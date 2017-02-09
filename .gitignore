@@ -1,0 +1,8 @@
+*.pyc
+output/*
+*.sublime-*
+*.swp
+build/*
+dist/*
+*.egg-info*
+.cache

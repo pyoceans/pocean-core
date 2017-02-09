@@ -1,0 +1,8 @@
+numpy
+pytz
+python-dateutil
+netcdf4
+pandas
+pygc
+simplejson
+shapely

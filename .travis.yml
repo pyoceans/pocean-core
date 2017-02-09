@@ -1,0 +1,44 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+
+sudo: false
+
+install:
+  # Install miniconda
+  # -----------------
+  - export CONDA_BASE=http://repo.continuum.io/miniconda/Miniconda
+  - wget ${CONDA_BASE}3-3.7.0-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+
+  # Create the basic testing environment
+  # ------------------------------------
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --set show_channel_urls True
+  - conda config --add create_default_packages pip
+  - conda update --quiet conda
+
+  # Add 3rd party channels
+  # ------------------------------------
+  - conda config --add channels conda-forge
+  - conda config --add channels axiom-data-science
+
+  # Create our environment
+  # ------------------------------------
+  - ENV_NAME='test-environment'
+  - conda create --quiet -n $ENV_NAME python=$TRAVIS_PYTHON_VERSION
+  - source activate $ENV_NAME
+
+  # Install testing requirements
+  # ------------------------------------
+  - conda install --file requirements.txt pytest
+  - conda list --export
+
+script:
+  - py.test -s -rxs -v
+  - conda install -n root conda-build anaconda-client
+  - conda build conda-recipe --python $TRAVIS_PYTHON_VERSION
+  - conda install pocean --use-local
