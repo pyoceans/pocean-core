@@ -42,13 +42,13 @@ install:
   - conda list --export
 
 script:
+  - set -e
   - py.test -s -rxs -v
   - conda install -n root conda-build anaconda-client
   - conda build conda-recipe --python $TRAVIS_PYTHON_VERSION
   - conda install pocean --use-local
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.5" ]; then
-    set -e
-    conda install --file docs/requirements.txt
-    mkdocs build --clean --verbose
-    doctr deploy --built-docs=_site --gh-pages-docs .
+        conda install --file docs/requirements.txt && \
+        mkdocs build --clean --verbose && \
+        doctr deploy --built-docs=_site --gh-pages-docs .
     fi
