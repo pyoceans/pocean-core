@@ -6,6 +6,10 @@ python:
 
 sudo: false
 
+env:
+  global:
+     secure: "n2fDU3WQjw781S8p1qUVAOIbNay991tk0LiiKZkYPJFUxEUT23yA11i/XODKRdoCuLS7gNfBb1P9QWNXQ9liHIRFzCbYRBRvUseHnkAraTBg3Wq2dDikheUQO82S5TMlttmCXJHaqQLdK3YxBqJdc2FitzxqD0/qn9sSmbfTD5MCAymcFWtqRrLyb4PbnmlJvL2EgFQI9AaZq59WDwo04Gw+tDvBn7krb9HQ8ATzw+YVgIO65xk6TXMPqg0NAnkPmYBf4E39ewyeBvPGbgngvk47zWxQ2GO18Au095P+dk6mykmtjsEf68XrobF+bZyz4Em0IcTP8pGeuvkgRhFysNUiW9KXH+UfhIv9MU1Fx4Q/229d2jPYy0xD6IvG9JW9m7bZmBUp6to7uqDnfxnrlxmTKf7CN/M0qpFSIyqXZEfNye4LlvnTOBJh5XkfZnBHLpwptacMlS5m1pjOWYbSUSGUDebqtQTBDaF7g8EcXMkUKw6nMXE1uTvDM7kcSvBNBaVQh5ammZLn2y6rqfZR0NK9vyGGfl1N+axe+U48iRpFBDs3Pq/IeSWvPVajbpR/kIjstu9ybu6qQPq1BlozvbPEuVGNUAja1jAWP/v3YNbJtWl2bWviyLw7/NWC5W95TPLLFUP1p6nqf3AkiZPjpAVmhC2lY1R9CfotSXD0Bo0="
+
 install:
   # Install miniconda
   # -----------------
@@ -42,3 +46,9 @@ script:
   - conda install -n root conda-build anaconda-client
   - conda build conda-recipe --python $TRAVIS_PYTHON_VERSION
   - conda install pocean --use-local
+  - if [ "$TRAVIS_PYTHON_VERSION" == "3.5" ]; then
+    set -e
+    conda install --file docs/requirements.txt
+    mkdocs build --clean --verbose
+    doctr deploy --built-docs=_site --gh-pages-docs .
+    fi
