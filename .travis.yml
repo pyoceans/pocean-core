@@ -46,7 +46,7 @@ script:
   - py.test -s -rxs -v
   - conda install -n root conda-build anaconda-client
   - conda build conda-recipe --python $TRAVIS_PYTHON_VERSION
-  - conda install pocean --use-local
+  - conda install pocean-core --use-local
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.5" ]; then
         conda install --file docs/requirements.txt && \
         mkdocs build --clean --verbose && \
