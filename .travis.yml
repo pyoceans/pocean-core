@@ -38,7 +38,7 @@ install:
 
   # Install testing requirements
   # ------------------------------------
-  - conda install --file requirements.txt pytest
+  - conda install --file requirements.txt --file pocean/tests/requirements.txt
   - conda list --export
 
 script:
