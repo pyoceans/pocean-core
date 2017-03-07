@@ -2,7 +2,10 @@
 set -ev
 
 if [ "$TRAVIS_PYTHON_VERSION" == "3.5" ]; then
-    conda install --file docs/requirements.txt
-    mkdocs build --clean --verbose
-    doctr deploy --built-docs=_site --gh-pages-docs .
+    cd docs
+    conda install --file requirements.txt
+    sphinx-apidoc -f -o api ../pocean ../pocean/tests
+    make html
+    doctr deploy --gh-pages-docs .
+    cd ..
 fi

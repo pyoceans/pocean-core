@@ -6,3 +6,5 @@ build/*
 dist/*
 *.egg-info*
 .cache
+docs/api
+docs/_site

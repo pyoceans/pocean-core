@@ -14,7 +14,26 @@ class CFDataset(EnhancedDataset):
     default_time_unit = 'seconds since 1990-01-01 00:00:00'
 
     @classmethod
-    def load(cls, path):
+    def load(cls, path: str):
+        """Attempt to load a netCDF file as a CF compatible dataset
+
+        Extended description of function.
+
+        Parameters
+        ----------
+        arg1 :
+            Path to netCDF file
+
+        Returns
+        -------
+            CFDataset subclass for your netCDF file
+
+        Raises
+        ------
+            ValueError:
+                If no suitable class is found for your dataset
+
+        """
 
         fpath = os.path.realpath(path)
         subs = list(all_subclasses(cls))
