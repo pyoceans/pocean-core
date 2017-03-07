@@ -119,6 +119,8 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 #html_static_path = ['_static']
 
+# If true, links to the reST sources are added to the pages.
+html_show_sourcelink = False
 
 # -- Options for HTMLHelp output ------------------------------------------
 
