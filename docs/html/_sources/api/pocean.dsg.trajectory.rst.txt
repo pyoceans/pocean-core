@@ -1,0 +1,36 @@
+pocean.dsg.trajectory package
+=============================
+
+.. automodule:: pocean.dsg.trajectory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+pocean.dsg.trajectory.cr module
+-------------------------------
+
+.. automodule:: pocean.dsg.trajectory.cr
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pocean.dsg.trajectory.im module
+-------------------------------
+
+.. automodule:: pocean.dsg.trajectory.im
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pocean.dsg.trajectory.ir module
+-------------------------------
+
+.. automodule:: pocean.dsg.trajectory.ir
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

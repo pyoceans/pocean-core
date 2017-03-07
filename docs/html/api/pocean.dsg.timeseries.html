@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pocean.dsg.timeseries package &#8212; pocean-core 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pocean.dsg.timeseries">
+<span id="pocean-dsg-timeseries-package"></span><h1>pocean.dsg.timeseries package<a class="headerlink" href="#module-pocean.dsg.timeseries" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pocean.dsg.timeseries.cr">
+<span id="pocean-dsg-timeseries-cr-module"></span><h2>pocean.dsg.timeseries.cr module<a class="headerlink" href="#module-pocean.dsg.timeseries.cr" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries">
+<em class="property">class </em><code class="descclassname">pocean.dsg.timeseries.cr.</code><code class="descname">ContiguousRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="method">
+<dt id="pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.calculated_metadata">
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.from_dataframe">
+<code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>variable_attributes=None</em>, <em>global_attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.is_mine">
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.to_dataframe">
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.cr.ContiguousRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pocean.dsg.timeseries.im">
+<span id="pocean-dsg-timeseries-im-module"></span><h2>pocean.dsg.timeseries.im module<a class="headerlink" href="#module-pocean.dsg.timeseries.im" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries">
+<em class="property">class </em><code class="descclassname">pocean.dsg.timeseries.im.</code><code class="descname">IncompleteMultidimensionalTimeseries</code><a class="headerlink" href="#pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="method">
+<dt id="pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.calculated_metadata">
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.from_dataframe">
+<code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>variable_attributes=None</em>, <em>global_attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.is_mine">
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.to_dataframe">
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.im.IncompleteMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pocean.dsg.timeseries.ir">
+<span id="pocean-dsg-timeseries-ir-module"></span><h2>pocean.dsg.timeseries.ir module<a class="headerlink" href="#module-pocean.dsg.timeseries.ir" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pocean.dsg.timeseries.ir.IndexedRaggedTimeseries">
+<em class="property">class </em><code class="descclassname">pocean.dsg.timeseries.ir.</code><code class="descname">IndexedRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.timeseries.ir.IndexedRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="method">
+<dt id="pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.calculated_metadata">
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.from_dataframe">
+<code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>variable_attributes=None</em>, <em>global_attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.is_mine">
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.to_dataframe">
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.ir.IndexedRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pocean.dsg.timeseries.om">
+<span id="pocean-dsg-timeseries-om-module"></span><h2>pocean.dsg.timeseries.om module<a class="headerlink" href="#module-pocean.dsg.timeseries.om" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries">
+<em class="property">class </em><code class="descclassname">pocean.dsg.timeseries.om.</code><code class="descname">OrthogonalMultidimensionalTimeseries</code><a class="headerlink" href="#pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="method">
+<dt id="pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.calculated_metadata">
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.from_dataframe">
+<code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>variable_attributes=None</em>, <em>global_attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.is_mine">
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.to_dataframe">
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.timeseries.om.OrthogonalMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pocean.dsg.timeseries package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-pocean.dsg.timeseries.cr">pocean.dsg.timeseries.cr module</a></li>
+<li><a class="reference internal" href="#module-pocean.dsg.timeseries.im">pocean.dsg.timeseries.im module</a></li>
+<li><a class="reference internal" href="#module-pocean.dsg.timeseries.ir">pocean.dsg.timeseries.ir module</a></li>
+<li><a class="reference internal" href="#module-pocean.dsg.timeseries.om">pocean.dsg.timeseries.om module</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/pocean.dsg.timeseries.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Kyle Wilcox.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/api/pocean.dsg.timeseries.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
