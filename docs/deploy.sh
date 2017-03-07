@@ -6,6 +6,6 @@ if [ "$TRAVIS_PYTHON_VERSION" == "3.5" ]; then
     conda install --file requirements.txt
     sphinx-apidoc -M -f -o api ../pocean ../pocean/tests
     make html
-    doctr deploy . --built-docs=_site/html
+    doctr deploy --built-docs=_site --gh-pages-docs .
     cd ..
 fi
