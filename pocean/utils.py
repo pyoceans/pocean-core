@@ -67,6 +67,9 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     The valid_range attribute takes precendence over the valid_min and
     valid_max attributes.
     """
+    if np.issubdtype('S', arr.dtype):
+        return arr
+
     attrs = attrs or {}
 
     if 'valid_min' in attrs:
