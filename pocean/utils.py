@@ -82,10 +82,15 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
         maxv = safe_attribute_typing(arr.dtype, vr[1])
 
     # Get the min/max of values that the hardware supports
+    if np.issubdtype(arr.dtype, int):
+        ifunc = np.iinfo
+    elif np.issubdtype(arr.dtype, float):
+        ifunc = np.finfo
+
     try:
-        info = np.iinfo(arr.dtype)
+        info = ifunc(arr.dtype)
     except ValueError:
-        info = np.finfo(arr.dtype)
+        info = ifunc(arr.dtype)
 
     minv = minv if minv is not None else info.min
     maxv = maxv if maxv is not None else info.max
