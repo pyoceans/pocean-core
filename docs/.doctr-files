@@ -6,6 +6,7 @@
 ./_sources/api/pocean.dsg.trajectory.rst.txt
 ./_sources/api/pocean.dsg.trajectoryProfile.rst.txt
 ./_sources/api/pocean.rst.txt
+./_sources/development.rst.txt
 ./_sources/index.rst.txt
 ./_static/ajax-loader.gif
 ./_static/alabaster.css
@@ -37,6 +38,7 @@
 ./api/pocean.dsg.trajectory.html
 ./api/pocean.dsg.trajectoryProfile.html
 ./api/pocean.html
+./development.html
 ./genindex.html
 ./index.html
 ./objects.inv
