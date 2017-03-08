@@ -70,14 +70,18 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             station_group = df.groupby('station')
             num_stations = len(station_group)
-
+            
+            # assume all groups are the same size and have identical times
+            _, sdf = list(station_group)[0]
+            t = sdf.t
+            
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
-            nc.createDimension('time', df.t.size)
+            nc.createDimension('time', t.size)
             nc.createDimension('station', num_stations)
-            station = nc.createVariable('station', get_dtype(df.station))
+            station = nc.createVariable('station', get_dtype(df.station), ('station',))
 
             time = nc.createVariable('time', 'f8', ('time',))
             latitude = nc.createVariable('latitude', get_dtype(df.y), ('station',))
@@ -87,7 +91,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
             logger.info(df.t.values.dtype)
-            time[:] = nc4.date2num(df.t.tolist(), units=cls.default_time_unit)
+            time[:] = nc4.date2num(t.tolist(), units=cls.default_time_unit)
 
             for i, (uid, sdf) in enumerate(station_group):
                 station[i] = uid
