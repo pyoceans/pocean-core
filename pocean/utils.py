@@ -35,8 +35,8 @@ def unique_justseen(iterable, key=None):
 def normalize_array(var):
     """
     Returns a normalized data array from a NetCDF4 variable. This is mostly
-    used to normalize string types between py2 and py3. It has no effect on types
-    other than chars/strings
+    used to normalize string types between py2 and py3 as well as netcdf3 and
+    netcdf4. It has no effect on types other than chars/strings
     """
     if np.issubdtype(var.dtype, 'S1'):
         if var.dtype == str:
