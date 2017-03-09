@@ -219,3 +219,21 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         #    df = df.iloc[~building_index_to_drop]
 
         return df
+
+    def nc_attributes(self):
+        atts = super(OrthogonalMultidimensionalTimeseries, self).nc_attributes()
+        return dict_update(atts, {
+            'global' : {
+                'featureType': 'timeseries',
+                'cdm_data_type': 'Timeseries'
+            },
+            'station' : {
+                'cf_role': 'timeseries_id',
+                'long_name' : 'station identifier'
+            },
+            'time': {
+                'units': 'seconds since 1970-01-01T00:00:00Z',
+                'standard_name': 'time',
+                'axis': 'T'
+            }
+        })
