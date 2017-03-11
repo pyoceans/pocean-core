@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from copy import copy
 from pocean.cf import CFDataset
 from datetime import datetime
 import numpy as np
@@ -132,4 +133,95 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         raise NotImplementedError
 
     def to_dataframe(self):
-        raise NotImplementedError
+        svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
+        try:
+            s = normalize_array(svar)
+        except ValueError:
+            s = np.asarray(list(range(len(svar))), dtype=np.integer)
+
+        # T
+        tvar = self.t_axes()[0]
+        t = nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))
+        if isinstance(t, datetime):
+            # Size one
+            t = np.array([t.isoformat()], dtype='datetime64')
+
+        # X
+        xvar = self.x_axes()[0]
+        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name)).round(5)
+
+        # Y
+        yvar = self.y_axes()[0]
+        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name)).round(5)
+
+        # Z
+        zvar = self.z_axes()[0]
+        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name))
+
+        # dimensions
+        n_times = len(t)
+        n_stations = len(s)
+        n_z = len(z)
+
+        # denormalize table structure
+        t = np.repeat(t, n_stations * n_z)
+        z = np.tile(np.repeat(z, n_stations), n_times)
+        station = np.tile(s, n_z * n_times)
+        y = np.tile(y, n_times * n_z)
+        x = np.tile(x, n_times * n_z)
+
+        df_data = {
+            't': t,
+            'z': z,
+            'station': station,
+            'y': y,
+            'x': x
+        }
+
+        extract_vars = copy(self.variables)
+        del extract_vars[svar.name]
+        del extract_vars[xvar.name]
+        del extract_vars[yvar.name]
+        del extract_vars[zvar.name]
+        del extract_vars[tvar.name]
+
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
+            if dvar[:].flatten().size != n_stations * n_times * n_z:
+                logger.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                continue
+
+            vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+            if vdata.size == 1:
+                vdata = vdata[0]
+            df_data[dnam] = vdata
+
+        df = pd.DataFrame(df_data)
+
+        return df
+
+    def nc_attributes(self):
+        atts = super(OrthogonalMultidimensionalTimeseriesProfile, self).nc_attributes()
+        return dict_update(atts, {
+            'global' : {
+                'featureType': 'timeseriesProfile',
+                'cdm_data_type': 'TimeseriesProfile'
+            },
+            'station' : {
+                'cf_role': 'timeseries_id',
+                'long_name' : 'station identifier'
+            },
+            'longitude': {
+                'axis': 'X'
+            },
+            'latitude': {
+                'axis': 'Y'
+            },
+            'z': {
+                'axis': 'Z'
+            },
+            'time': {
+                'units': self.default_time_unit,
+                'standard_name': 'time',
+                'axis': 'T'
+            }
+        })
