@@ -232,7 +232,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 'long_name' : 'station identifier'
             },
             'time': {
-                'units': 'seconds since 1970-01-01T00:00:00Z',
+                'units': self.default_time_unit,
                 'standard_name': 'time',
                 'axis': 'T'
             }
