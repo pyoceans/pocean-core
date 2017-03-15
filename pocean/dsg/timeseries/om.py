@@ -106,21 +106,30 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
                     if var_name not in nc.variables:
-                        if np.issubdtype(sdf[c].dtype, 'S') or sdf[c].dtype == object:
+                        if var_name not in attributes:
+                            attributes[var_name] = {}
+                        if sdf[c].dtype == np.dtype('datetime64[ns]'):
+                            fv = np.dtype('f8').type(cls.default_fill_value)
+                            v = nc.createVariable(var_name, 'f8', ('station', 'time',), fill_value=fv)
+                            tvalues = pd.Series(nc4.date2num(sdf[c].tolist(), units=cls.default_time_unit))
+                            attributes[var_name] = dict_update(attributes[var_name], {
+                                'units': cls.default_time_unit
+                            })
+                        elif np.issubdtype(sdf[c].dtype, 'S') or sdf[c].dtype == object:
                             # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
                             v = nc.createVariable(var_name, get_dtype(sdf[c]), ('station', 'time',))
                         else:
                             v = nc.createVariable(var_name, get_dtype(sdf[c]), ('station', 'time',), fill_value=sdf[c].dtype.type(cls.default_fill_value))
 
-                        if var_name not in attributes:
-                            attributes[var_name] = {}
                         attributes[var_name] = dict_update(attributes[var_name], {
                             'coordinates' : 'time latitude longitude z',
                         })
                     else:
                         v = nc.variables[var_name]
 
-                    if hasattr(v, '_FillValue'):
+                    if sdf[c].dtype == np.dtype('datetime64[ns]'):
+                        vvalues = tvalues.fillna(v._FillValue).values
+                    elif hasattr(v, '_FillValue'):
                         vvalues = sdf[c].fillna(v._FillValue).values
                     else:
                         # Use an empty string... better than nothing!
