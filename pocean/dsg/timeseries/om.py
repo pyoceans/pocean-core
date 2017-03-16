@@ -5,6 +5,7 @@ from pocean.cf import CFDataset
 from datetime import datetime
 import numpy as np
 import pandas as pd
+import re
 
 from pocean.utils import (
     unique_justseen,
@@ -213,8 +214,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             if vdata.size == 1:
                 vdata = vdata[0]
             #building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+            try:
+                if re.match(r'.* since .*',dvar.units):
+                    vdata = nc4.num2date(vdata[:], dvar.units, getattr(dvar, 'calendar', 'standard'))
+            except AttributeError:
+                pass
             df_data[dnam] = vdata
             #logger.info('{} - {}'.format(dnam, vdata.shape))
+
 
         df = pd.DataFrame()
         for k, v in df_data.items():
