@@ -189,6 +189,9 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         z = generic_masked(zvar[:].repeat(t.size), attrs=self.vatts(zvar.name))
         logger.debug(['z data size: ', z.size])
 
+        # now repeat t per station
+        t = np.repeat(t, len(svar))
+
         df_data = {
             't': t,
             'x': x,
@@ -221,7 +224,6 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 pass
             df_data[dnam] = vdata
             #logger.info('{} - {}'.format(dnam, vdata.shape))
-
 
         df = pd.DataFrame()
         for k, v in df_data.items():
