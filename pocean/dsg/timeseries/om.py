@@ -155,15 +155,6 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # Don't pass around the attributes store them in the class
 
-        svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
-        # Stations
-        # TODO: Make sure there is a test for a file with multiple time variables
-        try:
-            s = normalize_array(svar)
-        except ValueError:
-            s = np.asarray(list(range(len(svar))), dtype=np.integer)
-        logger.debug(['station data size: ', s.size])
-
         # T
         tvar = self.t_axes()[0]
         t = nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))
@@ -171,6 +162,16 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             # Size one
             t = np.array([t.isoformat()], dtype='datetime64')
         logger.debug(['time data size: ', t.size])
+
+        svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
+        # Stations
+        # TODO: Make sure there is a test for a file with multiple time variables
+        try:
+            s = normalize_array(svar)
+        except ValueError:
+            s = np.asarray(list(range(len(svar))), dtype=np.integer)
+        s = np.repeat(s, t.size)
+        logger.debug(['station data size: ', s.size])
 
         # X
         xvar = self.x_axes()[0]
@@ -244,5 +245,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 'units': self.default_time_unit,
                 'standard_name': 'time',
                 'axis': 'T'
+            },
+            'latitude': {
+                'axis': 'Y'
+            },
+            'longitude': {
+                'axis': 'X'
+            },
+            'z': {
+                'axis': 'Z'
             }
         })
