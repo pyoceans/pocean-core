@@ -193,7 +193,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # figure out if this is a single-station file
         # do this by checking the dimensions of the Z var
-        if len(zvar.dimensions) == 1:
+        if zvar.ndim == 1:
             t = np.repeat(t, len(svar))
 
         df_data = {
