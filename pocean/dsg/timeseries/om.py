@@ -190,7 +190,11 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         logger.debug(['z data size: ', z.size])
 
         # now repeat t per station
-        t = np.repeat(t, len(svar))
+
+        # figure out if this is a single-station file
+        # do this by checking the dimensions of the Z var
+        if len(zvar.dimensions) == 1:
+            t = np.repeat(t, len(svar))
 
         df_data = {
             't': t,
