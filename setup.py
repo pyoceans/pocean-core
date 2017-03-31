@@ -10,7 +10,7 @@ def version():
 
 def readme():
     with open('README.md') as f:
-        return f.read()
+        return f.read().encode('ascii', errors='ignore').decode()
 
 
 reqs = [line.strip() for line in open('requirements.txt') if not line.startswith('#')]
