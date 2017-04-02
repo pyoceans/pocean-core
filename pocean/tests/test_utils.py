@@ -41,7 +41,7 @@ class TestUtils(unittest.TestCase):
 
     def test_generic_masked_bad_min_max_value(self):
 
-        _, tpath = tempfile.mkstemp(suffix='.nc', prefix='pocean-test')
+        fid, tpath = tempfile.mkstemp(suffix='.nc', prefix='pocean-test')
         shutil.copy2(self.input_file, tpath)
 
         with EnhancedDataset(tpath, 'a') as ncd:
@@ -85,6 +85,7 @@ class TestUtils(unittest.TestCase):
             r = generic_masked(c[:], attrs=ncd.vatts(c.name))
             assert np.all(r.mask == False)  # noqa
 
+        os.close(fid)
         if os.path.exists(tpath):
             os.remove(tpath)
 

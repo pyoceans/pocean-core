@@ -1,37 +1,43 @@
 package:
-    name: pocean-core
-    version: "1.0.0"
+  name: pocean-core
+  version: "1.0.0"
 
 source:
-    path: ../
+  path: ../
 
 build:
-    number: 0
-    script: python setup.py install --single-version-externally-managed --record=record.txt
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
-    build:
-        - python
-        - setuptools
-    run:
-        - python
-        - numpy
-        - pytz
-        - python-dateutil
-        - netcdf4
-        - pandas
-        - pygc
-        - simplejson
-        - shapely
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - numpy
+    - pytz
+    - python-dateutil
+    - netcdf4
+    - pandas
+    - pygc
+    - simplejson
+    - shapely
 
 test:
-    imports:
-        - pocean
-        - pocean.dsg
-        - pocean.grid
-        - pocean.tests
+  source_files:
+    - pocean
+  requires:
+    - pytest
+  imports:
+    - pocean
+    - pocean.dsg
+    - pocean.grid
+    - pocean.tests
+  commands:
+    - py.test -s -rxs -v pocean
 
 about:
-    home: https://github.com/axiom-data-science/pocean-core
-    license: MIT License
-    summary: 'A python framework for working with met-ocean data.'
+  home: https://github.com/axiom-data-science/pocean-core
+  license: MIT
+  summary: 'A python framework for working with met-ocean data.'

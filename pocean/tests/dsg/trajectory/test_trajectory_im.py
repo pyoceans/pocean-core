@@ -25,18 +25,20 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
         IncompleteMultidimensionalTrajectory(self.multi).close()
 
     def test_imt_dataframe(self):
-        single_tmp = tempfile.mkstemp(suffix='.nc')[-1]
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with IncompleteMultidimensionalTrajectory(self.single) as ncd:
             single_df = ncd.to_dataframe(clean_rows=False)
             single_nc = IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp)
             single_nc.close()
+        os.close(fid)
         os.remove(single_tmp)
 
-        multip_tmp = tempfile.mkstemp(suffix='.nc')[-1]
+        fid, multip_tmp = tempfile.mkstemp(suffix='.nc')
         with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
             multip_df = ncd.to_dataframe(clean_rows=False)
             multip_nc = IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp)
             multip_nc.close()
+        os.close(fid)
         os.remove(multip_tmp)
 
     def test_imt_calculated_metadata(self):

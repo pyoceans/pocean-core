@@ -180,7 +180,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         for i in np.arange(profile_indexes.size):
             ei = si + o_index_var[i]
             p[si:ei] = profile_indexes[i]
-            r[si:ei] = traj_indexes[r_index_var[i]]
+            r[si:ei] = np.array(traj_indexes[r_index_var[i]])
             t[si:ei] = tvar[i]
             x[si:ei] = xvar[i]
             y[si:ei] = yvar[i]
