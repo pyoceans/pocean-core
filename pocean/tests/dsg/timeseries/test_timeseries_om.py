@@ -23,13 +23,14 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         OrthogonalMultidimensionalTimeseries(self.single).close()
 
     def test_omp_dataframe(self):
-        single_tmp = tempfile.mkstemp(suffix='.nc')[-1]
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
             nc = OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp)
             nc.close()
             logger.info(single_tmp)
-        #os.remove(single_tmp)
+        os.close(fid)
+        os.remove(single_tmp)
 
     # def test_omp_calculated_metadata(self):
     #     with OrthogonalMultidimensionalTimeseries(self.single) as ncd:
