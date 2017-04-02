@@ -1,5 +1,5 @@
-pocean.dsg package
-==================
+pocean\.dsg package
+===================
 
 .. automodule:: pocean.dsg
     :members:

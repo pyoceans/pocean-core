@@ -1,5 +1,5 @@
-pocean.dsg.timeseries package
-=============================
+pocean\.dsg\.timeseries package
+===============================
 
 .. automodule:: pocean.dsg.timeseries
     :members:
@@ -9,32 +9,32 @@ pocean.dsg.timeseries package
 Submodules
 ----------
 
-pocean.dsg.timeseries.cr module
--------------------------------
+pocean\.dsg\.timeseries\.cr module
+----------------------------------
 
 .. automodule:: pocean.dsg.timeseries.cr
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.dsg.timeseries.im module
--------------------------------
+pocean\.dsg\.timeseries\.im module
+----------------------------------
 
 .. automodule:: pocean.dsg.timeseries.im
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.dsg.timeseries.ir module
--------------------------------
+pocean\.dsg\.timeseries\.ir module
+----------------------------------
 
 .. automodule:: pocean.dsg.timeseries.ir
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.dsg.timeseries.om module
--------------------------------
+pocean\.dsg\.timeseries\.om module
+----------------------------------
 
 .. automodule:: pocean.dsg.timeseries.om
     :members:

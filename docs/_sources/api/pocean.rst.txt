@@ -17,24 +17,24 @@ Subpackages
 Submodules
 ----------
 
-pocean.cf module
-----------------
+pocean\.cf module
+-----------------
 
 .. automodule:: pocean.cf
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.dataset module
----------------------
+pocean\.dataset module
+----------------------
 
 .. automodule:: pocean.dataset
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.utils module
--------------------
+pocean\.utils module
+--------------------
 
 .. automodule:: pocean.utils
     :members:

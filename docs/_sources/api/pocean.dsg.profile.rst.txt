@@ -1,5 +1,5 @@
-pocean.dsg.profile package
-==========================
+pocean\.dsg\.profile package
+============================
 
 .. automodule:: pocean.dsg.profile
     :members:
@@ -9,16 +9,16 @@ pocean.dsg.profile package
 Submodules
 ----------
 
-pocean.dsg.profile.im module
-----------------------------
+pocean\.dsg\.profile\.im module
+-------------------------------
 
 .. automodule:: pocean.dsg.profile.im
     :members:
     :undoc-members:
     :show-inheritance:
 
-pocean.dsg.profile.om module
-----------------------------
+pocean\.dsg\.profile\.om module
+-------------------------------
 
 .. automodule:: pocean.dsg.profile.om
     :members:
