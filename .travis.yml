@@ -36,7 +36,6 @@ before_install:
   # Add 3rd party channels
   # ------------------------------------
   - conda config --add channels conda-forge
-  - conda config --add channels axiom-data-science
 
   # Create our environment
   # ------------------------------------
@@ -60,6 +59,6 @@ script:
       py.test -s -rxs -v ;
     fi
 
-  - if [[ $TEST_TARGET == "docs" ]]; then
+  - if [[ $TEST_TARGET == 'docs' ]]; then
       ./docs/deploy.sh ;
     fi
