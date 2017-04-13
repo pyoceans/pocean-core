@@ -1,8 +1,10 @@
 import os
+import math
 
 import unittest
 from dateutil.parser import parse as dtparse
 import numpy as np
+from shapely.wkt import loads as wktloads
 
 from pocean.dsg import ContiguousRaggedTrajectoryProfile
 
@@ -18,6 +20,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         self.single = os.path.join(os.path.dirname(__file__), 'resources', 'cr-single.nc')
         self.multi = os.path.join(os.path.dirname(__file__), 'resources', 'cr-multiple.nc')
         self.missing_time = os.path.join(os.path.dirname(__file__), 'resources', 'cr-missing-time.nc')
+        self.nan_locations = os.path.join(os.path.dirname(__file__), 'resources', 'cr-nan-locations.nc')
 
     def test_crtp_load(self):
         ContiguousRaggedTrajectoryProfile(self.single).close()
@@ -109,3 +112,13 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(traj.first_loc.x, -124.681526638573)
             assert np.isclose(traj.first_loc.y,  43.5022166666667)
             assert len(traj.profiles) == 13
+
+    def test_just_missing_locations(self):
+        with ContiguousRaggedTrajectoryProfile(self.nan_locations) as ml:
+            t = ml.calculated_metadata()
+            assert len(t.trajectories) == 1
+
+            traj = t.trajectories["clark-20150709T1803"]
+            coords = list(wktloads(traj.geometry.wkt).coords)
+            assert True not in [ math.isnan(x) for x, y in coords ]
+            assert True not in [ math.isnan(y) for x, y in coords ]

@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+import math
 from collections import namedtuple, OrderedDict
 
 import numpy as np
@@ -166,7 +167,11 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
             geometry = None
             if geometries:
-                coords = list(unique_justseen(zip(tgroup.x, tgroup.y)))
+                null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
+                coords = list(unique_justseen(zip(
+                    tgroup.x[~null_coordinates].tolist(),
+                    tgroup.y[~null_coordinates].tolist()
+                )))
                 if len(coords) > 1:
                     geometry = LineString(coords)
                 elif coords == 1:
