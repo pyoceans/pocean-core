@@ -1,8 +1,9 @@
-numpy
-pytz
-python-dateutil
 netcdf4
+numpy
 pandas
-pygc
-simplejson
+pygc>=1.2.0
+python-dateutil
+pytz
 shapely
+simplejson
+six

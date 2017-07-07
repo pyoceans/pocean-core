@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import unittest
 from os.path import join as jn
 from os.path import dirname as dn
 
