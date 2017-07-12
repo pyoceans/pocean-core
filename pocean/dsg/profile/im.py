@@ -73,7 +73,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['trajectory', 'profile', 't', 'x', 'y', 'z', 'distance']
+        reserved_columns = ['profile', 't', 'x', 'y', 'z', 'distance']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:

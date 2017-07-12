@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 import os
 import tempfile
-
 import unittest
-from dateutil.parser import parse as dtparse
-import numpy as np
 
 from pocean.dsg import OrthogonalMultidimensionalTimeseries
 
@@ -28,7 +26,6 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
             df = s.to_dataframe()
             nc = OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp)
             nc.close()
-            logger.info(single_tmp)
         os.close(fid)
         os.remove(single_tmp)
 

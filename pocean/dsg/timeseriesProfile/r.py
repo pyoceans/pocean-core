@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 from pocean.cf import CFDataset
-from pocean.utils import logger, normalize_array
+from pocean.utils import normalize_array
+from pocean.utils import logger  # noqa
 
 
 class RaggedTimeseriesProfile(CFDataset):
@@ -36,9 +38,7 @@ class RaggedTimeseriesProfile(CFDataset):
 
         return True
 
-    def from_dataframe(self, df, variable_attributes=None, global_attributes=None):
-        variable_attributes = variable_attributes or {}
-        global_attributes = global_attributes or {}
+    def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):

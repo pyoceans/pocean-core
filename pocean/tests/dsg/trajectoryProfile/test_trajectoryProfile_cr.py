@@ -37,45 +37,45 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
     def test_crtp_calculated_metadata(self):
         with ContiguousRaggedTrajectoryProfile(self.single) as st:
             s = st.calculated_metadata()
-            assert s.min_t == dtparse('2014-11-25 18:57:30')
-            assert s.max_t == dtparse('2014-11-27 07:10:30')
+            assert s.min_t.round('S') == dtparse('2014-11-25 18:57:30')
+            assert s.max_t.round('S') == dtparse('2014-11-27 07:10:30')
             assert len(s.trajectories) == 1
             traj = s.trajectories["sp025-20141125T1730"]
             assert traj.min_z == 0
             assert np.isclose(traj.max_z, 504.37827)
-            assert traj.min_t == dtparse('2014-11-25 18:57:30')
-            assert traj.max_t == dtparse('2014-11-27 07:10:30')
+            assert traj.min_t.round('S') == dtparse('2014-11-25 18:57:30')
+            assert traj.max_t.round('S') == dtparse('2014-11-27 07:10:30')
             assert np.isclose(traj.first_loc.x, -119.79025)
             assert np.isclose(traj.first_loc.y, 34.30818)
             assert len(traj.profiles) == 17
 
         with ContiguousRaggedTrajectoryProfile(self.multi) as mt:
             m = mt.calculated_metadata()
-            assert m.min_t == dtparse('1990-01-01 00:00:00')
-            assert m.max_t == dtparse('1990-01-03 02:00:00')
+            assert m.min_t.round('S') == dtparse('1990-01-01 00:00:00')
+            assert m.max_t.round('S') == dtparse('1990-01-03 02:00:00')
             assert len(m.trajectories) == 5
             # First trajectory
             traj0 = m.trajectories[0]
             assert traj0.min_z == 0
             assert traj0.max_z == 43
-            assert traj0.min_t == dtparse('1990-01-02 05:00:00')
-            assert traj0.max_t == dtparse('1990-01-03 01:00:00')
+            assert traj0.min_t.round('S') == dtparse('1990-01-02 05:00:00')
+            assert traj0.max_t.round('S') == dtparse('1990-01-03 01:00:00')
             assert traj0.first_loc.x == -60
             assert traj0.first_loc.y == 53
             assert len(traj0.profiles) == 4
-            assert traj0.profiles[0].t == dtparse('1990-01-03 01:00:00')
+            assert traj0.profiles[0].t.round('S') == dtparse('1990-01-03 01:00:00')
             assert traj0.profiles[0].x == -60
             assert traj0.profiles[0].y == 49
             # Last trajectory
             traj4 = m.trajectories[4]
             assert traj4.min_z == 0
             assert traj4.max_z == 38
-            assert traj4.min_t == dtparse('1990-01-02 14:00:00')
-            assert traj4.max_t == dtparse('1990-01-02 15:00:00')
+            assert traj4.min_t.round('S') == dtparse('1990-01-02 14:00:00')
+            assert traj4.max_t.round('S') == dtparse('1990-01-02 15:00:00')
             assert traj4.first_loc.x == -67
             assert traj4.first_loc.y == 47
             assert len(traj4.profiles) == 4
-            assert traj4.profiles[19].t == dtparse('1990-01-02 14:00:00')
+            assert traj4.profiles[19].t.round('S') == dtparse('1990-01-02 14:00:00')
             assert traj4.profiles[19].x == -44
             assert traj4.profiles[19].y == 47
 

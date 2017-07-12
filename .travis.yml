@@ -5,7 +5,7 @@ sudo: false
 matrix:
   fast_finish: true
   include:
-  - python: 3.4
+  - python: 2.7
     env: TEST_TARGET=default
   - python: 3.5
     env: TEST_TARGET=default
@@ -36,6 +36,7 @@ before_install:
   # Add 3rd party channels
   # ------------------------------------
   - conda config --add channels conda-forge
+  - conda config --add channels axiom-data-science
 
   # Create our environment
   # ------------------------------------
@@ -50,13 +51,13 @@ before_install:
 
 # Test source distribution.
 install:
-  - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install pocean-core-${version}.tar.gz && popd
+  - python setup.py sdist && version=$(python setup.py --version) && pushd dist && pip install pocean-core-${version}.tar.gz && popd
 
 script:
   - set -e
 
   - if [[ $TEST_TARGET == 'default' ]]; then
-      py.test -s -rxs -v ;
+      py.test --disable-warnings ;
     fi
 
   - if [[ $TEST_TARGET == 'docs' ]]; then

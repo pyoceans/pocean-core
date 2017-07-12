@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
-import os
-
+#!python
+# coding=utf-8
 import unittest
-from dateutil.parser import parse as dtparse
-import numpy as np
-
-from pocean.dsg import ContiguousRaggedTrajectory
 
 import logging
 from pocean import logger

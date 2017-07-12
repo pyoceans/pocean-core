@@ -56,9 +56,8 @@ class TestUtils(unittest.TestCase):
             # to make sure it doesn't error
             b = ncd.createVariable('imabyte', 'b')
             b.valid_min = 0
-            b.valid_max = 600  # this ss over a byte and thus invalid
+            b.valid_max = 600  # this is over a byte and thus invalid
             b[:] = 3
-
             r = generic_masked(b[:], attrs=ncd.vatts(b.name))
             assert np.all(r.mask == False)  # noqa
 
@@ -68,8 +67,8 @@ class TestUtils(unittest.TestCase):
             assert np.all(r.mask == True)  # noqa
 
             c = ncd.createVariable('imanotherbyte', 'f4')
-            c.setncattr('valid_min', '0b')
-            c.setncattr('valid_max', '9b')
+            c.setncattr('valid_min', b'0')
+            c.setncattr('valid_max', b'9')
             c[:] = 3
             r = generic_masked(c[:], attrs=ncd.vatts(c.name))
             assert np.all(r.mask == False)  # noqa

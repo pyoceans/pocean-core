@@ -3,6 +3,9 @@
 import os
 from datetime import datetime
 
+import six
+from six import u as astr
+
 from .utils import all_subclasses
 from .dataset import EnhancedDataset
 from . import logger
@@ -14,14 +17,14 @@ class CFDataset(EnhancedDataset):
     default_time_unit = 'seconds since 1990-01-01 00:00:00'
 
     @classmethod
-    def load(cls, path: str):
+    def load(cls, path):
         """Attempt to load a netCDF file as a CF compatible dataset
 
         Extended description of function.
 
         Parameters
         ----------
-        arg1 :
+        path :
             Path to netCDF file
 
         Returns
@@ -183,8 +186,10 @@ class CFDataset(EnhancedDataset):
 
 def cf_safe_name(name):
     import re
-    if isinstance(name, str):
-        if re.match('^[0-9_]', name):
+    if isinstance(name, six.string_types):
+        if re.match(astr('^[0-9_]'), name):
             # Add a letter to the front
-            name = "v_{}".format(name)
-        return re.sub(r'[^_a-zA-Z0-9]', "_", name)
+            name = astr("v_{}".format(name))
+        return re.sub(r'[^_a-zA-Z0-9]', astr("_"), name)
+
+    raise ValueError(astr('Could not convert "{}" to a safe name'.format(name)))

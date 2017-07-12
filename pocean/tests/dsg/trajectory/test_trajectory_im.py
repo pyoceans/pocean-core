@@ -44,13 +44,13 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
     def test_imt_calculated_metadata(self):
         with IncompleteMultidimensionalTrajectory(self.single) as ncd:
             s = ncd.calculated_metadata()
-            assert s.min_t == dtparse('1990-01-01 00:00:00')
-            assert s.max_t == dtparse('1990-01-05 03:00:00')
+            assert s.min_t.round('S') == dtparse('1990-01-01 00:00:00')
+            assert s.max_t.round('S') == dtparse('1990-01-05 03:00:00')
             traj1 = s.trajectories["Trajectory1"]
             assert traj1.min_z == 0
             assert traj1.max_z == 99
-            assert traj1.min_t == dtparse('1990-01-01 00:00:00')
-            assert traj1.max_t == dtparse('1990-01-05 03:00:00')
+            assert traj1.min_t.round('S') == dtparse('1990-01-01 00:00:00')
+            assert traj1.max_t.round('S') == dtparse('1990-01-05 03:00:00')
             assert np.isclose(traj1.first_loc.x, -7.9336)
             assert np.isclose(traj1.first_loc.y, 42.00339)
 
@@ -62,16 +62,16 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             traj0 = m.trajectories["Trajectory0"]
             assert traj0.min_z == 0
             assert traj0.max_z == 35
-            assert traj0.min_t == dtparse('1990-01-01 00:00:00')
-            assert traj0.max_t == dtparse('1990-01-02 11:00:00')
+            assert traj0.min_t.round('S') == dtparse('1990-01-01 00:00:00')
+            assert traj0.max_t.round('S') == dtparse('1990-01-02 11:00:00')
             assert np.isclose(traj0.first_loc.x, -35.07884)
             assert np.isclose(traj0.first_loc.y, 2.15286)
 
             traj3 = m.trajectories["Trajectory3"]
             assert traj3.min_z == 0
             assert traj3.max_z == 36
-            assert traj3.min_t == dtparse('1990-01-01 00:00:00')
-            assert traj3.max_t == dtparse('1990-01-02 12:00:00')
+            assert traj3.min_t.round('S') == dtparse('1990-01-01 00:00:00')
+            assert traj3.max_t.round('S') == dtparse('1990-01-02 12:00:00')
             assert np.isclose(traj3.first_loc.x, -73.3026)
             assert np.isclose(traj3.first_loc.y, 1.95761)
 

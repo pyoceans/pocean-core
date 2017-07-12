@@ -1,0 +1,123 @@
+{
+  "dimensions": {
+    "time": 1,
+    "y": 361,
+    "x": 301
+  },
+  "variables": {
+    "Mercator": {
+      "type": "char",
+      "attributes": {
+        "grid_mapping_name": "mercator",
+        "standard_parallel": 30.0,
+        "longitude_of_projection_origin": -128.735000610352,
+        "earth_shape": "spherical",
+        "earth_radius": 6367.47021484375,
+        "GRIB_param_Dx": 4000.0,
+        "GRIB_param_Dy": 4000.0,
+        "GRIB_param_GDSkey": -1946565923,
+        "GRIB_param_La1": 31.6650,
+        "GRIB_param_La2": 43.4710,
+        "GRIB_param_Latin": 30.0,
+        "GRIB_param_Lo1": -128.7350,
+        "GRIB_param_Lo2": -116.2740,
+        "GRIB_param_Nx": 301,
+        "GRIB_param_Ny": 361,
+        "GRIB_param_ResCompFlag": 1,
+        "GRIB_param_VectorComponentFlag": "easterlyNortherlyRelative",
+        "GRIB_param_Winds": "True",
+        "GRIB_param_grid_name": "Mercator",
+        "GRIB_param_grid_radius_spherical_earth": 6367.470,
+        "GRIB_param_grid_shape": "spherical",
+        "GRIB_param_grid_shape_code": 0,
+        "GRIB_param_grid_type": 1,
+        "GRIB_param_grid_units": "m",
+        "GRIB_param_scanning_mode": 64,
+        "_CoordinateTransformType": "Projection",
+        "_CoordinateAxisTypes": "GeoX GeoY"
+      }
+    },
+    "time": {
+      "shape": ["time"],
+      "type": "double",
+      "attributes": {
+        "long_name": "date time",
+        "units": "hours since 1970-01-01 00:00:00",
+        "_CoordinateAxisType": "Time"
+      }
+    },
+    "u_component_wind_true_direction_all_geometries": {
+      "shape": ["time", "y", "x"],
+      "type": "float",
+      "attributes": {
+        "units": "m/s",
+        "long_name": "u_component_wind_true_direction_all_geometries @ height_above_ground",
+        "missing_value": -9999.0,
+        "grid_mapping": "Mercator",
+        "GRIB_param_name": "u_component_wind_true_direction_all_geometries",
+        "GRIB_param_short_name": "wnd_utru",
+        "GRIB_center_id": 58,
+        "GRIB_table_id": 3,
+        "GRIB_param_number": 251,
+        "GRIB_param_id": [1, 58, 3, 251],
+        "GRIB_product_definition_type": "Initialized analysis product",
+        "GRIB_level_type": 105,
+        "GRIB_VectorComponentFlag": "easterlyNortherlyRelative"
+      }
+    },
+    "v_component_wind_true_direction_all_geometries": {
+      "shape": ["time", "y", "x"],
+      "type": "float",
+      "attributes": {
+        "units": "m/s",
+        "long_name": "v_component_wind_true_direction_all_geometries @ height_above_ground",
+        "missing_value": -9999.0,
+        "grid_mapping": "Mercator",
+        "GRIB_param_name": "v_component_wind_true_direction_all_geometries",
+        "GRIB_param_short_name": "wnd_vtru",
+        "GRIB_center_id": 58,
+        "GRIB_table_id": 3,
+        "GRIB_param_number": 252,
+        "GRIB_param_id": [1, 58, 3, 252],
+        "GRIB_product_definition_type": "Initialized analysis product",
+        "GRIB_level_type": 105,
+        "GRIB_VectorComponentFlag": "easterlyNortherlyRelative"
+      }
+    },
+    "x": {
+      "shape": ["x"],
+      "type": "double",
+      "attributes": {
+        "units": "km",
+        "long_name": "x coordinate of projection",
+        "standard_name": "projection_x_coordinate",
+        "grid_spacing": "4.0 km",
+        "_CoordinateAxisType": "GeoX"
+      }
+    },
+    "y": {
+      "shape": ["y"],
+      "type": "double",
+      "attributes": {
+        "units": "km",
+        "long_name": "y coordinate of projection",
+        "standard_name": "projection_y_coordinate",
+        "grid_spacing": "4.0 km",
+        "_CoordinateAxisType": "GeoY"
+      }
+    }
+  },
+  "attributes": {
+    "Conventions": "CF-1.4",
+    "Originating_center": "U.S. Navy Fleet Numerical Meteorology and Oceanography Center (58)",
+    "Product_Type": "Forecast/Uninitialized Analysis/Image Product",
+    "title": "U.S. Navy Fleet Numerical Meteorology and Oceanography Center Forecast/Uninitialized Analysis/Image Product",
+    "institution": "Center U.S. Navy Fleet Numerical Meteorology and Oceanography Center (58)",
+    "source": "Forecast/Uninitialized Analysis/Image Product",
+    "history": "Direct read of GRIB-1 into NetCDF-Java 4 API",
+    "CF:feature_type": "GRID",
+    "file_format": "GRIB-1",
+    "location": "/mnt/gluster/data/netCDF/coamps/cencoos_4km/wnd_utru/10m/coamps_cencoos_4km_10m_wnd_utru_2014-06-20-00_2014.171.00.nc",
+    "_CoordinateModelRunDate": "2014-06-20T00:00:00Z"
+  }
+}
