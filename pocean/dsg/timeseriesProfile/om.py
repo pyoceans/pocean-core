@@ -1,20 +1,23 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 from copy import copy
-from pocean.cf import CFDataset
 from datetime import datetime
+from collections import OrderedDict
+
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
-    unique_justseen,
     normalize_array,
     get_dtype,
     dict_update,
     generic_masked
 )
+from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
-from pocean import logger
+from pocean import logger  # noqa
+
 
 class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
@@ -61,7 +64,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         with OrthogonalMultidimensionalTimeseriesProfile(output, 'w') as nc:
             time_group = df.groupby('t')
             station_group = df.groupby('station')
-            z_group = df.groupby(['station','t'])
+            z_group = df.groupby(['station', 't'])
 
             n_times = len(time_group)
             n_stations = len(station_group)
@@ -95,7 +98,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                     latitude[istation] = sdf.y.iloc[0]
                     longitude[istation] = sdf.x.iloc[0]
                     # assume z is all same length, FIXME don't repeat assignment
-                    z[:] = np.array(sdf.z) # FIXME deal with fill values
+                    z[:] = np.array(sdf.z)  # FIXME deal with fill values
 
                     for c in data_columns:
                         # Create variable if it doesn't exist
@@ -166,17 +169,17 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         # denormalize table structure
         t = np.repeat(t, n_stations * n_z)
         z = np.tile(np.repeat(z, n_stations), n_times)
-        station = np.tile(s, n_z * n_times)
+        s = np.tile(s, n_z * n_times)
         y = np.tile(y, n_times * n_z)
         x = np.tile(x, n_times * n_z)
 
-        df_data = {
-            't': t,
-            'z': z,
-            'station': station,
-            'y': y,
-            'x': x
-        }
+        df_data = OrderedDict([
+            ('t', t),
+            ('x', x),
+            ('y', y),
+            ('z', z),
+            ('station', s),
+        ])
 
         extract_vars = copy(self.variables)
         del extract_vars[svar.name]

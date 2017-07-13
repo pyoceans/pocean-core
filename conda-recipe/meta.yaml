@@ -20,7 +20,7 @@ requirements:
     - python-dateutil
     - netcdf4
     - pandas
-    - pygc
+    - pygc >=1.2.0
     - simplejson
     - shapely
 
@@ -35,7 +35,7 @@ test:
     - pocean.grid
     - pocean.tests
   commands:
-    - py.test -s -rxs -v pocean
+    - py.test pocean
 
 about:
   home: https://github.com/axiom-data-science/pocean-core

@@ -45,7 +45,10 @@ def normalize_array(var):
             return var[:]
 
         def decoder(x):
-            return str(x.decode('utf-8'))
+            if hasattr(x, 'decode'):
+                return str(x.decode('utf-8'))
+            else:
+                return str(x)
         vfunc = np.vectorize(decoder)
         return vfunc(nc4.chartostring(var[:]))
     else:
@@ -68,7 +71,7 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     valid_max attributes.
     """
     if np.issubdtype('S', arr.dtype):
-        return arr
+        return np.ma.masked_array(arr)
 
     attrs = attrs or {}
 
@@ -100,7 +103,7 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
 
     if isinstance(arr, np.ma.core.MaskedConstant):
         if arr > maxv or arr < minv:
-            return np.masked
+            return np.ma.masked
         return arr
     else:
         return np.ma.masked_outside(

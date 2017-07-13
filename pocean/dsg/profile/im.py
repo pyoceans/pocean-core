@@ -73,7 +73,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['trajectory', 'profile', 't', 'x', 'y', 'z', 'distance']
+        reserved_columns = ['profile', 't', 'x', 'y', 'z', 'distance']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:
@@ -166,7 +166,11 @@ class IncompleteMultidimensionalProfile(CFDataset):
         first_row = df.iloc[0]
         first_loc = Point(first_row.x, first_row.y)
         if geometries:
-            coords = list(unique_justseen(zip(df.x, df.y)))
+            null_coordinates = df.x.isnull() | df.y.isnull()
+            coords = list(unique_justseen(zip(
+                df.x[~null_coordinates].tolist(),
+                df.y[~null_coordinates].tolist()
+            )))
             if len(coords) > 1:
                 geometry = LineString(coords)  # noqa
             elif len(coords) == 1:

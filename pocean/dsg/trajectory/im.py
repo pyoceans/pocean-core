@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-import tempfile
-
-from datetime import datetime
-from collections import namedtuple
+#!python
+# coding=utf-8
+from collections import namedtuple, OrderedDict
 
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
 from pygc import great_distance
 from shapely.geometry import Point, LineString
-
 
 from pocean.utils import unique_justseen, normalize_array, get_dtype, dict_update
 from pocean.cf import CFDataset
@@ -169,7 +166,11 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
             geometry = None
             if geometries:
-                coords = list(unique_justseen(zip(tgroup.x, tgroup.y)))
+                null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
+                coords = list(unique_justseen(zip(
+                    tgroup.x[~null_coordinates].tolist(),
+                    tgroup.y[~null_coordinates].tolist()
+                )))
                 if len(coords) > 1:
                     geometry = LineString(coords)
                 elif coords == 1:
@@ -239,14 +240,14 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         d = np.ma.fix_invalid(np.ma.MaskedArray(np.cumsum(d)).astype(np.float64).round(2))
         logger.debug(['distance data size: ', d.size])
 
-        df_data = {
-            't': t,
-            'x': x,
-            'y': y,
-            'z': z,
-            'trajectory': p,
-            'distance': d
-        }
+        df_data = OrderedDict([
+            ('t', t),
+            ('x', x),
+            ('y', y),
+            ('z', z),
+            ('trajectory', p),
+            ('distance', d),
+        ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))

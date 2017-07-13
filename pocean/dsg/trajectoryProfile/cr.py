@@ -1,18 +1,21 @@
 #!python
 # coding=utf-8
-from datetime import datetime
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
-import pytz
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
 from pygc import great_distance
 from shapely.geometry import Point, LineString
 
-from pocean.utils import unique_justseen, normalize_array, get_fill_value, get_dtype, generic_masked
+from pocean.utils import (
+    unique_justseen,
+    normalize_array,
+    get_fill_value,
+    generic_masked
+)
 from pocean.cf import CFDataset
-from pocean import logger
+from pocean import logger  # noqa
 
 
 class ContiguousRaggedTrajectoryProfile(CFDataset):
@@ -52,9 +55,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
         return True
 
-    def from_dataframe(self, df, variable_attributes=None, global_attributes=None):
-        variable_attributes = variable_attributes or {}
-        global_attributes = global_attributes or {}
+    def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
@@ -83,7 +84,11 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             first_row = tgroup.iloc[0]
             first_loc = Point(first_row.x, first_row.y)
             if geometries:
-                coords = list(unique_justseen(zip(tgroup.x, tgroup.y)))
+                null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
+                coords = list(unique_justseen(zip(
+                    tgroup.x[~null_coordinates].tolist(),
+                    tgroup.y[~null_coordinates].tolist()
+                )))
                 if len(coords) > 1:
                     geometry = LineString(coords)
                 elif coords == 1:
@@ -133,6 +138,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         try:
             rvar = self.filter_by_attrs(cf_role='trajectory_id')[0]
             traj_indexes = normalize_array(rvar)
+            if hasattr(traj_indexes, 'mask') and np.all(traj_indexes.mask == True):  # noqa
+                raise ValueError  # If they are all fill values, create an integer index
             assert traj_indexes.size == r_dim.size
         except BaseException:
             logger.warning('Could not pull trajectory values a variable with "cf_role=trajectory_id", using a computed range.')
@@ -140,6 +147,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         try:
             pvar = self.filter_by_attrs(cf_role='profile_id')[0]
             profile_indexes = normalize_array(pvar)
+            if hasattr(profile_indexes, 'mask') and np.all(profile_indexes.mask == True):  # noqa
+                raise ValueError  # If they are all fill values, create an integer index
             assert profile_indexes.size == p_dim.size
         except BaseException:
             logger.warning('Could not pull profile values from a variable with "cf_role=profile_id", using a computed range.')
@@ -211,15 +220,15 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         # Sample dimension
         z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name)).round(5)
 
-        df_data = {
-            't': t,
-            'x': x,
-            'y': y,
-            'z': z,
-            'trajectory': r,
-            'profile': p,
-            'distance': d
-        }
+        df_data = OrderedDict([
+            ('t', t),
+            ('x', x),
+            ('y', y),
+            ('z', z),
+            ('trajectory', r),
+            ('profile', p),
+            ('distance', d),
+        ])
 
         building_index_to_drop = np.ones(o_dim.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))

@@ -20,3 +20,20 @@ from .timeseries.om import OrthogonalMultidimensionalTimeseries
 from .timeseriesProfile.r import RaggedTimeseriesProfile
 from .timeseriesProfile.im import IncompleteMultidimensionalTimeseriesProfile
 from .timeseriesProfile.om import OrthogonalMultidimensionalTimeseriesProfile
+
+
+__all__ = [
+    'IncompleteMultidimensionalProfile',
+    'OrthogonalMultidimensionalProfile',
+    'ContiguousRaggedTrajectory',
+    'IndexedRaggedTrajectory',
+    'IncompleteMultidimensionalTrajectory',
+    'ContiguousRaggedTrajectoryProfile',
+    'ContiguousRaggedTimeseries',
+    'IndexedRaggedTimeseries',
+    'IncompleteMultidimensionalTimeseries',
+    'OrthogonalMultidimensionalTimeseries',
+    'RaggedTimeseriesProfile',
+    'IncompleteMultidimensionalTimeseriesProfile',
+    'OrthogonalMultidimensionalTimeseriesProfile',
+]

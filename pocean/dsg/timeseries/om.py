@@ -1,23 +1,24 @@
 #!python
 # coding=utf-8
+import re
 from copy import copy
-from pocean.cf import CFDataset
 from datetime import datetime
+from collections import OrderedDict
+
 import numpy as np
 import pandas as pd
-import re
+import netCDF4 as nc4
 
 from pocean.utils import (
-    unique_justseen,
     normalize_array,
     get_dtype,
     dict_update,
     generic_masked
 )
+from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
 
-import netCDF4 as nc4
-from pocean import logger
+from pocean import logger  # noqa
 
 
 class OrthogonalMultidimensionalTimeseries(CFDataset):
@@ -71,11 +72,11 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             station_group = df.groupby('station')
             num_stations = len(station_group)
-            
+
             # assume all groups are the same size and have identical times
             _, sdf = list(station_group)[0]
             t = sdf.t
-            
+
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
@@ -91,7 +92,6 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
-            logger.info(df.t.values.dtype)
             time[:] = nc4.date2num(t.tolist(), units=cls.default_time_unit)
 
             for i, (uid, sdf) in enumerate(station_group):
@@ -139,13 +139,12 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     try:
                         v[i, :] = vvalues
                     except BaseException:
-                        logger.error('{} NOPE'.format(v.name))
+                        logger.debug('{} was not written. Likely a metadata variable'.format(v.name))
 
             # Set global attributes
             nc.update_attributes(attributes)
 
         return OrthogonalMultidimensionalTimeseries(output, **kwargs)
-
 
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
         # if df is None:
@@ -196,15 +195,15 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         if zvar.ndim == 1:
             t = np.repeat(t, len(svar))
 
-        df_data = {
-            't': t,
-            'x': x,
-            'y': y,
-            'z': z,
-            'station': s,
-        }
+        df_data = OrderedDict([
+            ('t', t),
+            ('x', x),
+            ('y', y),
+            ('z', z),
+            ('station', s),
+        ])
 
-        #building_index_to_drop = np.ones(t.size, dtype=bool)
+        building_index_to_drop = np.ma.zeros(t.size, dtype=bool)
         extract_vars = copy(self.variables)
         del extract_vars[svar.name]
         del extract_vars[xvar.name]
@@ -218,28 +217,32 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 continue
 
             vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
-            if vdata.size == 1:
-                vdata = vdata[0]
-            #building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
             try:
-                if re.match(r'.* since .*',dvar.units):
-                    vdata = nc4.num2date(vdata[:], dvar.units, getattr(dvar, 'calendar', 'standard'))
+                if re.match(r'.* since .*', dvar.units):
+                    vdata = nc4.num2date(vdata.data[:], dvar.units, getattr(dvar, 'calendar', 'standard'))
             except AttributeError:
                 pass
+
+            if vdata.size == 1:
+                vdata = vdata[0]
             df_data[dnam] = vdata
-            #logger.info('{} - {}'.format(dnam, vdata.shape))
 
         df = pd.DataFrame()
         for k, v in df_data.items():
-            df[k] = v
+            try:
+                df[k] = v
+            except ValueError as e:
+                logger.exception("Could not write {} as {}. {}".format(k, v, e))
+                raise
 
         # Drop all data columns with no data
         if clean_cols:
             df = df.dropna(axis=1, how='all')
 
         # Drop all data rows with no data variable data
-        #if clean_rows:
-        #    df = df.iloc[~building_index_to_drop]
+        if clean_rows:
+            df = df.iloc[~building_index_to_drop]
 
         return df
 

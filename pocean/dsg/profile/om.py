@@ -78,10 +78,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         return True
 
-    def from_dataframe(self, df, variable_attributes=None, global_attributes=None):
-        variable_attributes = variable_attributes or {}
-        global_attributes = global_attributes or {}
-
+    def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
@@ -106,7 +103,11 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         first_row = df.iloc[0]
         first_loc = Point(first_row.x, first_row.y)
         if geometries:
-            coords = list(unique_justseen(zip(df.x, df.y)))
+            null_coordinates = df.x.isnull() | df.y.isnull()
+            coords = list(unique_justseen(zip(
+                df.x[~null_coordinates].tolist(),
+                df.y[~null_coordinates].tolist()
+            )))
             if len(coords) > 1:
                 geometry = LineString(coords)
             elif len(coords) == 1:
