@@ -33,6 +33,14 @@ pocean\.dataset module
     :undoc-members:
     :show-inheritance:
 
+pocean\.meta module
+-------------------
+
+.. automodule:: pocean.meta
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pocean\.utils module
 --------------------
 

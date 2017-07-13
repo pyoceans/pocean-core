@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>pocean package &#8212; pocean-core 1.0.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -120,19 +117,19 @@
 
 <dl class="attribute">
 <dt id="pocean.cf.CFDataset.default_time_unit">
-<code class="descname">default_time_unit</code><em class="property"> = ‘seconds since 1990-01-01 00:00:00’</em><a class="headerlink" href="#pocean.cf.CFDataset.default_time_unit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_time_unit</code><em class="property"> = 'seconds since 1990-01-01 00:00:00'</em><a class="headerlink" href="#pocean.cf.CFDataset.default_time_unit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="pocean.cf.CFDataset.load">
-<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path: str</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to load a netCDF file as a CF compatible dataset</p>
 <p>Extended description of function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>arg1</strong> – Path to netCDF file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> – Path to netCDF file</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -212,6 +209,11 @@ set. These will overwrite existing attributes</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pocean.dataset.EnhancedDataset.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="pocean.dataset.EnhancedDataset.update_attributes">
 <code class="descname">update_attributes</code><span class="sig-paren">(</span><em>attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.update_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -224,11 +226,56 @@ set. These will overwrite existing attributes</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-pocean.meta">
+<span id="pocean-meta-module"></span><h2>pocean.meta module<a class="headerlink" href="#module-pocean.meta" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pocean.meta.MetaInterface">
+<em class="property">class </em><code class="descclassname">pocean.meta.</code><code class="descname">MetaInterface</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">collections.abc.Mapping</span></code></p>
+<dl class="attribute">
+<dt id="pocean.meta.MetaInterface.VALID_KEYS">
+<code class="descname">VALID_KEYS</code><em class="property"> = ['dimensions', 'variables', 'attributes']</em><a class="headerlink" href="#pocean.meta.MetaInterface.VALID_KEYS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.meta.MetaInterface.from_jsonfile">
+<em class="property">classmethod </em><code class="descname">from_jsonfile</code><span class="sig-paren">(</span><em>jsf</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.meta.MetaInterface.from_jsonstr">
+<em class="property">classmethod </em><code class="descname">from_jsonstr</code><span class="sig-paren">(</span><em>js</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonstr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pocean.meta.ncpyattributes">
+<code class="descclassname">pocean.meta.</code><code class="descname">ncpyattributes</code><span class="sig-paren">(</span><em>obj</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.ncpyattributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts any attributes that are not native python types to those types</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pocean.meta.safe_attribute_typing">
+<code class="descclassname">pocean.meta.</code><code class="descname">safe_attribute_typing</code><span class="sig-paren">(</span><em>zdtype</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.safe_attribute_typing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.meta.string_to_dtype">
+<code class="descclassname">pocean.meta.</code><code class="descname">string_to_dtype</code><span class="sig-paren">(</span><em>type_str</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.string_to_dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.meta.untype_attributes">
+<code class="descclassname">pocean.meta.</code><code class="descname">untype_attributes</code><span class="sig-paren">(</span><em>vd</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.untype_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-pocean.utils">
 <span id="pocean-utils-module"></span><h2>pocean.utils module<a class="headerlink" href="#module-pocean.utils" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pocean.utils.BasicNumpyEncoder">
-<em class="property">class </em><code class="descclassname">pocean.utils.</code><code class="descname">BasicNumpyEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding=’utf-8’</em>, <em>default=None</em>, <em>use_decimal=True</em>, <em>namedtuple_as_object=True</em>, <em>tuple_as_array=True</em>, <em>bigint_as_string=False</em>, <em>item_sort_key=None</em>, <em>for_json=False</em>, <em>ignore_nan=False</em>, <em>int_as_string_bitcount=None</em>, <em>iterable_as_array=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.BasicNumpyEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pocean.utils.</code><code class="descname">BasicNumpyEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding='utf-8'</em>, <em>default=None</em>, <em>use_decimal=True</em>, <em>namedtuple_as_object=True</em>, <em>tuple_as_array=True</em>, <em>bigint_as_string=False</em>, <em>item_sort_key=None</em>, <em>for_json=False</em>, <em>ignore_nan=False</em>, <em>int_as_string_bitcount=None</em>, <em>iterable_as_array=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.BasicNumpyEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">simplejson.encoder.JSONEncoder</span></code></p>
 <dl class="method">
 <dt id="pocean.utils.BasicNumpyEncoder.default">
@@ -240,7 +287,7 @@ set. These will overwrite existing attributes</p>
 
 <dl class="class">
 <dt id="pocean.utils.NumpyEncoder">
-<em class="property">class </em><code class="descclassname">pocean.utils.</code><code class="descname">NumpyEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding=’utf-8’</em>, <em>default=None</em>, <em>use_decimal=True</em>, <em>namedtuple_as_object=True</em>, <em>tuple_as_array=True</em>, <em>bigint_as_string=False</em>, <em>item_sort_key=None</em>, <em>for_json=False</em>, <em>ignore_nan=False</em>, <em>int_as_string_bitcount=None</em>, <em>iterable_as_array=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.NumpyEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">pocean.utils.</code><code class="descname">NumpyEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding='utf-8'</em>, <em>default=None</em>, <em>use_decimal=True</em>, <em>namedtuple_as_object=True</em>, <em>tuple_as_array=True</em>, <em>bigint_as_string=False</em>, <em>item_sort_key=None</em>, <em>for_json=False</em>, <em>ignore_nan=False</em>, <em>int_as_string_bitcount=None</em>, <em>iterable_as_array=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.NumpyEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">simplejson.encoder.JSONEncoder</span></code></p>
 <dl class="method">
 <dt id="pocean.utils.NumpyEncoder.default">
@@ -321,6 +368,7 @@ netcdf4. It has no effect on types other than chars/strings</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-pocean.cf">pocean.cf module</a></li>
 <li><a class="reference internal" href="#module-pocean.dataset">pocean.dataset module</a></li>
+<li><a class="reference internal" href="#module-pocean.meta">pocean.meta module</a></li>
 <li><a class="reference internal" href="#module-pocean.utils">pocean.utils module</a></li>
 </ul>
 </li>
@@ -350,7 +398,7 @@ netcdf4. It has no effect on types other than chars/strings</p>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>
