@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import math
 from collections import namedtuple, OrderedDict
 
 import numpy as np

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import math
 from datetime import datetime
 from collections import namedtuple
 
