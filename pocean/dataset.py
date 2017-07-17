@@ -50,6 +50,9 @@ class EnhancedDataset(Dataset):
 
         # Dimensions
         for dname, dsize in ds.items():
+            # Ignore dimension sizes less than 0
+            if dsize and dsize < 0:
+                continue
             if dname not in self.dimensions:
                 self.createDimension(dname, size=dsize)
             else:
