@@ -2,9 +2,10 @@
 from datetime import datetime
 from collections import namedtuple
 
-import netCDF4 as nc4
+import six
 import numpy as np
 import pandas as pd
+import netCDF4 as nc4
 
 from pygc import great_distance
 from shapely.geometry import Point, LineString
@@ -45,7 +46,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             assert 0 <= len(pvar.dimensions) <= 2
 
             ps = normalize_array(pvar)
-            is_single = isinstance(ps, str) or ps.size == 1
+            is_single = isinstance(ps, six.string_types) or ps.size == 1
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]

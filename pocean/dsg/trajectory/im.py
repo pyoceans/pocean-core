@@ -2,6 +2,7 @@
 # coding=utf-8
 from collections import namedtuple, OrderedDict
 
+import six
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
@@ -43,7 +44,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             assert 0 <= len(tvar.dimensions) <= 2
 
             ts = normalize_array(tvar)
-            is_single = isinstance(ts, str) or ts.size == 1
+            is_single = isinstance(ts, six.string_types) or ts.size == 1
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]
