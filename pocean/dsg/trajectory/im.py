@@ -82,27 +82,39 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         reserved_columns = ['trajectory', 't', 'x', 'y', 'z', 'distance']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
+        reduce_dims = kwargs.pop('reduce_dims', False)
+
         with IncompleteMultidimensionalTrajectory(output, 'w') as nc:
 
             trajectory_group = df.groupby('trajectory')
             max_obs = trajectory_group.size().max()
 
-            unique_trajectories = df.trajectory.unique()
-            nc.createDimension('trajectory', unique_trajectories.size)
             nc.createDimension('obs', max_obs)
+
+            unique_trajectories = df.trajectory.unique()
+            if reduce_dims is True and len(unique_trajectories) == 1:
+                # If a singlular trajectory, we can reduce that dimension if it is of size 1
+                def ts(index):
+                    return np.s_[:]
+                default_dimensions = ('obs',)
+                trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory))
+            else:
+                def ts(t_index):
+                    return np.s_[t_index, :]
+                default_dimensions = ('trajectory', 'obs')
+                nc.createDimension('trajectory', unique_trajectories.size)
+                trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory), ('trajectory',))
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
-            trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory), ('trajectory',))
-
             # Create all of the variables
-            time = nc.createVariable('time', 'i4', ('trajectory', 'obs'), fill_value=int(cls.default_fill_value))
-            z = nc.createVariable('z', get_dtype(df.z), ('trajectory', 'obs'), fill_value=df.z.dtype.type(cls.default_fill_value))
-            latitude = nc.createVariable('latitude', get_dtype(df.y), ('trajectory', 'obs'), fill_value=df.y.dtype.type(cls.default_fill_value))
-            longitude = nc.createVariable('longitude', get_dtype(df.x), ('trajectory', 'obs'), fill_value=df.x.dtype.type(cls.default_fill_value))
+            time = nc.createVariable('time', 'i4', default_dimensions, fill_value=int(cls.default_fill_value))
+            z = nc.createVariable('z', get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
+            latitude = nc.createVariable('latitude', get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
+            longitude = nc.createVariable('longitude', get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
             if 'distance' in df:
-                distance = nc.createVariable('distance', get_dtype(df.distance), ('trajectory', 'obs'), fill_value=df.distance.dtype.type(cls.default_fill_value))
+                distance = nc.createVariable('distance', get_dtype(df.distance), default_dimensions, fill_value=df.distance.dtype.type(cls.default_fill_value))
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
@@ -114,13 +126,13 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 NaTs = gdf.t.isnull()
                 timenums = np.ma.MaskedArray(nc4.date2num(g, units=cls.default_time_unit))
                 timenums.mask = NaTs
-                time[i, :] = timenums
+                time[ts(i)] = timenums
 
-                latitude[i, :] = gdf.y.fillna(latitude._FillValue).values
-                longitude[i, :] = gdf.x.fillna(longitude._FillValue).values
-                z[i, :] = gdf.z.fillna(z._FillValue).values
+                latitude[ts(i)] = gdf.y.fillna(latitude._FillValue).values
+                longitude[ts(i)] = gdf.x.fillna(longitude._FillValue).values
+                z[ts(i)] = gdf.z.fillna(z._FillValue).values
                 if 'distance' in gdf:
-                    distance[i, :] = gdf.distance.fillna(distance._FillValue).values
+                    distance[ts(i)] = gdf.distance.fillna(distance._FillValue).values
 
                 for c in data_columns:
                     # Create variable if it doesn't exist
@@ -128,9 +140,9 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                     if var_name not in nc.variables:
                         if np.issubdtype(gdf[c].dtype, 'S') or gdf[c].dtype == object:
                             # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(gdf[c]), ('trajectory', 'obs'))
+                            v = nc.createVariable(var_name, get_dtype(gdf[c]), default_dimensions)
                         else:
-                            v = nc.createVariable(var_name, get_dtype(gdf[c]), ('trajectory', 'obs'), fill_value=gdf[c].dtype.type(cls.default_fill_value))
+                            v = nc.createVariable(var_name, get_dtype(gdf[c]), default_dimensions, fill_value=gdf[c].dtype.type(cls.default_fill_value))
 
                         if var_name not in attributes:
                             attributes[var_name] = {}
@@ -146,8 +158,9 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                         # Use an empty string... better than nothing!
                         vvalues = gdf[c].fillna('').values
 
-                    sl = slice(0, vvalues.size)
-                    v[i, sl] = vvalues
+                    # Why do we need a slice object?
+                    # sl = slice(0, vvalues.size)
+                    v[ts(i)] = vvalues
 
             # Set global attributes
             nc.update_attributes(attributes)
@@ -283,5 +296,17 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 'long_name': 'Great circle distance between trajectory points',
                 'standard_name': 'distance_between_trajectory_points',
                 'units': 'm'
+            },
+            'time' : {
+                'axis': 'T'
+            },
+            'latitude' : {
+                'axis': 'Y'
+            },
+            'longitude' : {
+                'axis': 'X'
+            },
+            'z' : {
+                'axis': 'Z'
             }
         })
