@@ -40,14 +40,13 @@ class CFDataset(EnhancedDataset):
 
         fpath = os.path.realpath(path)
         subs = list(all_subclasses(cls))
-        dsg = cls(fpath)
 
         try:
+            dsg = cls(fpath)
             for klass in subs:
                 logger.debug('Trying {}...'.format(klass.__name__))
                 if hasattr(klass, 'is_mine'):
                     if klass.is_mine(dsg):
-                        dsg.close()
                         return klass(path)
         finally:
             dsg.close()
