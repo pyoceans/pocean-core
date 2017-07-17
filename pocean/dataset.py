@@ -71,7 +71,7 @@ class EnhancedDataset(Dataset):
             if vname not in self.variables:
                 shape = vvalue.get('shape', [])  # Dimension names
                 dtype = string_to_dtype(vvalue.get('type'))
-                fillmiss = vatts.pop('_FillValue', vatts.get('missing_value', None))
+                fillmiss = vatts.get('_FillValue', vatts.get('missing_value', None))
                 newvar = self.createVariable(
                     vname,
                     dtype,
@@ -80,6 +80,10 @@ class EnhancedDataset(Dataset):
                 )
             else:
                 newvar = self.variables[vname]
+
+            # Don't re-assign _FillValue
+            if '_FillValue' in vatts:
+                del vatts['_FillValue']
 
             newvar.setncatts(vatts)
 
