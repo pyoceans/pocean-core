@@ -43,7 +43,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             assert 0 <= len(tvar.dimensions) <= 2
 
             ts = normalize_array(tvar)
-            is_single = ts.size == 1
+            is_single = isinstance(ts, str) or ts.size == 1
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]

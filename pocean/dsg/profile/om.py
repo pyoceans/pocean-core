@@ -45,7 +45,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             assert 0 <= len(pvar.dimensions) <= 2
 
             ps = normalize_array(pvar)
-            is_single = ps.size == 1
+            is_single = isinstance(ps, str) or ps.size == 1
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]
