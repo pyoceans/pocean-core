@@ -140,11 +140,14 @@ def dict_update(d, u):
     # http://stackoverflow.com/a/3233356
     import collections
     for k, v in u.items():
-        if isinstance(v, collections.Mapping):
-            r = dict_update(d.get(k, {}), v)
-            d[k] = r
+        if isinstance(d, collections.Mapping):
+            if isinstance(v, collections.Mapping):
+                r = dict_update(d.get(k, {}), v)
+                d[k] = r
+            else:
+                d[k] = u[k]
         else:
-            d[k] = u[k]
+            d = {k: u[k] }
     return d
 
 
