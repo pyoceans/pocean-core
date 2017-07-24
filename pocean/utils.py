@@ -11,6 +11,12 @@ import netCDF4 as nc4
 from . import logger
 
 
+def downcast_dataframe(df):
+    for column in df:
+        if np.issubdtype(df[column].dtype, np.int64):
+            df[column] = df[column].astype(np.int32)
+    return df
+
 def all_subclasses(cls):
     """ Recursively generate of all the subclasses of class cls. """
     for subclass in cls.__subclasses__():
