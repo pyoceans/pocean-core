@@ -17,6 +17,7 @@ def downcast_dataframe(df):
             df[column] = df[column].astype(np.int32)
     return df
 
+
 def all_subclasses(cls):
     """ Recursively generate of all the subclasses of class cls. """
     for subclass in cls.__subclasses__():
