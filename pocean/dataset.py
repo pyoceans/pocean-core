@@ -72,6 +72,9 @@ class EnhancedDataset(Dataset):
             vatts = untype_attributes(vvalue.get('attributes', {}))
 
             if vname not in self.variables:
+                if 'shape' not in vvalue and 'type' not in vvalue:
+                    L.info("Skipping {} creation, no shape or no type defined".format(vname))
+                    continue
                 shape = vvalue.get('shape', [])  # Dimension names
                 dtype = string_to_dtype(vvalue.get('type'))
                 fillmiss = vatts.get('_FillValue', vatts.get('missing_value', None))
