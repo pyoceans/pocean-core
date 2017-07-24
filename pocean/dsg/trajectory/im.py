@@ -235,9 +235,10 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
         # Trajectories
         pvar = self.filter_by_attrs(cf_role='trajectory_id')[0]
-
         try:
             p = normalize_array(pvar)
+            if isinstance(p, six.string_types):
+                p = np.asarray([p])
         except BaseException:
             logger.exception('Could not pull trajectory values from the variable, using indexes.')
             p = np.asarray(list(range(len(pvar))), dtype=np.integer)
