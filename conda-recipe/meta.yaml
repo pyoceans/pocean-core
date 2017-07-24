@@ -38,6 +38,6 @@ test:
     - py.test pocean
 
 about:
-  home: https://github.com/axiom-data-science/pocean-core
+  home: https://github.com/pyoceans/pocean-core
   license: MIT
   summary: 'A python framework for working with met-ocean data.'
