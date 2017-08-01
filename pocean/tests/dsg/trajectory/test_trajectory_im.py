@@ -29,16 +29,16 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
         with IncompleteMultidimensionalTrajectory(self.single) as ncd:
             fid, single_tmp = tempfile.mkstemp(suffix='.nc')
             single_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp) as ncd:
-                assert 'trajectory' in ncd.dimensions
+            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp) as result_ncd:
+                assert 'trajectory' in result_ncd.dimensions
             os.close(fid)
             os.remove(single_tmp)
 
         with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
             fid, multip_tmp = tempfile.mkstemp(suffix='.nc')
             multip_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp) as ncd:
-                assert 'trajectory' in ncd.dimensions
+            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp) as result_ncd:
+                assert 'trajectory' in result_ncd.dimensions
             os.close(fid)
             os.remove(multip_tmp)
 
@@ -46,9 +46,9 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
         with IncompleteMultidimensionalTrajectory(self.single) as ncd:
             fid, single_tmp = tempfile.mkstemp(suffix='.nc')
             single_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp, reduce_dims=True) as ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp, reduce_dims=True) as result_ncd:
                 # Reduced trajectory dimension
-                assert 'trajectory' not in ncd.dimensions
+                assert 'trajectory' not in result_ncd.dimensions
             test_is_mine(IncompleteMultidimensionalTrajectory, single_tmp)  # Try to load it again
             os.close(fid)
             os.remove(single_tmp)
@@ -56,9 +56,10 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
         with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
             fid, multip_tmp = tempfile.mkstemp(suffix='.nc')
             multip_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp, reduce_dims=True) as ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp, reduce_dims=True) as result_ncd:
                 # Could not reduce dims since there was more than one trajectory
-                assert 'trajectory' in ncd.dimensions
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, multip_tmp)  # Try to load it again
             os.close(fid)
             os.remove(multip_tmp)
 

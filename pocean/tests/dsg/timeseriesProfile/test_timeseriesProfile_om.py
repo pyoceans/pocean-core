@@ -19,11 +19,11 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
         with OrthogonalMultidimensionalTimeseriesProfile(multi) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
             df = ncd.to_dataframe(clean_rows=False)
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as ncd:
-                assert 'station' in ncd.dimensions
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as ncd:
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Even though we pass reduce_dims, there are two stations so it is not reduced
-                assert 'station' in ncd.dimensions
+                assert 'station' in result_ncd.dimensions
             os.close(fid)
             os.remove(tmpfile)
 
@@ -32,11 +32,11 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
         with OrthogonalMultidimensionalTimeseriesProfile(single) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
             df = ncd.to_dataframe(clean_rows=False)
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as ncd:
-                assert 'station' in ncd.dimensions
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as ncd:
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Should remove the station dim since there is only one station
-                assert 'station' not in ncd.dimensions
+                assert 'station' not in result_ncd.dimensions
             os.close(fid)
             os.remove(tmpfile)
 
@@ -45,10 +45,10 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
         with OrthogonalMultidimensionalTimeseriesProfile(single_multi) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
             df = ncd.to_dataframe(clean_rows=False)
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as ncd:
-                assert 'station' in ncd.dimensions
-            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as ncd:
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Should remove the station dim since there is only one station
-                assert 'station' not in ncd.dimensions
+                assert 'station' not in result_ncd.dimensions
             os.close(fid)
             os.remove(tmpfile)

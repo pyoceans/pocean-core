@@ -36,16 +36,15 @@ logger.handlers = [logging.StreamHandler()]
     (RaggedTimeseriesProfile,                     jn(dn(__file__), 'timeseriesProfile', 'resources', 'r-multiple.nc')),
 ])
 def test_is_mine(klass, fp):
-    dsg = CFDataset.load(fp)
-    assert dsg.__class__ == klass
+    with CFDataset.load(fp) as dsg:
+        assert dsg.__class__ == klass
 
     allsubs = list(all_subclasses(CFDataset))
     subs = [ s for s in allsubs if s != klass ]
-    dsg = CFDataset(fp)
-    logger.info('\nTesting {}'.format(klass.__name__))
-    assert klass.is_mine(dsg) is True
-    for s in subs:
-        if hasattr(s, 'is_mine'):
-            logger.info('  * Trying {}...'.format(s.__name__))
-            assert s.is_mine(dsg) is False
-    dsg.close()
+    with CFDataset(fp) as dsg:
+        logger.info('\nTesting {}'.format(klass.__name__))
+        assert klass.is_mine(dsg) is True
+        for s in subs:
+            if hasattr(s, 'is_mine'):
+                logger.info('  * Trying {}...'.format(s.__name__))
+                assert s.is_mine(dsg) is False
