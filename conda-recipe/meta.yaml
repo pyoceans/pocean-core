@@ -15,14 +15,15 @@ requirements:
     - setuptools
   run:
     - python
-    - numpy
-    - pytz
-    - python-dateutil
     - netcdf4
+    - numpy
     - pandas
     - pygc >=1.2.0
-    - simplejson
+    - python-dateutil
+    - pytz
     - shapely
+    - simplejson
+    - six
 
 test:
   source_files:

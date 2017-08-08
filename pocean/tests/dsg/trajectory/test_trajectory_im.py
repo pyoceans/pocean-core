@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 import os
 import tempfile
 
@@ -17,54 +18,69 @@ logger.handlers = [logging.StreamHandler()]
 
 class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
 
-    def setUp(self):
-        self.single = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
-        self.multi = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
+    def test_imt_multi(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
 
-    def test_imt_load(self):
-        IncompleteMultidimensionalTrajectory(self.single).close()
-        IncompleteMultidimensionalTrajectory(self.multi).close()
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
+            fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+            df = ncd.to_dataframe(clean_rows=False)
 
-    def test_imt_dataframe(self):
-        with IncompleteMultidimensionalTrajectory(self.single) as ncd:
-            fid, single_tmp = tempfile.mkstemp(suffix='.nc')
-            single_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp) as result_ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile) as result_ncd:
                 assert 'trajectory' in result_ncd.dimensions
-            os.close(fid)
-            os.remove(single_tmp)
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
 
-        with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
-            fid, multip_tmp = tempfile.mkstemp(suffix='.nc')
-            multip_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp) as result_ncd:
-                assert 'trajectory' in result_ncd.dimensions
-            os.close(fid)
-            os.remove(multip_tmp)
-
-    def test_imt_dataframe_reduce_dims(self):
-        with IncompleteMultidimensionalTrajectory(self.single) as ncd:
-            fid, single_tmp = tempfile.mkstemp(suffix='.nc')
-            single_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(single_df, single_tmp, reduce_dims=True) as result_ncd:
-                # Reduced trajectory dimension
-                assert 'trajectory' not in result_ncd.dimensions
-            test_is_mine(IncompleteMultidimensionalTrajectory, single_tmp)  # Try to load it again
-            os.close(fid)
-            os.remove(single_tmp)
-
-        with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
-            fid, multip_tmp = tempfile.mkstemp(suffix='.nc')
-            multip_df = ncd.to_dataframe(clean_rows=False)
-            with IncompleteMultidimensionalTrajectory.from_dataframe(multip_df, multip_tmp, reduce_dims=True) as result_ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Could not reduce dims since there was more than one trajectory
                 assert 'trajectory' in result_ncd.dimensions
-            test_is_mine(IncompleteMultidimensionalTrajectory, multip_tmp)  # Try to load it again
-            os.close(fid)
-            os.remove(multip_tmp)
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
 
-    def test_imt_calculated_metadata(self):
-        with IncompleteMultidimensionalTrajectory(self.single) as ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
+                # Could not reduce dims since there was more than one trajectory
+                assert 'trajectory' in result_ncd.dimensions
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            os.close(fid)
+            os.remove(tmpfile)
+
+    def test_imt_single(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
+            fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+            df = ncd.to_dataframe(clean_rows=False)
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile) as result_ncd:
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
+                # Reduced trajectory dimension
+                assert 'trajectory' not in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
+                # Reduced trajectory dimension
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
+                # Reduced trajectory dimension
+                assert 'trajectory' not in result_ncd.dimensions
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            os.close(fid)
+            os.remove(tmpfile)
+
+    def test_imt_calculated_metadata_single(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             s = ncd.calculated_metadata()
             assert s.min_t.round('S') == dtparse('1990-01-01 00:00:00')
             assert s.max_t.round('S') == dtparse('1990-01-05 03:00:00')
@@ -76,7 +92,10 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             assert np.isclose(traj1.first_loc.x, -7.9336)
             assert np.isclose(traj1.first_loc.y, 42.00339)
 
-        with IncompleteMultidimensionalTrajectory(self.multi) as ncd:
+    def test_imt_calculated_metadata_multi(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             m = ncd.calculated_metadata()
             assert m.min_t == dtparse('1990-01-01 00:00:00')
             assert m.max_t == dtparse('1990-01-02 12:00:00')
@@ -97,9 +116,14 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             assert np.isclose(traj3.first_loc.x, -73.3026)
             assert np.isclose(traj3.first_loc.y, 1.95761)
 
-    def test_json_attributes(self):
-        with IncompleteMultidimensionalTrajectory(self.single) as s:
+    def test_json_attributes_single(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as s:
             s.json_attributes()
 
-        with IncompleteMultidimensionalTrajectory(self.multi) as m:
-            m.json_attributes()
+    def test_json_attributes_multi(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as s:
+            s.json_attributes()

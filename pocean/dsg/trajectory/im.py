@@ -31,6 +31,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             tvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(tvars) == 1
             assert dsg.featureType.lower() == 'trajectory'
+
             assert len(dsg.t_axes()) == 1
             assert len(dsg.x_axes()) == 1
             assert len(dsg.y_axes()) == 1
@@ -44,7 +45,14 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             assert 0 <= len(tvar.dimensions) <= 2
 
             ts = normalize_array(tvar)
-            is_single = isinstance(ts, six.string_types) or ts.size == 1
+            is_single = False
+
+            if isinstance(ts, six.string_types):
+                # Non-dimensioned string variable
+                is_single = True
+            elif ts.size == 1 and tvar.dtype != str:
+                # Other non-string types
+                is_single = True
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]
@@ -56,11 +64,11 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
             if is_single:
                 assert len(t.dimensions) == 1
-                time_dim = dsg.dimensions[t.dimensions[0]]
+                t_dim = dsg.dimensions[t.dimensions[0]]
                 for dv in dsg.data_vars():
                     assert len(dv.dimensions) == 1
-                    assert time_dim.name in dv.dimensions
-                    assert dv.size == time_dim.size
+                    assert t_dim.name in dv.dimensions
+                    assert dv.size == t_dim.size
             else:
                 # This `time` being two dimensional is unique to IncompleteMultidimensionalTrajectory
                 assert len(t.dimensions) == 2
@@ -84,24 +92,28 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         reduce_dims = kwargs.pop('reduce_dims', False)
+        unlimited = kwargs.pop('unlimited', False)
 
         with IncompleteMultidimensionalTrajectory(output, 'w') as nc:
 
             trajectory_group = df.groupby('trajectory')
-            max_obs = trajectory_group.size().max()
 
+            if unlimited is True:
+                max_obs = None
+            else:
+                max_obs = trajectory_group.size().max()
             nc.createDimension('obs', max_obs)
 
             unique_trajectories = df.trajectory.unique()
             if reduce_dims is True and len(unique_trajectories) == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
-                def ts(index):
-                    return np.s_[:]
+                def ts(t_index, size):
+                    return np.s_[0:size]
                 default_dimensions = ('obs',)
                 trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory))
             else:
-                def ts(t_index):
-                    return np.s_[t_index, :]
+                def ts(t_index, size):
+                    return np.s_[t_index, 0:size]
                 default_dimensions = ('trajectory', 'obs')
                 nc.createDimension('trajectory', unique_trajectories.size)
                 trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory), ('trajectory',))
@@ -127,13 +139,19 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 NaTs = gdf.t.isnull()
                 timenums = np.ma.MaskedArray(nc4.date2num(g, units=cls.default_time_unit))
                 timenums.mask = NaTs
-                time[ts(i)] = timenums
+                time[ts(i, timenums.size)] = timenums
 
-                latitude[ts(i)] = gdf.y.fillna(latitude._FillValue).values
-                longitude[ts(i)] = gdf.x.fillna(longitude._FillValue).values
-                z[ts(i)] = gdf.z.fillna(z._FillValue).values
+                lats = gdf.y.fillna(latitude._FillValue).values
+                latitude[ts(i, lats.size)] = lats
+
+                lons = gdf.x.fillna(longitude._FillValue).values
+                longitude[ts(i, lons.size)] = lons
+
+                zs = gdf.z.fillna(z._FillValue).values
+                z[ts(i, zs.size)] = zs
                 if 'distance' in gdf:
-                    distance[ts(i)] = gdf.distance.fillna(distance._FillValue).values
+                    vs = gdf.distance.fillna(distance._FillValue).values
+                    distance[ts(i, vs.size)] = vs
 
                 for c in data_columns:
                     # Create variable if it doesn't exist
@@ -161,7 +179,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
                     # Why do we need a slice object?
                     # sl = slice(0, vvalues.size)
-                    v[ts(i)] = vvalues
+                    v[ts(i, vvalues.size)] = vvalues
 
             # Set global attributes
             nc.update_attributes(attributes)

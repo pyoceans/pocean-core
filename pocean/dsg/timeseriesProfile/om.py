@@ -64,6 +64,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         reduce_dims = kwargs.pop('reduce_dims', False)
+        unlimited = kwargs.pop('unlimited', False)
 
         # Downcast anything from int64 to int32
         df = downcast_dataframe(df)
@@ -111,7 +112,10 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
-            nc.createDimension('time', len(unique_t))
+            if unlimited is True:
+                nc.createDimension('time', None)
+            else:
+                nc.createDimension('time', len(unique_t))
             time = nc.createVariable('time', 'f8', ('time',))
             time[:] = nc4.date2num(unique_t, units=cls.default_time_unit)
 

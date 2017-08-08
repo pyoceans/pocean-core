@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from pocean.dsg import OrthogonalMultidimensionalTimeseries
+from pocean.tests.dsg.test_new import test_is_mine
 
 import logging
 from pocean import logger
@@ -24,8 +25,9 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
-            nc = OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp)
-            nc.close()
+            with OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+        test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
         os.close(fid)
         os.remove(single_tmp)
 

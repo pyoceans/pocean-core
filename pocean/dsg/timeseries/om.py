@@ -5,6 +5,7 @@ from copy import copy
 from datetime import datetime
 from collections import OrderedDict
 
+import six
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
