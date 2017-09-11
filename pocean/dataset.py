@@ -73,7 +73,7 @@ class EnhancedDataset(Dataset):
 
             if vname not in self.variables:
                 if 'shape' not in vvalue and 'type' not in vvalue:
-                    L.info("Skipping {} creation, no shape or no type defined".format(vname))
+                    L.debug("Skipping {} creation, no shape or no type defined".format(vname))
                     continue
                 shape = vvalue.get('shape', [])  # Dimension names
                 dtype = string_to_dtype(vvalue.get('type'))
@@ -90,6 +90,8 @@ class EnhancedDataset(Dataset):
             # Don't re-assign _FillValue
             if '_FillValue' in vatts:
                 del vatts['_FillValue']
+            if 'missing_value' in vatts:
+                del vatts['missing_value']
 
             newvar.setncatts(vatts)
 
