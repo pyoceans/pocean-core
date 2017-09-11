@@ -77,6 +77,27 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             os.close(fid)
             os.remove(tmpfile)
 
+    def test_imt_change_axis_names(self):
+        new_axis = {
+            't': 'time',
+            'x': 'lon',
+            'y': 'lat',
+            'z': 'depth'
+        }
+
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
+            fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+            df = ncd.to_dataframe(clean_rows=False)
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, axis_names=new_axis) as result_ncd:
+                assert 'trajectory' in result_ncd.dimensions
+                assert 'time' in result_ncd.variables
+                assert 'lon' in result_ncd.variables
+                assert 'lat' in result_ncd.variables
+                assert 'depth' in result_ncd.variables
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
     def test_imt_calculated_metadata_single(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
 

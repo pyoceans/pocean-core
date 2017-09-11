@@ -129,9 +129,13 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
             # Create all of the variables
             time = nc.createVariable(T_NAME, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
+            time.axis = 'T'
             z = nc.createVariable(Z_NAME, get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
+            z.axis = 'Z'
             latitude = nc.createVariable(Y_NAME, get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
+            latitude.axis = 'Y'
             longitude = nc.createVariable(X_NAME, get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
+            longitude.axis = 'X'
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
