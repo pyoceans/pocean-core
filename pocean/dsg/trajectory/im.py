@@ -126,8 +126,6 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             z = nc.createVariable('z', get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
             latitude = nc.createVariable('latitude', get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
             longitude = nc.createVariable('longitude', get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
-            if 'distance' in df:
-                distance = nc.createVariable('distance', get_dtype(df.distance), default_dimensions, fill_value=df.distance.dtype.type(cls.default_fill_value))
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
@@ -149,9 +147,6 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
                 zs = gdf.z.fillna(z._FillValue).values
                 z[ts(i, zs.size)] = zs
-                if 'distance' in gdf:
-                    vs = gdf.distance.fillna(distance._FillValue).values
-                    distance[ts(i, vs.size)] = vs
 
                 for c in data_columns:
                     # Create variable if it doesn't exist
@@ -311,11 +306,6 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             'trajectory' : {
                 'cf_role': 'trajectory_id',
                 'long_name' : 'trajectory identifier'
-            },
-            'distance' : {
-                'long_name': 'Great circle distance between trajectory points',
-                'standard_name': 'distance_between_trajectory_points',
-                'units': 'm'
             },
             'time' : {
                 'axis': 'T'
