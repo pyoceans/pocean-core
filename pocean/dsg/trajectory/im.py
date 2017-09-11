@@ -91,6 +91,12 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         reserved_columns = ['trajectory', 't', 'x', 'y', 'z', 'distance']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
+        axis_names = kwargs.pop('axis_names', {})
+        T_NAME = axis_names.get('t', 'time')
+        X_NAME = axis_names.get('x', 'longitude')
+        Y_NAME = axis_names.get('y', 'latitude')
+        Z_NAME = axis_names.get('z', 'z')
+
         reduce_dims = kwargs.pop('reduce_dims', False)
         unlimited = kwargs.pop('unlimited', False)
 
@@ -122,10 +128,10 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
-            time = nc.createVariable('time', 'i4', default_dimensions, fill_value=int(cls.default_fill_value))
-            z = nc.createVariable('z', get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
-            latitude = nc.createVariable('latitude', get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
-            longitude = nc.createVariable('longitude', get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
+            time = nc.createVariable(T_NAME, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
+            z = nc.createVariable(Z_NAME, get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
+            latitude = nc.createVariable(Y_NAME, get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
+            longitude = nc.createVariable(X_NAME, get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
@@ -161,7 +167,9 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                         if var_name not in attributes:
                             attributes[var_name] = {}
                         attributes[var_name] = dict_update(attributes[var_name], {
-                            'coordinates' : 'time latitude longitude z',
+                            'coordinates' : '{} {} {} {}'.format(
+                                T_NAME, Z_NAME, X_NAME, Y_NAME
+                            ),
                         })
                     else:
                         v = nc.variables[var_name]
@@ -306,17 +314,5 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             'trajectory' : {
                 'cf_role': 'trajectory_id',
                 'long_name' : 'trajectory identifier'
-            },
-            'time' : {
-                'axis': 'T'
-            },
-            'latitude' : {
-                'axis': 'Y'
-            },
-            'longitude' : {
-                'axis': 'X'
-            },
-            'z' : {
-                'axis': 'Z'
             }
         })
