@@ -87,7 +87,7 @@ class EnhancedDataset(Dataset):
             else:
                 newvar = self.variables[vname]
 
-            # Don't re-assign _FillValue
+            # Don't re-assign fill value attributes
             if '_FillValue' in vatts:
                 del vatts['_FillValue']
             if 'missing_value' in vatts:

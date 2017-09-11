@@ -51,6 +51,9 @@ class TestJsonDataset(unittest.TestCase):
                 if '_FillValue' in newvaratts:
                     del newvaratts['_FillValue']
 
+                if 'missing_value' in filevaratts:
+                    del filevaratts['missing_value']
+
                 self.assertDictEqual(
                     filevaratts,
                     newvaratts
@@ -84,6 +87,9 @@ class TestJsonDataset(unittest.TestCase):
                 if '_FillValue' in newvaratts:
                     del newvaratts['_FillValue']
 
+                if 'missing_value' in filevaratts:
+                    del filevaratts['missing_value']
+
                 self.assertDictEqual(
                     filevaratts,
                     newvaratts
@@ -111,6 +117,9 @@ class TestJsonDataset(unittest.TestCase):
                     # _FillValue gets added even if it wasn't in the original attributes
                     if '_FillValue' in newatts:
                         del newatts['_FillValue']
+
+                    if 'missing_value' in oldatts:
+                        del oldatts['missing_value']
 
                     self.assertDictEqual(
                         oldatts,
