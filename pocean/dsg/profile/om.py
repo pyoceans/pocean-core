@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 import netCDF4 as nc4
 
-from pygc import great_distance
 from shapely.geometry import Point, LineString
 
 from pocean.utils import unique_justseen, normalize_array, generic_masked
@@ -106,8 +105,8 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         if geometries:
             null_coordinates = df.x.isnull() | df.y.isnull()
             coords = list(unique_justseen(zip(
-                df.x[~null_coordinates].tolist(),
-                df.y[~null_coordinates].tolist()
+                df.loc[~null_coordinates, 'x'].tolist(),
+                df.loc[~null_coordinates, 'y'].tolist()
             )))
             if len(coords) > 1:
                 geometry = LineString(coords)
@@ -141,7 +140,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         logger.debug(['profile data size: ', p.size])
 
         # Z
-        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name)).round(5)
+        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name))
         try:
             z = np.tile(z, ps)
         except ValueError:
@@ -159,33 +158,42 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         # X
         xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name)).round(5)
+        x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
         logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name)).round(5)
+        y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
-
-        # Distance
-        d = np.ma.zeros(y.size, dtype=np.float64)
-        d[1:] = great_distance(start_latitude=y[0:-1], end_latitude=y[1:], start_longitude=x[0:-1], end_longitude=x[1:])['distance']
-        d = generic_masked(np.cumsum(d), minv=0).round(2)
-        logger.debug(['distance data size: ', d.size])
 
         df_data = {
             't': t,
             'x': x,
             'y': y,
             'z': z,
-            'profile': p,
-            'distance': d
+            'profile': p
         }
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
         for i, dvar in enumerate(extract_vars):
-            vdata = np.ma.fix_invalid(np.ma.MaskedArray(dvar[:].round(3).flatten()))
+
+            # Profile dimension
+            if dvar.dimensions == pvar.dimensions:
+                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dvar.name))
+
+            # Z dimension
+            elif dvar.dimensions == zvar.dimensions:
+                vdata = generic_masked(np.tile(dvar[:], ps).flatten(), attrs=self.vatts(dvar.name))
+
+            # Profile, z dimension
+            elif dvar.dimensions == pvar.dimensions + zvar.dimensions:
+                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name))
+
+            else:
+                logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))
+                continue
+
             building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
             df_data[dvar.name] = vdata
 

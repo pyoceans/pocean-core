@@ -109,15 +109,21 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
         arr = np.ma.fix_invalid(arr)
 
     if isinstance(arr, np.ma.core.MaskedConstant):
-        if arr > maxv or arr < minv:
+        if arr is np.ma.masked or arr > maxv or arr < minv:
             return np.ma.masked
         return arr
+    elif arr.mask.all():
+        return arr
     else:
-        return np.ma.masked_outside(
-            arr,
+        # You can't use `masked_outside` with nan values or numpy will send a warning
+        not_nan = ~np.isnan(arr)
+        not_nan = not_nan.filled(True)
+        arr[not_nan] = np.ma.masked_outside(
+            arr[not_nan],
             minv,
             maxv
         )
+        return arr
 
 
 def pyscalar(val):

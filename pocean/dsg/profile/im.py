@@ -5,7 +5,6 @@ from collections import namedtuple
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
-from pygc import great_distance
 from shapely.geometry import Point, LineString
 
 from pocean.utils import (
@@ -73,7 +72,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['profile', 't', 'x', 'y', 'z', 'distance']
+        reserved_columns = ['profile', 't', 'x', 'y', 'z']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:
@@ -92,11 +91,14 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
             # Create all of the variables
             time = nc.createVariable('time', 'i4', ('profile',))
+            time.axis = 'T'
+            time.units = cls.default_time_unit
             latitude = nc.createVariable('latitude', get_dtype(df.y), ('profile',))
+            latitude.axis = 'Y'
             longitude = nc.createVariable('longitude', get_dtype(df.x), ('profile',))
-            if 'distance' in df:
-                distance = nc.createVariable('distance', get_dtype(df.distance), ('profile',))
+            longitude.axis = 'X'
             z = nc.createVariable('z', get_dtype(df.z), ('profile', 'z'), fill_value=df.z.dtype.type(cls.default_fill_value))
+            z.axis = 'Z'
 
             attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
 
@@ -106,8 +108,6 @@ class IncompleteMultidimensionalProfile(CFDataset):
                 time[i] = nc4.date2num(pdf.t.iloc[0], units=cls.default_time_unit)
                 latitude[i] = pdf.y.iloc[0]
                 longitude[i] = pdf.x.iloc[0]
-                if 'distance' in pdf:
-                    distance[i] = pdf.distance.iloc[0]
 
                 zvalues = pdf.z.fillna(z._FillValue).values
                 sl = slice(0, zvalues.size)
@@ -168,8 +168,8 @@ class IncompleteMultidimensionalProfile(CFDataset):
         if geometries:
             null_coordinates = df.x.isnull() | df.y.isnull()
             coords = list(unique_justseen(zip(
-                df.x[~null_coordinates].tolist(),
-                df.y[~null_coordinates].tolist()
+                df.loc[~null_coordinates, 'x'].tolist(),
+                df.loc[~null_coordinates, 'y'].tolist()
             )))
             if len(coords) > 1:
                 geometry = LineString(coords)  # noqa
@@ -188,27 +188,24 @@ class IncompleteMultidimensionalProfile(CFDataset):
         )
 
     def to_dataframe(self, clean_cols=True, clean_rows=True):
-        pvar = self.filter_by_attrs(cf_role='profile_id')[0]
         # Multiple profiles in the file
+        pvar = self.filter_by_attrs(cf_role='profile_id')[0]
         p_dim = self.dimensions[pvar.dimensions[0]]
-        ps = p_dim.size
-        logger.debug(['# profiles: ', ps])
 
         zvar = self.z_axes()[0]
-
-        z_dim = self.dimensions[[ d for d in zvar.dimensions if d != p_dim.name ][0]]
-        zs = z_dim.size
+        zs = len(self.dimensions[[ d for d in zvar.dimensions if d != p_dim.name ][0]])
 
         # Profiles
         try:
             p = normalize_array(pvar)
         except ValueError:
             p = np.asarray(list(range(len(pvar))), dtype=np.integer)
+        ps = p.size
         p = p.repeat(zs)
         logger.debug(['profile data size: ', p.size])
 
         # Z
-        z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name)).round(5)
+        z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
         logger.debug(['z data size: ', z.size])
 
         # T
@@ -222,33 +219,38 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         # X
         xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name)).round(5)
+        x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
         logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name)).round(5)
+        y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
-
-        # Distance
-        d = np.ma.zeros(y.size, dtype=np.float64)
-        d[1:] = great_distance(start_latitude=y[0:-1], end_latitude=y[1:], start_longitude=x[0:-1], end_longitude=x[1:])['distance']
-        d = generic_masked(np.cumsum(d), minv=0).round(2)
-        logger.debug(['distance data size: ', d.size])
 
         df_data = {
             't': t,
             'x': x,
             'y': y,
             'z': z,
-            'profile': p,
-            'distance': d
+            'profile': p
         }
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
         for i, dvar in enumerate(extract_vars):
-            vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name)).round(3)
+
+            # Profile dimension
+            if dvar.dimensions == pvar.dimensions:
+                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dvar.name))
+
+            # Profile, z dimension
+            elif dvar.dimensions == zvar.dimensions:
+                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name))
+
+            else:
+                logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))
+                continue
+
             building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
             df_data[dvar.name] = vdata
 
@@ -274,10 +276,5 @@ class IncompleteMultidimensionalProfile(CFDataset):
             'profile' : {
                 'cf_role': 'profile_id',
                 'long_name' : 'profile identifier'
-            },
-            'distance' : {
-                'long_name': 'Great circle distance between trajectory points',
-                'standard_name': 'distance_between_trajectory_points',
-                'units': 'm'
             }
         })

@@ -5,7 +5,6 @@ from collections import namedtuple, OrderedDict
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
-from pygc import great_distance
 from shapely.geometry import Point, LineString
 
 from pocean.utils import (
@@ -86,8 +85,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             if geometries:
                 null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
                 coords = list(unique_justseen(zip(
-                    tgroup.x[~null_coordinates].tolist(),
-                    tgroup.y[~null_coordinates].tolist()
+                    tgroup.loc[~null_coordinates, 'x'].tolist(),
+                    tgroup.loc[~null_coordinates, 'y'].tolist()
                 )))
                 if len(coords) > 1:
                     geometry = LineString(coords)
@@ -195,30 +194,20 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             y[si:ei] = yvar[i]
             si = ei
 
-        t_mask = False
-        tfill = get_fill_value(tvar)
-        if tfill is not None:
-            t_mask = np.copy(np.ma.getmaskarray(t))
-            t[t_mask] = 1
-
         t = np.ma.MaskedArray(
             nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
         )
         # Patch the time variable back to its original mask, since num2date
         # breaks any missing/fill values
-        t[t_mask] = np.ma.masked
+        if hasattr(tvar[0], 'mask'):
+            t.mask = tvar[:].mask
 
         # X and Y
-        x = generic_masked(x, minv=-180, maxv=180).round(5)
-        y = generic_masked(y, minv=-90, maxv=90).round(5)
-
-        # Distance
-        d = np.ma.zeros(o_dim.size, dtype=np.float64)
-        d[1:] = great_distance(start_latitude=y[0:-1], end_latitude=y[1:], start_longitude=x[0:-1], end_longitude=x[1:])['distance']
-        d = generic_masked(np.cumsum(d), minv=0).round(2)
+        x = generic_masked(x, minv=-180, maxv=180)
+        y = generic_masked(y, minv=-90, maxv=90)
 
         # Sample dimension
-        z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name)).round(5)
+        z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
 
         df_data = OrderedDict([
             ('t', t),
@@ -226,8 +215,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             ('y', y),
             ('z', z),
             ('trajectory', r),
-            ('profile', p),
-            ('distance', d),
+            ('profile', p)
         ])
 
         building_index_to_drop = np.ones(o_dim.size, dtype=bool)
@@ -245,7 +233,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
             # Sample dimensions
             elif dvar.dimensions == (o_dim.name,):
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name)).round(3)
+                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name))
 
             else:
                 logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))

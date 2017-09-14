@@ -6,7 +6,6 @@ import six
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
-from pygc import great_distance
 from shapely.geometry import Point, LineString
 
 from pocean.utils import unique_justseen, normalize_array, get_dtype, dict_update
@@ -88,7 +87,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['trajectory', 't', 'x', 'y', 'z', 'distance']
+        reserved_columns = ['trajectory', 't', 'x', 'y', 'z']
         data_columns = [ d for d in df.columns if d not in reserved_columns ]
 
         axis_names = kwargs.pop('axis_names', {})
@@ -130,6 +129,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             # Create all of the variables
             time = nc.createVariable(T_NAME, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
             time.axis = 'T'
+            time.units = cls.default_time_unit
             z = nc.createVariable(Z_NAME, get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
             z.axis = 'Z'
             latitude = nc.createVariable(Y_NAME, get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
@@ -207,8 +207,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             if geometries:
                 null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
                 coords = list(unique_justseen(zip(
-                    tgroup.x[~null_coordinates].tolist(),
-                    tgroup.y[~null_coordinates].tolist()
+                    tgroup.loc[~null_coordinates, 'x'].tolist(),
+                    tgroup.loc[~null_coordinates, 'y'].tolist()
                 )))
                 if len(coords) > 1:
                     geometry = LineString(coords)
@@ -275,18 +275,12 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             p = p.repeat(dim_diff.size)
         logger.debug(['trajectory data size: ', p.size])
 
-        # Distance
-        d = np.append([0], great_distance(start_latitude=y[0:-1], end_latitude=y[1:], start_longitude=x[0:-1], end_longitude=x[1:])['distance'])
-        d = np.ma.fix_invalid(np.ma.MaskedArray(np.cumsum(d)).astype(np.float64).round(2))
-        logger.debug(['distance data size: ', d.size])
-
         df_data = OrderedDict([
             ('t', t),
             ('x', x),
             ('y', y),
             ('z', z),
-            ('trajectory', p),
-            ('distance', d),
+            ('trajectory', p)
         ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)

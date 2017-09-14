@@ -30,14 +30,14 @@ class TestIncompleteMultidimensionalProfile(unittest.TestCase):
             assert m.min_t == dtparse('1990-01-01 00:00:00')
             assert m.max_t == dtparse('1990-01-06 21:00:00')
             assert len(m.profiles.keys()) == 137
-            assert np.isclose(m.profiles[0].min_z, 0.05376)
-            assert np.isclose(m.profiles[0].max_z, 9.62958)
+            assert np.isclose(m.profiles[0].min_z, 0.05376, atol=1e-5)
+            assert np.isclose(m.profiles[0].max_z, 9.62958, atol=1e-5)
             assert m.profiles[0].t == dtparse('1990-01-01 00:00:00')
             assert m.profiles[0].x == 119
             assert m.profiles[0].y == 171
 
-            assert np.isclose(m.profiles[141].min_z, 0.04196)
-            assert np.isclose(m.profiles[141].max_z, 9.85909)
+            assert np.isclose(m.profiles[141].min_z, 0.04196, atol=1e-5)
+            assert np.isclose(m.profiles[141].max_z, 9.85909, atol=1e-5)
             assert m.profiles[141].t == dtparse('1990-01-06 21:00:00')
             assert m.profiles[141].x == 34
             assert m.profiles[141].y == 80
