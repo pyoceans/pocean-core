@@ -84,15 +84,15 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
 
         with ContiguousRaggedTrajectoryProfile(self.missing_time) as mmt:
             t = mmt.calculated_metadata()
-            assert t.min_t == dtparse('2014-11-16 21:32:29.952482')
-            assert t.max_t == dtparse('2014-11-17 07:59:08.398475')
+            assert t.min_t == dtparse('2014-11-16 21:32:29.952500')
+            assert t.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert len(t.trajectories) == 1
 
             traj = t.trajectories["UW157-20141116T211809"]
             assert np.isclose(traj.min_z, 0.47928014)
             assert np.isclose(traj.max_z, 529.68005)
-            assert traj.min_t == dtparse('2014-11-16 21:32:29.952482')
-            assert traj.max_t == dtparse('2014-11-17 07:59:08.398475')
+            assert traj.min_t == dtparse('2014-11-16 21:32:29.952500')
+            assert traj.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert np.isclose(traj.first_loc.x, -124.681526638573)
             assert np.isclose(traj.first_loc.y,  43.5022166666667)
             assert len(traj.profiles) == 13
@@ -100,15 +100,15 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
     def test_just_missing_time(self):
         with ContiguousRaggedTrajectoryProfile(self.missing_time) as mmt:
             t = mmt.calculated_metadata()
-            assert t.min_t == dtparse('2014-11-16 21:32:29.952482')
-            assert t.max_t == dtparse('2014-11-17 07:59:08.398475')
+            assert t.min_t == dtparse('2014-11-16 21:32:29.952500')
+            assert t.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert len(t.trajectories) == 1
 
             traj = t.trajectories["UW157-20141116T211809"]
             assert np.isclose(traj.min_z, 0.47928014)
             assert np.isclose(traj.max_z, 529.68005)
-            assert traj.min_t == dtparse('2014-11-16 21:32:29.952482')
-            assert traj.max_t == dtparse('2014-11-17 07:59:08.398475')
+            assert traj.min_t == dtparse('2014-11-16 21:32:29.952500')
+            assert traj.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert np.isclose(traj.first_loc.x, -124.681526638573)
             assert np.isclose(traj.first_loc.y,  43.5022166666667)
             assert len(traj.profiles) == 13

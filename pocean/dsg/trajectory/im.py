@@ -8,7 +8,14 @@ import pandas as pd
 import netCDF4 as nc4
 from shapely.geometry import Point, LineString
 
-from pocean.utils import unique_justseen, normalize_array, get_dtype, dict_update
+from pocean.utils import (
+    unique_justseen,
+    normalize_array,
+    get_dtype,
+    dict_update,
+    generic_masked,
+    get_masked_datetime_array
+)
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
 from pocean import logger
@@ -235,27 +242,22 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     def to_dataframe(self, clean_cols=True, clean_rows=True):
         # Z
         zvar = self.z_axes()[0]
-        z = np.ma.fix_invalid(np.ma.MaskedArray(zvar[:]))
-        z = z.flatten().round(5)
+        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name)).flatten()
         logger.debug(['z data size: ', z.size])
 
         # T
         tvar = self.t_axes()[0]
-        t = np.ma.MaskedArray(nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))).flatten()
-        # Patch the time variable back to its original mask, since num2date
-        # breaks any missing/fill values
-        if hasattr(tvar[0], 'mask'):
-            t.mask = tvar[:].mask
+        t = get_masked_datetime_array(tvar[:], tvar).flatten()
         logger.debug(['time data size: ', t.size])
 
         # X
         xvar = self.x_axes()[0]
-        x = np.ma.fix_invalid(np.ma.MaskedArray(xvar[:])).flatten().round(5)
+        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name)).flatten()
         logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
-        y = np.ma.fix_invalid(np.ma.MaskedArray(yvar[:])).flatten().round(5)
+        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name)).flatten()
         logger.debug(['y data size: ', y.size])
 
         # Trajectories

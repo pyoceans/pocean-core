@@ -4,6 +4,7 @@ import base64
 import operator
 import itertools
 import simplejson as json
+from datetime import datetime
 
 import numpy as np
 import netCDF4 as nc4
@@ -136,6 +137,25 @@ def get_fill_value(var):
     elif hasattr(var, '_FillValue'):
         return var._FillValue
     return None
+
+
+def get_masked_datetime_array(t, tvar):
+    t_mask = []
+    tfill = get_fill_value(tvar)
+    if tfill is not None:
+        t_mask = np.copy(np.ma.getmaskarray(t))
+        # Temporarily set to 1 so num2date works
+        t[t_mask] = 1
+
+    dts = nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
+    if isinstance(dts, datetime):
+        dts = np.array([t.isoformat()], dtype='datetime64')
+
+    # Patch the time variable back to its original mask, since num2date
+    # breaks any missing/fill values
+    nt = np.ma.MaskedArray(dts)
+    nt[t_mask] = np.ma.masked
+    return nt
 
 
 def get_dtype(obj):

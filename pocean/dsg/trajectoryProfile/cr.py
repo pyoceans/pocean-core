@@ -11,7 +11,8 @@ from pocean.utils import (
     unique_justseen,
     normalize_array,
     get_fill_value,
-    generic_masked
+    generic_masked,
+    get_masked_datetime_array
 )
 from pocean.cf import CFDataset
 from pocean import logger  # noqa
@@ -194,13 +195,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             y[si:ei] = yvar[i]
             si = ei
 
-        t = np.ma.MaskedArray(
-            nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
-        )
-        # Patch the time variable back to its original mask, since num2date
-        # breaks any missing/fill values
-        if hasattr(tvar[0], 'mask'):
-            t.mask = tvar[:].mask
+        #  T
+        nt = get_masked_datetime_array(t, tvar).flatten()
 
         # X and Y
         x = generic_masked(x, minv=-180, maxv=180)
@@ -210,7 +206,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
 
         df_data = OrderedDict([
-            ('t', t),
+            ('t', nt),
             ('x', x),
             ('y', y),
             ('z', z),

@@ -15,6 +15,7 @@ from pocean.utils import (
     generic_masked,
     get_dtype,
     normalize_array,
+    get_masked_datetime_array
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
@@ -172,19 +173,16 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         # T
         tvar = self.t_axes()[0]
-        t = nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))
-        if isinstance(t, datetime):
-            # Size one
-            t = np.array([t.isoformat()], dtype='datetime64')
+        t = get_masked_datetime_array(tvar[:], tvar)
         n_times = t.size
 
         # X
         xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name)).round(5)
+        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name))
 
         # Y
         yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name)).round(5)
+        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name))
 
         # Z
         zvar = self.z_axes()[0]

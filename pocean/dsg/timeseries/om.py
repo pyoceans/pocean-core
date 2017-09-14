@@ -13,7 +13,8 @@ from pocean.utils import (
     normalize_array,
     get_dtype,
     dict_update,
-    generic_masked
+    generic_masked,
+    get_masked_datetime_array
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
@@ -157,10 +158,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # T
         tvar = self.t_axes()[0]
-        t = nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))
-        if isinstance(t, datetime):
-            # Size one
-            t = np.array([t.isoformat()], dtype='datetime64')
+        t = get_masked_datetime_array(tvar[:], tvar)
         logger.debug(['time data size: ', t.size])
 
         svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
@@ -175,12 +173,12 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # X
         xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:].repeat(t.size), attrs=self.vatts(xvar.name)).round(5)
+        x = generic_masked(xvar[:].repeat(t.size), attrs=self.vatts(xvar.name))
         logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:].repeat(t.size), attrs=self.vatts(yvar.name)).round(5)
+        y = generic_masked(yvar[:].repeat(t.size), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
 
         # Z
