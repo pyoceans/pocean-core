@@ -200,7 +200,6 @@ class IncompleteMultidimensionalProfile(CFDataset):
             p = normalize_array(pvar)
         except ValueError:
             p = np.asarray(list(range(len(pvar))), dtype=np.integer)
-        ps = p.size
         p = p.repeat(zs)
         logger.debug(['profile data size: ', p.size])
 

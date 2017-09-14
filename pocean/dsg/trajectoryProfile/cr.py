@@ -4,13 +4,11 @@ from collections import namedtuple, OrderedDict
 
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
 from shapely.geometry import Point, LineString
 
 from pocean.utils import (
     unique_justseen,
     normalize_array,
-    get_fill_value,
     generic_masked,
     get_masked_datetime_array
 )

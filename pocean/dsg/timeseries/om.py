@@ -2,7 +2,6 @@
 # coding=utf-8
 import re
 from copy import copy
-from datetime import datetime
 from collections import OrderedDict
 
 import numpy as np
