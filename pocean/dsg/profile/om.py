@@ -4,6 +4,7 @@ from collections import namedtuple
 
 import six
 import numpy as np
+import xarray as xr
 import pandas as pd
 import netCDF4 as nc4
 
@@ -78,6 +79,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         return True
 
+    @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 

@@ -33,6 +33,65 @@ class IncompleteMultidimensionalProfile(CFDataset):
     """
 
     @classmethod
+    def required_columns(cls):
+        return ['profile', 'z']
+
+    @classmethod
+    def reduce_variables(cls):
+        return {
+            'time': ('profile',),
+            'latitude': ('profile',),
+            'longitude': ('profile',),
+        }
+
+    @classmethod
+    def apply_indexes(cls, df):
+        return df.set_index(['profile', 'z'])
+
+    @classmethod
+    def attrs(cls, xds):
+        # Add
+        return {
+            'attributes': {
+                'featureType': 'profile',
+                'cdm_data_type': 'Profile',
+                'Conventions': 'CF-1.6'
+            },
+            'variables': {
+                'profile': {
+                    'attributes': {
+                        'cf_role': 'profile_id',
+                        'long_name' : 'profile identifier'
+                    }
+                },
+                'time': {
+                    'axis': 'T',
+                },
+                'latitude': {
+                    'attributes': {
+                        'axis': 'Y',
+                        'standard_name': 'latitude',
+                        'units': 'degrees_north'
+                    }
+                },
+                'longitude': {
+                    'attributes': {
+                        'axis': 'Y',
+                        'standard_name': 'longitude',
+                        'units': 'degrees_east'
+                    }
+                },
+                'z': {
+                    'attributes': {
+                        'axis': 'Z',
+                        'standard_name': 'depth',
+                        'positive': 'down'
+                    }
+                }
+            }
+        }
+
+    @classmethod
     def is_mine(cls, dsg):
         try:
             pvars = dsg.filter_by_attrs(cf_role='profile_id')

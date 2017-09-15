@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 from os.path import join as jn
 from os.path import dirname as dn
 

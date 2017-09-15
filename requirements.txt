@@ -1,9 +1,15 @@
+bottleneck
+cartopy
+dask
 netcdf4
 numpy
 pandas
 pygc>=1.2.0
+pynio
 python-dateutil
 pytz
+seaborn
 shapely
 simplejson
 six
+xarray

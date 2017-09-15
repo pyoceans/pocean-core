@@ -5,9 +5,39 @@ from copy import deepcopy
 from collections import OrderedDict, Mapping
 
 import numpy as np
+import xarray as xr
 import simplejson as json
 
 from . import logger
+
+
+@xr.register_dataset_accessor('jsmeta')
+class JsmetaAccessor(object):
+    def __init__(self, xarray_obj):
+        self._obj = xarray_obj
+
+    def to_dict(self, *args, **kwargs):
+        d = {
+            'attributes': self._obj.attrs,
+            'variables': OrderedDict()
+        }
+        for v, varobj in self._obj.items():
+            d['variables'][v] = {'attributes': ncpyattributes(varobj.attrs)}
+        return d
+
+    def update(self, jsmeta):
+        gs = jsmeta.get('attributes', OrderedDict())
+        vs = jsmeta.get('variables', OrderedDict())
+
+         # Global attributes
+        typed_gs = untype_attributes(gs)
+        self._obj.attrs.update(typed_gs)
+
+        for v, vvalue in vs.items():
+            if v not in self._obj:
+                continue
+            vatts = untype_attributes(vvalue.get('attributes', {}))
+            self._obj[v].attrs.update(vatts)
 
 
 class MetaInterface(Mapping):
