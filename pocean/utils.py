@@ -19,12 +19,17 @@ def downcast_dataframe(df):
     return df
 
 
-def all_subclasses(cls):
+def all_subclasses(cls, skips=None):
     """ Recursively generate of all the subclasses of class cls. """
+    if skips is None:
+        skips = []
+
     for subclass in cls.__subclasses__():
-        yield subclass
+        if subclass not in skips:
+            yield subclass
         for subc in all_subclasses(subclass):
-            yield subc
+            if subclass not in skips:
+                yield subc
 
 
 def unique_justseen(iterable, key=None):
