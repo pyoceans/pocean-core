@@ -1,18 +1,19 @@
 #!python
 # coding=utf-8
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-from shapely.geometry import Point, LineString
 
 from pocean.utils import (
-    unique_justseen,
+
     normalize_array,
     generic_masked,
     get_masked_datetime_array
 )
 from pocean.cf import CFDataset
+from pocean.dsg.trajectoryProfile import trajectory_profile_calculated_metadata
+
 from pocean import logger  # noqa
 
 
@@ -59,58 +60,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
         if df is None:
             df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-
-        trajectories = {}
-        for tid, tgroup in df.groupby('trajectory'):
-            tgroup = tgroup.sort_values('t')
-
-            profiles = {}
-            for pid, pgroup in tgroup.groupby('profile'):
-                pgroup = pgroup.sort_values('t')
-                first_row = pgroup.iloc[0]
-                profile = namedtuple('Profile', ['min_z', 'max_z', 't', 'x', 'y', 'loc'])
-                profiles[pid] = profile(
-                    min_z=pgroup.z.min(),
-                    max_z=pgroup.z.max(),
-                    t=first_row.t,
-                    x=first_row.x,
-                    y=first_row.y,
-                    loc=Point(first_row.x, first_row.y)
-                )
-
-            geometry = None
-            first_row = tgroup.iloc[0]
-            first_loc = Point(first_row.x, first_row.y)
-            if geometries:
-                null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
-                coords = list(unique_justseen(zip(
-                    tgroup.loc[~null_coordinates, 'x'].tolist(),
-                    tgroup.loc[~null_coordinates, 'y'].tolist()
-                )))
-                if len(coords) > 1:
-                    geometry = LineString(coords)
-                elif coords == 1:
-                    geometry = first_loc
-
-            trajectory = namedtuple('Trajectory', ['min_z', 'max_z', 'min_t', 'max_t', 'profiles', 'first_loc', 'geometry'])
-            trajectories[tid] = trajectory(
-                min_z=tgroup.z.min(),
-                max_z=tgroup.z.max(),
-                min_t=tgroup.t.min(),
-                max_t=tgroup.t.max(),
-                profiles=profiles,
-                first_loc=first_loc,
-                geometry=geometry
-            )
-
-        meta = namedtuple('Metadata', ['min_z', 'max_z', 'min_t', 'max_t', 'trajectories'])
-        return meta(
-            min_z=df.z.min(),
-            max_z=df.z.max(),
-            min_t=df.t.min(),
-            max_t=df.t.max(),
-            trajectories=trajectories
-        )
+        return trajectory_profile_calculated_metadata(df, geometries)
 
     def to_dataframe(self, clean_cols=True, clean_rows=True):
         # The index variable (trajectory_index) is identified by having an

@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
+#!python
+# coding=utf-8
 from datetime import datetime
-from collections import namedtuple
 
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
-from shapely.geometry import Point, LineString
 
 from pocean.utils import (
-    unique_justseen,
     normalize_array,
     get_dtype,
     dict_update,
     generic_masked
 )
 from pocean.cf import CFDataset, cf_safe_name
+from pocean.dsg.profile import profile_calculated_metadata
+
 from pocean import logger
 
 
@@ -147,45 +147,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
         if df is None:
             df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-
-        profiles = {}
-        for pid, pgroup in df.groupby('profile'):
-            pgroup = pgroup.sort_values('t')
-            first_row = pgroup.iloc[0]
-            profile = namedtuple('Profile', ['min_z', 'max_z', 't', 'x', 'y', 'loc'])
-            profiles[pid] = profile(
-                min_z=pgroup.z.min(),
-                max_z=pgroup.z.max(),
-                t=first_row.t,
-                x=first_row.x,
-                y=first_row.y,
-                loc=Point(first_row.x, first_row.y)
-            )
-
-        geometry = None
-        first_row = df.iloc[0]
-        first_loc = Point(first_row.x, first_row.y)
-        if geometries:
-            null_coordinates = df.x.isnull() | df.y.isnull()
-            coords = list(unique_justseen(zip(
-                df.loc[~null_coordinates, 'x'].tolist(),
-                df.loc[~null_coordinates, 'y'].tolist()
-            )))
-            if len(coords) > 1:
-                geometry = LineString(coords)  # noqa
-            elif len(coords) == 1:
-                geometry = first_loc  # noqa
-
-        meta = namedtuple('Metadata', ['min_z', 'max_z', 'min_t', 'max_t', 'profiles', 'first_loc', 'geometry'])
-        return meta(
-            min_z=df.z.min(),
-            max_z=df.z.max(),
-            min_t=df.t.min(),
-            max_t=df.t.max(),
-            profiles=profiles,
-            first_loc=first_loc,
-            geometry=geometry
-        )
+        return profile_calculated_metadata(df, geometries)
 
     def to_dataframe(self, clean_cols=True, clean_rows=True):
         # Multiple profiles in the file

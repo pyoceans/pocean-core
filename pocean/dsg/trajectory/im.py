@@ -1,23 +1,22 @@
 #!python
 # coding=utf-8
-from collections import namedtuple, OrderedDict
+from collections import OrderedDict
 
 import six
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
-from shapely.geometry import Point, LineString
 
 from pocean.utils import (
-    unique_justseen,
     normalize_array,
     get_dtype,
     dict_update,
     generic_masked,
     get_masked_datetime_array
 )
-from pocean.cf import CFDataset
-from pocean.cf import cf_safe_name
+from pocean.cf import CFDataset, cf_safe_name
+from pocean.dsg.trajectory import trajectory_calculated_metadata
+
 from pocean import logger
 
 
@@ -203,41 +202,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
         if df is None:
             df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-
-        trajectories = {}
-        for tid, tgroup in df.groupby('trajectory'):
-            tgroup = tgroup.sort_values('t')
-            first_row = tgroup.iloc[0]
-            first_loc = Point(first_row.x, first_row.y)
-
-            geometry = None
-            if geometries:
-                null_coordinates = tgroup.x.isnull() | tgroup.y.isnull()
-                coords = list(unique_justseen(zip(
-                    tgroup.loc[~null_coordinates, 'x'].tolist(),
-                    tgroup.loc[~null_coordinates, 'y'].tolist()
-                )))
-                if len(coords) > 1:
-                    geometry = LineString(coords)
-                elif coords == 1:
-                    geometry = first_loc
-
-            trajectory = namedtuple('Trajectory', ['min_z', 'max_z', 'min_t', 'max_t', 'first_loc', 'geometry'])
-            trajectories[tid] = trajectory(
-                min_z=tgroup.z.min(),
-                max_z=tgroup.z.max(),
-                min_t=tgroup.t.min(),
-                max_t=tgroup.t.max(),
-                first_loc=first_loc,
-                geometry=geometry
-            )
-
-        meta = namedtuple('Metadata', ['min_t', 'max_t', 'trajectories'])
-        return meta(
-            min_t=df.t.min(),
-            max_t=df.t.max(),
-            trajectories=trajectories
-        )
+        return trajectory_calculated_metadata(df, geometries)
 
     def to_dataframe(self, clean_cols=True, clean_rows=True):
         # Z

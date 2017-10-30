@@ -110,8 +110,9 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             assert traj1.max_z == 99
             assert traj1.min_t.round('S') == dtparse('1990-01-01 00:00:00')
             assert traj1.max_t.round('S') == dtparse('1990-01-05 03:00:00')
-            assert np.isclose(traj1.first_loc.x, -7.9336)
-            assert np.isclose(traj1.first_loc.y, 42.00339)
+            first_loc = traj1.geometry.coords[0]
+            assert np.isclose(first_loc[0], -7.9336)
+            assert np.isclose(first_loc[1], 42.00339)
 
     def test_imt_calculated_metadata_multi(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
@@ -126,16 +127,18 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             assert traj0.max_z == 35
             assert traj0.min_t.round('S') == dtparse('1990-01-01 00:00:00')
             assert traj0.max_t.round('S') == dtparse('1990-01-02 11:00:00')
-            assert np.isclose(traj0.first_loc.x, -35.07884)
-            assert np.isclose(traj0.first_loc.y, 2.15286)
+            first_loc = traj0.geometry.coords[0]
+            assert np.isclose(first_loc[0], -35.07884)
+            assert np.isclose(first_loc[1], 2.15286)
 
             traj3 = m.trajectories["Trajectory3"]
             assert traj3.min_z == 0
             assert traj3.max_z == 36
             assert traj3.min_t.round('S') == dtparse('1990-01-01 00:00:00')
             assert traj3.max_t.round('S') == dtparse('1990-01-02 12:00:00')
-            assert np.isclose(traj3.first_loc.x, -73.3026)
-            assert np.isclose(traj3.first_loc.y, 1.95761)
+            first_loc = traj3.geometry.coords[0]
+            assert np.isclose(first_loc[0], -73.3026)
+            assert np.isclose(first_loc[1], 1.95761)
 
     def test_json_attributes_single(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
