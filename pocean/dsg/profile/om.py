@@ -112,12 +112,9 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         # T
         tvar = self.t_axes()[0]
-        t = nc4.num2date(tvar[:], tvar.units, getattr(tvar, 'calendar', 'standard'))
-        if isinstance(t, datetime):
-            # Size one
-            t = np.array([t.isoformat()], dtype='datetime64')
-        t = t.repeat(zs)
-        logger.debug(['time data size: ', t.size])
+        t = tvar[:].repeat(zs)
+        nt = get_masked_datetime_array(t, tvar).flatten()
+        logger.debug(['time data size: ', nt.size])
 
         # X
         xvar = self.x_axes()[0]
@@ -130,7 +127,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         logger.debug(['y data size: ', y.size])
 
         df_data = {
-            't': t,
+            't': nt,
             'x': x,
             'y': y,
             'z': z,
