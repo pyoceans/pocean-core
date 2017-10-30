@@ -17,7 +17,7 @@ from pocean.utils import (
 from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.trajectory import trajectory_calculated_metadata
 
-from pocean import logger
+from pocean import logger as L  # noqa
 
 
 class IncompleteMultidimensionalTrajectory(CFDataset):
@@ -149,11 +149,12 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 trajectory[i] = uid
 
                 # tolist() converts to a python datetime object without timezone
-                g = gdf.t.fillna(999999).tolist()   # 999999 is a dummy value
-                NaTs = gdf.t.isnull()
-                timenums = np.ma.MaskedArray(nc4.date2num(g, units=cls.default_time_unit))
-                timenums.mask = NaTs
-                time[ts(i, timenums.size)] = timenums
+                # and has NaTs.
+                g = gdf.t.tolist()
+                # date2num convers NaTs to np.nan
+                gg = nc4.date2num(g, units=cls.default_time_unit)
+                # masked_invalid moves np.nan to a masked value
+                time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
 
                 lats = gdf.y.fillna(latitude._FillValue).values
                 latitude[ts(i, lats.size)] = lats
@@ -208,22 +209,22 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         # Z
         zvar = self.z_axes()[0]
         z = generic_masked(zvar[:], attrs=self.vatts(zvar.name)).flatten()
-        logger.debug(['z data size: ', z.size])
+        L.debug(['z data size: ', z.size])
 
         # T
         tvar = self.t_axes()[0]
         t = get_masked_datetime_array(tvar[:], tvar).flatten()
-        logger.debug(['time data size: ', t.size])
+        L.debug(['time data size: ', t.size])
 
         # X
         xvar = self.x_axes()[0]
         x = generic_masked(xvar[:], attrs=self.vatts(xvar.name)).flatten()
-        logger.debug(['x data size: ', x.size])
+        L.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
         y = generic_masked(yvar[:], attrs=self.vatts(yvar.name)).flatten()
-        logger.debug(['y data size: ', y.size])
+        L.debug(['y data size: ', y.size])
 
         # Trajectories
         pvar = self.filter_by_attrs(cf_role='trajectory_id')[0]
@@ -232,7 +233,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             if isinstance(p, six.string_types):
                 p = np.asarray([p])
         except BaseException:
-            logger.exception('Could not pull trajectory values from the variable, using indexes.')
+            L.exception('Could not pull trajectory values from the variable, using indexes.')
             p = np.asarray(list(range(len(pvar))), dtype=np.integer)
 
         # The Dimension that the trajectory id variable doesn't have is what
@@ -240,7 +241,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         dim_diff = self.dimensions[list(set(tvar.dimensions).difference(set(pvar.dimensions)))[0]]
         if dim_diff:
             p = p.repeat(dim_diff.size)
-        logger.debug(['trajectory data size: ', p.size])
+        L.debug(['trajectory data size: ', p.size])
 
         df_data = OrderedDict([
             ('t', t),
