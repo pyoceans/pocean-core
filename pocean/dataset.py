@@ -127,10 +127,15 @@ class EnhancedDataset(Dataset):
 
         # Variables
         for k, v in self.variables.items():
+
+            typed = v.dtype
+            if isinstance(typed, np.dtype):
+                typed = str(typed.name)
+
             vs[k] = {
                 'attributes': ncpyattributes(v.__dict__),
                 'shape': v.dimensions,
-                'type': str(v.dtype.name)
+                'type': typed
             }
 
         return MetaInterface(
