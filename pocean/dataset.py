@@ -116,7 +116,7 @@ class EnhancedDataset(Dataset):
     def meta(self):
         ds = OrderedDict()
         vs = OrderedDict()
-        gs = ncpyattributes(self.__dict__)
+        gs = ncpyattributes({ ga: self.getncattr(ga) for ga in self.ncattrs() })
 
         # Dimensions
         for dname, dim in self.dimensions.items():
@@ -133,7 +133,7 @@ class EnhancedDataset(Dataset):
                 typed = str(typed.name)
 
             vs[k] = {
-                'attributes': ncpyattributes(v.__dict__),
+                'attributes': ncpyattributes({ va: v.getncattr(va) for va in v.ncattrs() }),
                 'shape': v.dimensions,
                 'type': typed
             }
