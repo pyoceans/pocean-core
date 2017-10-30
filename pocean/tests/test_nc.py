@@ -28,7 +28,7 @@ class TestJsonDataset(unittest.TestCase):
         mi = MetaInterface.from_jsonfile(jsf)
 
         with EnhancedDataset(self.ncdf, 'w') as ncd:
-            ncd.__apply_meta_interface__(mi)
+            ncd.apply_meta(mi)
 
             assert { k: v.size for k, v in ncd.dimensions.items() } == mi['dimensions']
 
@@ -64,7 +64,7 @@ class TestJsonDataset(unittest.TestCase):
         mi = MetaInterface.from_jsonfile(jsf)
 
         with EnhancedDataset(self.ncdf, 'w') as ncd:
-            ncd.__apply_meta_interface__(mi)
+            ncd.apply_meta(mi)
 
             assert { k: v.size for k, v in ncd.dimensions.items() } == mi['dimensions']
 
@@ -99,10 +99,10 @@ class TestJsonDataset(unittest.TestCase):
         ncfile = os.path.join(os.path.dirname(__file__), "resources/coamps.nc")
 
         with EnhancedDataset(ncfile, 'r') as original_ncd:
-            mi = original_ncd.__meta_interface__
+            mi = original_ncd.meta()
 
             with EnhancedDataset(self.ncdf, 'w') as ncd:
-                ncd.__apply_meta_interface__(mi)
+                ncd.apply_meta(mi)
 
                 self.assertDictEqual(
                     ncpyattributes(dict(original_ncd.__dict__)),

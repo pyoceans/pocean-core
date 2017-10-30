@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+import warnings
 from collections import OrderedDict
 
 import numpy as np
@@ -43,6 +44,23 @@ class EnhancedDataset(Dataset):
         return self.get_variables_by_attributes(*args, **kwargs)
 
     def __apply_meta_interface__(self, meta):
+        warnings.warn(
+            '`__apply_meta_interface__` is deprecated. Use `apply_meta()` instead',
+            DeprecationWarning
+        )
+        return self.apply_meta(meta)
+
+    def __getattr__(self, name):
+        if name in ['__meta_interface__', '_meta']:
+            warnings.warn(
+                '`__meta_interface__` and `_meta` are deprecated. Use `meta()` instead',
+                DeprecationWarning
+            )
+            return self.meta()
+        else:
+            return super().__getattr__(name)
+
+    def apply_meta(self, meta):
         """Apply a meta interface object to a netCDF4 compatible object"""
         ds = meta.get('dimensions', OrderedDict())
         gs = meta.get('attributes', OrderedDict())
@@ -95,8 +113,7 @@ class EnhancedDataset(Dataset):
 
             newvar.setncatts(vatts)
 
-    @property
-    def __meta_interface__(self):
+    def meta(self):
         ds = OrderedDict()
         vs = OrderedDict()
         gs = ncpyattributes(self.__dict__)
