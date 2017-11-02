@@ -28,8 +28,9 @@ matrix:
 before_install:
   # Install miniconda
   # -----------------
-  - export CONDA_BASE=http://repo.continuum.io/miniconda/Miniconda
-  - wget ${CONDA_BASE}3-3.7.0-Linux-x86_64.sh -O miniconda.sh;
+  - export CONDA_BASE=https://repo.continuum.io/miniconda/Miniconda3
+  - export MINICONDA_VERSION=latest
+  - wget ${CONDA_BASE}-${MINICONDA_VERSION}-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
 
