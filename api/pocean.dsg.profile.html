@@ -42,7 +42,7 @@
 <span id="pocean-dsg-profile-package"></span><h1>pocean.dsg.profile package<a class="headerlink" href="#module-pocean.dsg.profile" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pocean.dsg.profile.profile_calculated_metadata">
-<code class="descclassname">pocean.dsg.profile.</code><code class="descname">profile_calculated_metadata</code><span class="sig-paren">(</span><em>df</em>, <em>geometries=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.profile_calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pocean.dsg.profile.</code><code class="descname">profile_calculated_metadata</code><span class="sig-paren">(</span><em>df</em>, <em>axes</em>, <em>geometries=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.profile_calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -78,7 +78,7 @@ In that case, any unused elements of the data and auxiliary coordinate
 variables must contain missing data values (section 9.6).</p>
 <dl class="method">
 <dt id="pocean.dsg.profile.im.IncompleteMultidimensionalProfile.calculated_metadata">
-<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
@@ -93,12 +93,12 @@ variables must contain missing data values (section 9.6).</p>
 
 <dl class="method">
 <dt id="pocean.dsg.profile.im.IncompleteMultidimensionalProfile.nc_attributes">
-<code class="descname">nc_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nc_attributes</code><span class="sig-paren">(</span><em>axes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pocean.dsg.profile.im.IncompleteMultidimensionalProfile.to_dataframe">
-<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.im.IncompleteMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -120,7 +120,7 @@ listing the vertical coordinate variable in the coordinates attributes of
 the data variables is optional.</p>
 <dl class="method">
 <dt id="pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.calculated_metadata">
-<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -135,7 +135,7 @@ the data variables is optional.</p>
 
 <dl class="method">
 <dt id="pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.to_dataframe">
-<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.profile.om.OrthogonalMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
