@@ -1,13 +1,16 @@
 #!python
 # coding=utf-8
 import six
+from collections import OrderedDict
+
 import numpy as np
 import pandas as pd
 
 from pocean.utils import (
-    normalize_array,
     generic_masked,
-    get_masked_datetime_array
+    get_default_axes,
+    get_masked_datetime_array,
+    normalize_array,
 )
 from pocean.cf import CFDataset
 from pocean.dsg.profile import profile_calculated_metadata
@@ -82,12 +85,14 @@ class OrthogonalMultidimensionalProfile(CFDataset):
     def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         if df is None:
-            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-        return profile_calculated_metadata(df, geometries)
+            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
+        return profile_calculated_metadata(df, axes, geometries)
 
-    def to_dataframe(self, clean_cols=True, clean_rows=True):
+    def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
 
         zvar = self.z_axes()[0]
         zs = len(self.dimensions[zvar.dimensions[0]])
@@ -126,13 +131,13 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
 
-        df_data = {
-            't': nt,
-            'x': x,
-            'y': y,
-            'z': z,
-            'profile': p
-        }
+        df_data = OrderedDict([
+            (axes.t, nt),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.profile, p)
+        ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))

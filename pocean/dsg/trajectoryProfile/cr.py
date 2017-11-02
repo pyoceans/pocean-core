@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 
 from pocean.utils import (
-
-    normalize_array,
     generic_masked,
-    get_masked_datetime_array
+    get_default_axes,
+    get_masked_datetime_array,
+    normalize_array,
 )
 from pocean.cf import CFDataset
 from pocean.dsg.trajectoryProfile import trajectory_profile_calculated_metadata
@@ -57,12 +57,14 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
     def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         if df is None:
-            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-        return trajectory_profile_calculated_metadata(df, geometries)
+            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
+        return trajectory_profile_calculated_metadata(df, axes, geometries)
 
-    def to_dataframe(self, clean_cols=True, clean_rows=True):
+    def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         # The index variable (trajectory_index) is identified by having an
         # attribute with name of instance_dimension whose value is the instance
         # dimension name (trajectory in this example). The index variable must
@@ -154,12 +156,12 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
 
         df_data = OrderedDict([
-            ('t', nt),
-            ('x', x),
-            ('y', y),
-            ('z', z),
-            ('trajectory', r),
-            ('profile', p)
+            (axes.t, nt),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.trajectory, r),
+            (axes.profile, p)
         ])
 
         building_index_to_drop = np.ones(o_dim.size, dtype=bool)

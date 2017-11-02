@@ -5,6 +5,7 @@ import operator
 import itertools
 import simplejson as json
 from datetime import datetime
+from collections import namedtuple, Mapping, Counter
 
 import numpy as np
 import netCDF4 as nc4
@@ -17,6 +18,45 @@ def downcast_dataframe(df):
         if np.issubdtype(df[column].dtype, np.int64):
             df[column] = df[column].astype(np.int32)
     return df
+
+
+def namedtuple_with_defaults(typename, field_names, default_values=()):
+    T = namedtuple(typename, field_names)
+    T.__new__.__defaults__ = (None,) * len(T._fields)
+    if isinstance(default_values, Mapping):
+        prototype = T(**default_values)
+    else:
+        prototype = T(*default_values)
+    T.__new__.__defaults__ = tuple(prototype)
+    return T
+
+
+def get_default_axes(axes=None):
+    axes = axes or {}
+    if isinstance(axes, tuple):
+        axes = axes._asdict()
+
+    # Make sure there are no duplicate values for axis names
+    counts = Counter(axes.values())
+    for v, c in counts.items():
+        if c > 1:
+            raise ValueError("Axis value '{}' appears twice.".format(v))
+
+    default_axes = {
+        'trajectory': 'trajectory',
+        'station':    'station',
+        'profile':    'profile',
+        't':          't',
+        'x':          'x',
+        'y':          'y',
+        'z':          'z',
+    }
+
+    return namedtuple_with_defaults(
+        'AxisDefaults',
+        'trajectory station profile t x y z',
+        default_axes
+    )(**axes)
 
 
 def all_subclasses(cls, skips=None):

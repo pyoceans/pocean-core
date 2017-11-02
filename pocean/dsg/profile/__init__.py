@@ -26,25 +26,25 @@ profiles_meta = namedtuple('ProfileCollection', [
 ])
 
 
-def profile_calculated_metadata(df, geometries=True):
+def profile_calculated_metadata(df, axes, geometries=True):
     profiles = {}
-    for pid, pgroup in df.groupby('profile'):
-        pgroup = pgroup.sort_values('t')
+    for pid, pgroup in df.groupby(axes.profile):
+        pgroup = pgroup.sort_values(axes.t)
         first_row = pgroup.iloc[0]
         profiles[pid] = profile_meta(
-            min_z=pgroup.z.min(),
-            max_z=pgroup.z.max(),
-            t=first_row.t,
-            x=first_row.x,
-            y=first_row.y,
-            geometry=Point(first_row.x, first_row.y)
+            min_z=pgroup[axes.z].min(),
+            max_z=pgroup[axes.z].max(),
+            t=first_row[axes.t],
+            x=first_row[axes.x],
+            y=first_row[axes.y],
+            geometry=Point(first_row[axes.x], first_row[axes.y])
         )
 
     if geometries:
-        null_coordinates = df.x.isnull() | df.y.isnull()
+        null_coordinates = df[axes.x].isnull() | df[axes.y].isnull()
         coords = list(unique_justseen(zip(
-            df.loc[~null_coordinates, 'x'].tolist(),
-            df.loc[~null_coordinates, 'y'].tolist()
+            df.loc[~null_coordinates, axes.x].tolist(),
+            df.loc[~null_coordinates, axes.y].tolist()
         )))
     else:
         # Calculate the geometry as the linestring between all of the profile points
@@ -57,10 +57,10 @@ def profile_calculated_metadata(df, geometries=True):
         geometry = Point(coords[0])
 
     return profiles_meta(
-        min_z=df.z.min(),
-        max_z=df.z.max(),
-        min_t=df.t.min(),
-        max_t=df.t.max(),
+        min_z=df[axes.z].min(),
+        max_z=df[axes.z].max(),
+        min_t=df[axes.t].min(),
+        max_t=df[axes.t].max(),
         profiles=profiles,
         geometry=geometry
     )

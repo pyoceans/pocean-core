@@ -33,13 +33,13 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
                 assert 'station' in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
                 # Even though we pass reduce_dims, there are two stations so it is not reduced
                 assert 'station' in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             os.close(fid)
@@ -63,13 +63,13 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
                 assert 'station' in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
                 # Should remove the station dim since there is only one station
                 assert 'station' not in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             os.close(fid)
@@ -93,13 +93,38 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
                 assert 'station' in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
                 # Should remove the station dim since there is only one station
                 assert 'station' not in result_ncd.dimensions
-                assert result_ncd.dimensions['time'].isunlimited() is True
+                assert result_ncd.dimensions['t'].isunlimited() is True
+            test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
+
+            os.close(fid)
+            os.remove(tmpfile)
+
+    def test_omtp_change_axis_names(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'om-multiple.nc')
+
+        new_axis = {
+            't': 'time',
+            'x': 'lon',
+            'y': 'lat',
+            'z': 'depth'
+        }
+
+        with OrthogonalMultidimensionalTimeseriesProfile(filepath) as ncd:
+            fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+            df = ncd.to_dataframe(clean_rows=False, axes=new_axis)
+
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, axes=new_axis) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+                assert 'time' in result_ncd.variables
+                assert 'lon' in result_ncd.variables
+                assert 'lat' in result_ncd.variables
+                assert 'depth' in result_ncd.variables
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             os.close(fid)

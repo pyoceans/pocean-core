@@ -8,7 +8,7 @@ import tempfile
 import numpy as np
 
 from pocean.dataset import EnhancedDataset
-from pocean.utils import generic_masked
+from pocean.utils import generic_masked, get_default_axes
 
 import logging
 from pocean import logger
@@ -20,6 +20,66 @@ class TestUtils(unittest.TestCase):
 
     def setUp(self):
         self.input_file = os.path.join(os.path.dirname(__file__), "resources/coamps.nc")
+
+    def test_get_default_axes(self):
+        assert get_default_axes() == (
+            'trajectory',
+            'station',
+            'profile',
+            't',
+            'x',
+            'y',
+            'z',
+        )
+
+        new_defaults = {
+            'trajectory': 'a',
+            'station':    'b',
+            'profile':    'c',
+            't':          'd',
+            'x':          'e',
+            'y':          'f',
+            'z':          'g',
+        }
+        assert get_default_axes(new_defaults) == (
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f',
+            'g',
+        )
+
+        new_defaults = {
+            'trajectory': 'a',
+            'station':    'b',
+            'profile':    'c'
+        }
+        assert get_default_axes(new_defaults) == (
+            'a',
+            'b',
+            'c',
+            't',
+            'x',
+            'y',
+            'z',
+        )
+
+        # Time is not a valid axis key
+        bad_defaults = {
+            'time': 'a'
+        }
+        with self.assertRaises(TypeError):
+            get_default_axes(bad_defaults)
+
+        # Can't have duplicate values
+        bad_defaults = {
+            'x': 'a',
+            'y': 'a'
+        }
+        with self.assertRaises(ValueError):
+            get_default_axes(bad_defaults)
 
     def test_single_attr_filter(self):
         nc = EnhancedDataset(self.input_file)

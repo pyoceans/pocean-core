@@ -12,9 +12,10 @@ from pocean.utils import (
     dict_update,
     downcast_dataframe,
     generic_masked,
+    get_default_axes,
     get_dtype,
+    get_masked_datetime_array,
     normalize_array,
-    get_masked_datetime_array
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
@@ -60,8 +61,8 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['station', 't', 'x', 'y', 'z']
-        data_columns = [ d for d in df.columns if d not in reserved_columns ]
+        axes = get_default_axes(kwargs.pop('axes', {}))
+        data_columns = [ d for d in df.columns if d not in axes ]
 
         reduce_dims = kwargs.pop('reduce_dims', False)
         unlimited = kwargs.pop('unlimited', False)
@@ -72,15 +73,15 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         # Make a new index that is the Cartesian product of all of the values from all of the
         # values of the old index. This is so don't have to iterate over anything. The full column
         # of data will be able to be shaped to the size of the final unique sized dimensions.
-        index_order = ['t', 'z', 'station']
+        index_order = [axes.t, axes.z, axes.station]
         df = df.set_index(index_order)
         df = df.reindex(
             pd.MultiIndex.from_product(df.index.levels, names=index_order)
         )
 
-        unique_z = df.index.get_level_values('z').unique().values.astype(np.int32)
-        unique_t = df.index.get_level_values('t').unique().tolist()  # tolist converts to datetime
-        all_stations = df.index.get_level_values('station')
+        unique_z = df.index.get_level_values(axes.z).unique().values.astype(np.int32)
+        unique_t = df.index.get_level_values(axes.t).unique().tolist()  # tolist converts to datetime
+        all_stations = df.index.get_level_values(axes.station)
         unique_s = all_stations.unique()
 
         with OrthogonalMultidimensionalTimeseriesProfile(output, 'w') as nc:
@@ -89,41 +90,41 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
                 def ts():
                     return np.s_[:, :]
-                default_dimensions = ('time', 'z')
+                default_dimensions = (axes.t, axes.z)
                 station_dimensions = ()
             else:
                 def ts():
                     return np.s_[:, :, :]
-                default_dimensions = ('time', 'z', 'station')
-                station_dimensions = ('station',)
-                nc.createDimension('station', unique_s.size)
+                default_dimensions = (axes.t, axes.z, axes.station)
+                station_dimensions = (axes.station,)
+                nc.createDimension(axes.station, unique_s.size)
 
-            station = nc.createVariable('station', get_dtype(unique_s), station_dimensions)
-            latitude = nc.createVariable('latitude', get_dtype(df.y), station_dimensions)
-            longitude = nc.createVariable('longitude', get_dtype(df.x), station_dimensions)
+            station = nc.createVariable(axes.station, get_dtype(unique_s), station_dimensions)
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), station_dimensions)
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), station_dimensions)
             # Assign over loop because VLEN variables (strings) have to be assigned by integer index
             # and we need to find the lat/lon based on station index
             for si, st in enumerate(unique_s):
                 station[si] = st
-                latitude[si] = df.y[all_stations == st].dropna().iloc[0]
-                longitude[si] = df.x[all_stations == st].dropna().iloc[0]
+                latitude[si] = df[axes.y][all_stations == st].dropna().iloc[0]
+                longitude[si] = df[axes.x][all_stations == st].dropna().iloc[0]
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
             if unlimited is True:
-                nc.createDimension('time', None)
+                nc.createDimension(axes.t, None)
             else:
-                nc.createDimension('time', len(unique_t))
-            time = nc.createVariable('time', 'f8', ('time',))
+                nc.createDimension(axes.t, len(unique_t))
+            time = nc.createVariable(axes.t, 'f8', (axes.t,))
             time[:] = nc4.date2num(unique_t, units=cls.default_time_unit)
 
-            nc.createDimension('z', unique_z.size)
-            z = nc.createVariable('z', get_dtype(unique_z), ('z',))
+            nc.createDimension(axes.z, unique_z.size)
+            z = nc.createVariable(axes.z, get_dtype(unique_z), (axes.z,))
             z[:] = unique_z
 
-            attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
             for c in data_columns:
                 # Create variable if it doesn't exist
@@ -155,12 +156,14 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         return OrthogonalMultidimensionalTimeseriesProfile(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        # axes = get_default_axes(kwargs.pop('axes', {}))
         # if df is None:
-        #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
+        #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         raise NotImplementedError
 
-    def to_dataframe(self, clean_cols=True, clean_rows=True):
+    def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
         try:
             s = normalize_array(svar)
@@ -196,11 +199,11 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         x = np.tile(x, n_times * n_z)
 
         df_data = OrderedDict([
-            ('t', t),
-            ('x', x),
-            ('y', y),
-            ('z', z),
-            ('station', s),
+            (axes.t, t),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.station, s),
         ])
 
         extract_vars = copy(self.variables)
@@ -234,27 +237,27 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         return df
 
-    def nc_attributes(self):
+    def nc_attributes(self, axes):
         atts = super(OrthogonalMultidimensionalTimeseriesProfile, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'timeSeriesProfile',
                 'cdm_data_type': 'TimeseriesProfile'
             },
-            'station' : {
+            axes.station : {
                 'cf_role': 'timeseries_id',
                 'long_name' : 'station identifier'
             },
-            'longitude': {
+            axes.x: {
                 'axis': 'X'
             },
-            'latitude': {
+            axes.y: {
                 'axis': 'Y'
             },
-            'z': {
+            axes.z: {
                 'axis': 'Z'
             },
-            'time': {
+            axes.t: {
                 'units': self.default_time_unit,
                 'standard_name': 'time',
                 'axis': 'T'

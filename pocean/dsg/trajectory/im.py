@@ -8,11 +8,12 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
-    normalize_array,
-    get_dtype,
     dict_update,
     generic_masked,
-    get_masked_datetime_array
+    get_default_axes,
+    get_dtype,
+    get_masked_datetime_array,
+    normalize_array,
 )
 from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.trajectory import trajectory_calculated_metadata
@@ -93,21 +94,15 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['trajectory', 't', 'x', 'y', 'z']
-        data_columns = [ d for d in df.columns if d not in reserved_columns ]
-
-        axis_names = kwargs.pop('axis_names', {})
-        T_NAME = axis_names.get('t', 'time')
-        X_NAME = axis_names.get('x', 'longitude')
-        Y_NAME = axis_names.get('y', 'latitude')
-        Z_NAME = axis_names.get('z', 'z')
+        axes = get_default_axes(kwargs.pop('axes', {}))
+        data_columns = [ d for d in df.columns if d not in axes ]
 
         reduce_dims = kwargs.pop('reduce_dims', False)
         unlimited = kwargs.pop('unlimited', False)
 
         with IncompleteMultidimensionalTrajectory(output, 'w') as nc:
 
-            trajectory_group = df.groupby('trajectory')
+            trajectory_group = df.groupby(axes.trajectory)
 
             if unlimited is True:
                 max_obs = None
@@ -115,54 +110,48 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 max_obs = trajectory_group.size().max()
             nc.createDimension('obs', max_obs)
 
-            unique_trajectories = df.trajectory.unique()
+            unique_trajectories = df[axes.trajectory].unique()
             if reduce_dims is True and len(unique_trajectories) == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
                 def ts(t_index, size):
                     return np.s_[0:size]
                 default_dimensions = ('obs',)
-                trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory))
+                trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]))
             else:
                 def ts(t_index, size):
                     return np.s_[t_index, 0:size]
-                default_dimensions = ('trajectory', 'obs')
-                nc.createDimension('trajectory', unique_trajectories.size)
-                trajectory = nc.createVariable('trajectory', get_dtype(df.trajectory), ('trajectory',))
+                default_dimensions = (axes.trajectory, 'obs')
+                nc.createDimension(axes.trajectory, unique_trajectories.size)
+                trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
-            time = nc.createVariable(T_NAME, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
-            time.axis = 'T'
-            time.units = cls.default_time_unit
-            z = nc.createVariable(Z_NAME, get_dtype(df.z), default_dimensions, fill_value=df.z.dtype.type(cls.default_fill_value))
-            z.axis = 'Z'
-            latitude = nc.createVariable(Y_NAME, get_dtype(df.y), default_dimensions, fill_value=df.y.dtype.type(cls.default_fill_value))
-            latitude.axis = 'Y'
-            longitude = nc.createVariable(X_NAME, get_dtype(df.x), default_dimensions, fill_value=df.x.dtype.type(cls.default_fill_value))
-            longitude.axis = 'X'
+            time = nc.createVariable(axes.t, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
+            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), default_dimensions, fill_value=df[axes.z].dtype.type(cls.default_fill_value))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), default_dimensions, fill_value=df[axes.y].dtype.type(cls.default_fill_value))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), default_dimensions, fill_value=df[axes.x].dtype.type(cls.default_fill_value))
 
-            attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
             for i, (uid, gdf) in enumerate(trajectory_group):
                 trajectory[i] = uid
 
-                # tolist() converts to a python datetime object without timezone
-                # and has NaTs.
-                g = gdf.t.tolist()
+                # tolist() converts to a python datetime object without timezone and has NaTs.
+                g = gdf[axes.t].tolist()
                 # date2num convers NaTs to np.nan
                 gg = nc4.date2num(g, units=cls.default_time_unit)
                 # masked_invalid moves np.nan to a masked value
                 time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
 
-                lats = gdf.y.fillna(latitude._FillValue).values
+                lats = gdf[axes.y].fillna(latitude._FillValue).values
                 latitude[ts(i, lats.size)] = lats
 
-                lons = gdf.x.fillna(longitude._FillValue).values
+                lons = gdf[axes.x].fillna(longitude._FillValue).values
                 longitude[ts(i, lons.size)] = lons
 
-                zs = gdf.z.fillna(z._FillValue).values
+                zs = gdf[axes.z].fillna(z._FillValue).values
                 z[ts(i, zs.size)] = zs
 
                 for c in data_columns:
@@ -179,8 +168,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                             attributes[var_name] = {}
                         attributes[var_name] = dict_update(attributes[var_name], {
                             'coordinates' : '{} {} {} {}'.format(
-                                T_NAME, Z_NAME, X_NAME, Y_NAME
-                            ),
+                                axes.t, axes.z, axes.x, axes.y
+                            )
                         })
                     else:
                         v = nc.variables[var_name]
@@ -200,12 +189,15 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
         return IncompleteMultidimensionalTrajectory(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         if df is None:
-            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-        return trajectory_calculated_metadata(df, geometries)
+            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
+        return trajectory_calculated_metadata(df, axes, geometries)
 
-    def to_dataframe(self, clean_cols=True, clean_rows=True):
+    def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
+
         # Z
         zvar = self.z_axes()[0]
         z = generic_masked(zvar[:], attrs=self.vatts(zvar.name)).flatten()
@@ -244,11 +236,11 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         L.debug(['trajectory data size: ', p.size])
 
         df_data = OrderedDict([
-            ('t', t),
-            ('x', x),
-            ('y', y),
-            ('z', z),
-            ('trajectory', p)
+            (axes.t, t),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.trajectory, p)
         ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
@@ -270,15 +262,29 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
         return df
 
-    def nc_attributes(self):
+    def nc_attributes(self, axes):
         atts = super(IncompleteMultidimensionalTrajectory, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'trajectory',
                 'cdm_data_type': 'Trajectory'
             },
-            'trajectory' : {
+            axes.trajectory : {
                 'cf_role': 'trajectory_id',
                 'long_name' : 'trajectory identifier'
+            },
+            axes.x: {
+                'axis': 'X'
+            },
+            axes.y: {
+                'axis': 'Y'
+            },
+            axes.z: {
+                'axis': 'Z'
+            },
+            axes.t: {
+                'units': self.default_time_unit,
+                'standard_name': 'time',
+                'axis': 'T'
             }
         })

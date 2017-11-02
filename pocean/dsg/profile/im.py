@@ -1,15 +1,18 @@
 #!python
 # coding=utf-8
+from collections import OrderedDict
+
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
+    dict_update,
+    generic_masked,
+    get_default_axes,
+    get_dtype,
     get_masked_datetime_array,
     normalize_array,
-    get_dtype,
-    dict_update,
-    generic_masked
 )
 from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.profile import profile_calculated_metadata
@@ -71,44 +74,45 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['profile', 't', 'x', 'y', 'z']
-        data_columns = [ d for d in df.columns if d not in reserved_columns ]
+        axes = get_default_axes(kwargs.pop('axes', {}))
+        data_columns = [ d for d in df.columns if d not in axes ]
+
+        unlimited = kwargs.pop('unlimited', False)
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:
 
-            profile_group = df.groupby('profile')
-            max_zs = profile_group.size().max()
+            profile_group = df.groupby(axes.profile)
 
-            unique_profiles = df.profile.unique()
-            nc.createDimension('profile', unique_profiles.size)
-            nc.createDimension('z', max_zs)
+            if unlimited is True:
+                max_profiles = None
+            else:
+                max_profiles = df[axes.profile].unique().size
+            nc.createDimension(axes.profile, max_profiles)
+
+            max_zs = profile_group.size().max()
+            nc.createDimension(axes.z, max_zs)
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
-            profile = nc.createVariable('profile', get_dtype(df.profile), ('profile',))
+            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (axes.profile,))
 
             # Create all of the variables
-            time = nc.createVariable('time', 'i4', ('profile',))
-            time.axis = 'T'
-            time.units = cls.default_time_unit
-            latitude = nc.createVariable('latitude', get_dtype(df.y), ('profile',))
-            latitude.axis = 'Y'
-            longitude = nc.createVariable('longitude', get_dtype(df.x), ('profile',))
-            longitude.axis = 'X'
-            z = nc.createVariable('z', get_dtype(df.z), ('profile', 'z'), fill_value=df.z.dtype.type(cls.default_fill_value))
-            z.axis = 'Z'
+            time = nc.createVariable(axes.t, 'f8', (axes.profile,))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.profile,))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.profile,))
+            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (axes.profile, axes.z), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
 
-            attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
             for i, (uid, pdf) in enumerate(profile_group):
                 profile[i] = uid
 
-                time[i] = nc4.date2num(pdf.t.iloc[0], units=cls.default_time_unit)
-                latitude[i] = pdf.y.iloc[0]
-                longitude[i] = pdf.x.iloc[0]
+                time[i] = nc4.date2num(pdf[axes.t].iloc[0], units=cls.default_time_unit)
+                latitude[i] = pdf[axes.y].iloc[0]
+                longitude[i] = pdf[axes.x].iloc[0]
 
-                zvalues = pdf.z.fillna(z._FillValue).values
+                zvalues = pdf[axes.z].fillna(z._FillValue).values
                 sl = slice(0, zvalues.size)
                 z[i, sl] = zvalues
                 for c in data_columns:
@@ -117,14 +121,16 @@ class IncompleteMultidimensionalProfile(CFDataset):
                     if var_name not in nc.variables:
                         if np.issubdtype(pdf[c].dtype, 'S') or pdf[c].dtype == object:
                             # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(pdf[c]), ('profile', 'z'))
+                            v = nc.createVariable(var_name, get_dtype(pdf[c]), (axes.profile, 'z'))
                         else:
-                            v = nc.createVariable(var_name, get_dtype(pdf[c]), ('profile', 'z'), fill_value=pdf[c].dtype.type(cls.default_fill_value))
+                            v = nc.createVariable(var_name, get_dtype(pdf[c]), (axes.profile, 'z'), fill_value=pdf[c].dtype.type(cls.default_fill_value))
 
                         if var_name not in attributes:
                             attributes[var_name] = {}
                         attributes[var_name] = dict_update(attributes[var_name], {
-                            'coordinates' : 'time latitude longitude z',
+                            'coordinates' : '{} {} {} {}'.format(
+                                axes.t, axes.z, axes.x, axes.y
+                            )
                         })
                     else:
                         v = nc.variables[var_name]
@@ -143,12 +149,14 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         return IncompleteMultidimensionalProfile(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         if df is None:
-            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
-        return profile_calculated_metadata(df, geometries)
+            df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
+        return profile_calculated_metadata(df, axes, geometries)
 
-    def to_dataframe(self, clean_cols=True, clean_rows=True):
+    def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         # Multiple profiles in the file
         pvar = self.filter_by_attrs(cf_role='profile_id')[0]
         p_dim = self.dimensions[pvar.dimensions[0]]
@@ -184,13 +192,13 @@ class IncompleteMultidimensionalProfile(CFDataset):
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
 
-        df_data = {
-            't': nt,
-            'x': x,
-            'y': y,
-            'z': z,
-            'profile': p
-        }
+        df_data = OrderedDict([
+            (axes.t, nt),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.profile, p)
+        ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
         extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
@@ -223,15 +231,29 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         return df
 
-    def nc_attributes(self):
+    def nc_attributes(self, axes):
         atts = super(IncompleteMultidimensionalProfile, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'profile',
                 'cdm_data_type': 'Profile'
             },
-            'profile' : {
+            axes.profile : {
                 'cf_role': 'profile_id',
                 'long_name' : 'profile identifier'
+            },
+            axes.x: {
+                'axis': 'X'
+            },
+            axes.y: {
+                'axis': 'Y'
+            },
+            axes.z: {
+                'axis': 'Z'
+            },
+            axes.t: {
+                'units': self.default_time_unit,
+                'standard_name': 'time',
+                'axis': 'T'
             }
         })

@@ -9,11 +9,12 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
-    normalize_array,
-    get_dtype,
     dict_update,
     generic_masked,
-    get_masked_datetime_array
+    get_default_axes,
+    get_dtype,
+    get_masked_datetime_array,
+    normalize_array,
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
@@ -25,7 +26,12 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
     """
     H.2.1. Orthogonal multidimensional array representation of time series
 
-    If the time series instances have the same number of elements and the time values are identical for all instances, you may use the orthogonal multidimensional array representation. This has either a one-dimensional coordinate variable, time(time), provided the time values are ordered monotonically, or a one-dimensional auxiliary coordinate variable, time(o), where o is the element dimension. In the former case, listing the time variable in the coordinates attributes of the data variables is optional.
+    If the time series instances have the same number of elements and the time values are identical
+    for all instances, you may use the orthogonal multidimensional array representation. This has
+    either a one-dimensional coordinate variable, time(time), provided the time values are ordered
+    monotonically, or a one-dimensional auxiliary coordinate variable, time(o), where o is the
+    element dimension. In the former case, listing the time variable in the coordinates attributes
+    of the data variables is optional.
     """
 
     @classmethod
@@ -65,42 +71,47 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        reserved_columns = ['station', 't', 'x', 'y', 'z']
-        data_columns = [ d for d in df.columns if d not in reserved_columns ]
+        axes = get_default_axes(kwargs.pop('axes', {}))
+        data_columns = [ d for d in df.columns if d not in axes ]
 
         with OrthogonalMultidimensionalTimeseries(output, 'w') as nc:
 
-            station_group = df.groupby('station')
+            station_group = df.groupby(axes.station)
             num_stations = len(station_group)
 
             # assume all groups are the same size and have identical times
             _, sdf = list(station_group)[0]
-            t = sdf.t
+            t = sdf[axes.t]
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
             # Create all of the variables
-            nc.createDimension('time', t.size)
-            nc.createDimension('station', num_stations)
-            station = nc.createVariable('station', get_dtype(df.station), ('station',))
+            nc.createDimension(axes.t, t.size)
+            nc.createDimension(axes.station, num_stations)
+            station = nc.createVariable(axes.station, get_dtype(df.station), (axes.station,))
 
-            time = nc.createVariable('time', 'f8', ('time',))
-            latitude = nc.createVariable('latitude', get_dtype(df.y), ('station',))
-            longitude = nc.createVariable('longitude', get_dtype(df.x), ('station',))
-            z = nc.createVariable('z', get_dtype(df.z), ('station',), fill_value=df.z.dtype.type(cls.default_fill_value))
+            time = nc.createVariable(axes.t, 'f8', (axes.t,))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.station,))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.station,))
+            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (axes.station,), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
 
-            attributes = dict_update(nc.nc_attributes(), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
-            time[:] = nc4.date2num(t.tolist(), units=cls.default_time_unit)
+            # tolist() converts to a python datetime object without timezone and has NaTs.
+            g = t.tolist()
+            # date2num convers NaTs to np.nan
+            gg = nc4.date2num(g, units=cls.default_time_unit)
+            # masked_invalid moves np.nan to a masked value
+            time[:] = np.ma.masked_invalid(gg)
 
             for i, (uid, sdf) in enumerate(station_group):
                 station[i] = uid
-                latitude[i] = sdf.y.iloc[0]
-                longitude[i] = sdf.x.iloc[0]
+                latitude[i] = sdf[axes.y].iloc[0]
+                longitude[i] = sdf[axes.x].iloc[0]
 
                 # TODO: write a test for a Z with a _FillValue
-                z[i] = sdf.z.iloc[0]
+                z[i] = sdf[axes.z].iloc[0]
 
                 for c in data_columns:
 
@@ -111,19 +122,21 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                             attributes[var_name] = {}
                         if sdf[c].dtype == np.dtype('datetime64[ns]'):
                             fv = np.dtype('f8').type(cls.default_fill_value)
-                            v = nc.createVariable(var_name, 'f8', ('station', 'time',), fill_value=fv)
+                            v = nc.createVariable(var_name, 'f8', (axes.station, axes.t,), fill_value=fv)
                             tvalues = pd.Series(nc4.date2num(sdf[c].tolist(), units=cls.default_time_unit))
                             attributes[var_name] = dict_update(attributes[var_name], {
                                 'units': cls.default_time_unit
                             })
                         elif np.issubdtype(sdf[c].dtype, 'S') or sdf[c].dtype == object:
                             # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(sdf[c]), ('station', 'time',))
+                            v = nc.createVariable(var_name, get_dtype(sdf[c]), (axes.station, axes.t,))
                         else:
-                            v = nc.createVariable(var_name, get_dtype(sdf[c]), ('station', 'time',), fill_value=sdf[c].dtype.type(cls.default_fill_value))
+                            v = nc.createVariable(var_name, get_dtype(sdf[c]), (axes.station, axes.t,), fill_value=sdf[c].dtype.type(cls.default_fill_value))
 
                         attributes[var_name] = dict_update(attributes[var_name], {
-                            'coordinates' : 'time latitude longitude z',
+                            'coordinates' : '{} {} {} {}'.format(
+                                axes.t, axes.z, axes.x, axes.y
+                            )
                         })
                     else:
                         v = nc.variables[var_name]
@@ -146,13 +159,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         return OrthogonalMultidimensionalTimeseries(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True):
+    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+        # axes = get_default_axes(kwargs.pop('axes', {}))
         # if df is None:
-        #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows)
+        #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         raise NotImplementedError
 
-    def to_dataframe(self, clean_cols=False, clean_rows=False):
-
+    def to_dataframe(self, clean_cols=False, clean_rows=False, **kwargs):
+        axes = get_default_axes(kwargs.pop('axes', {}))
         # Don't pass around the attributes store them in the class
 
         # T
@@ -193,11 +207,11 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             t = np.repeat(t, len(svar))
 
         df_data = OrderedDict([
-            ('t', t),
-            ('x', x),
-            ('y', y),
-            ('z', z),
-            ('station', s),
+            (axes.t, t),
+            (axes.x, x),
+            (axes.y, y),
+            (axes.z, z),
+            (axes.station, s),
         ])
 
         building_index_to_drop = np.ma.zeros(t.size, dtype=bool)
@@ -243,29 +257,29 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         return df
 
-    def nc_attributes(self):
+    def nc_attributes(self, axes):
         atts = super(OrthogonalMultidimensionalTimeseries, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'timeseries',
                 'cdm_data_type': 'Timeseries'
             },
-            'station' : {
+            axes.station : {
                 'cf_role': 'timeseries_id',
                 'long_name' : 'station identifier'
             },
-            'time': {
+            axes.t: {
                 'units': self.default_time_unit,
                 'standard_name': 'time',
                 'axis': 'T'
             },
-            'latitude': {
+            axes.y: {
                 'axis': 'Y'
             },
-            'longitude': {
+            axes.x: {
                 'axis': 'X'
             },
-            'z': {
+            axes.z: {
                 'axis': 'Z'
             }
         })

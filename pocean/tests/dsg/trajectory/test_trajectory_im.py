@@ -88,9 +88,9 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
-            df = ncd.to_dataframe(clean_rows=False)
+            df = ncd.to_dataframe(clean_rows=False, axes=new_axis)
 
-            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, axis_names=new_axis) as result_ncd:
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, axes=new_axis) as result_ncd:
                 assert 'trajectory' in result_ncd.dimensions
                 assert 'time' in result_ncd.variables
                 assert 'lon' in result_ncd.variables
