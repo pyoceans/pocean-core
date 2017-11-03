@@ -79,8 +79,8 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             pd.MultiIndex.from_product(df.index.levels, names=index_order)
         )
 
-        unique_z = df.index.get_level_values(axes.z).unique().values.astype(np.int32)
-        unique_t = df.index.get_level_values(axes.t).unique().tolist()  # tolist converts to datetime
+        unique_z = df.index.get_level_values(axes.z).unique().values
+        unique_t = df.index.get_level_values(axes.t).unique().tolist()  # tolist converts to Timestamp
         all_stations = df.index.get_level_values(axes.station)
         unique_s = all_stations.unique()
 
