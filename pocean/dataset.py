@@ -131,6 +131,8 @@ class EnhancedDataset(Dataset):
             typed = v.dtype
             if isinstance(typed, np.dtype):
                 typed = str(typed.name)
+            elif isinstance(typed, type):
+                typed = typed.__name__
 
             vs[k] = {
                 'attributes': ncpyattributes({ va: v.getncattr(va) for va in v.ncattrs() }),
