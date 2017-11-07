@@ -1,6 +1,7 @@
 #!python
 # coding=utf-8
 import six
+from copy import copy
 from collections import OrderedDict
 
 import numpy as np
@@ -9,8 +10,10 @@ import pandas as pd
 from pocean.utils import (
     generic_masked,
     get_default_axes,
+    get_mapped_axes_variables,
     get_masked_datetime_array,
     normalize_array,
+    normalize_countable_array,
 )
 from pocean.cf import CFDataset
 from pocean.dsg.profile import profile_calculated_metadata
@@ -94,21 +97,20 @@ class OrthogonalMultidimensionalProfile(CFDataset):
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
 
-        zvar = self.z_axes()[0]
+        axv = get_mapped_axes_variables(self, axes)
+
+        zvar = axv.z
         zs = len(self.dimensions[zvar.dimensions[0]])
 
         # Profiles
-        pvar = self.filter_by_attrs(cf_role='profile_id')[0]
-        try:
-            p = normalize_array(pvar)
-        except ValueError:
-            p = np.asarray(list(range(len(pvar))), dtype=np.integer)
+        pvar = axv.profile
+        p = normalize_countable_array(pvar)
         ps = p.size
         p = p.repeat(zs)
         logger.debug(['profile data size: ', p.size])
 
         # Z
-        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name))
+        z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name))
         try:
             z = np.tile(z, ps)
         except ValueError:
@@ -116,18 +118,18 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         logger.debug(['z data size: ', z.size])
 
         # T
-        tvar = self.t_axes()[0]
+        tvar = axv.t
         t = tvar[:].repeat(zs)
         nt = get_masked_datetime_array(t, tvar).flatten()
         logger.debug(['time data size: ', nt.size])
 
         # X
-        xvar = self.x_axes()[0]
+        xvar = axv.x
         x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
         logger.debug(['x data size: ', x.size])
 
         # Y
-        yvar = self.y_axes()[0]
+        yvar = axv.y
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
         logger.debug(['y data size: ', y.size])
 
@@ -140,27 +142,40 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
-        extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
-        for i, dvar in enumerate(extract_vars):
+
+        # Axes variables are already processed so skip them
+        extract_vars = copy(self.variables)
+        for ncvar in axv._asdict().values():
+            if ncvar is not None and ncvar.name in extract_vars:
+                del extract_vars[ncvar.name]
+
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
 
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dnam))
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Z dimension
             elif dvar.dimensions == zvar.dimensions:
-                vdata = generic_masked(np.tile(dvar[:], ps).flatten(), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(np.tile(dvar[:], ps).flatten(), attrs=self.vatts(dnam))
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Profile, z dimension
             elif dvar.dimensions == pvar.dimensions + zvar.dimensions:
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
-                logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))
-                continue
+                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                # Carry through size 1 variables
+                if vdata.size == 1:
+                    vdata = vdata[0]
+                else:
+                    logger.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
+                    continue
 
-            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
-            df_data[dvar.name] = vdata
+            df_data[dnam] = vdata
 
         df = pd.DataFrame(df_data)
 

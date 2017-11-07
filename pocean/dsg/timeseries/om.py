@@ -13,13 +13,14 @@ from pocean.utils import (
     generic_masked,
     get_default_axes,
     get_dtype,
+    get_mapped_axes_variables,
     get_masked_datetime_array,
-    normalize_array,
+    normalize_countable_array,
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
 
-from pocean import logger  # noqa
+from pocean import logger as L  # noqa
 
 
 class OrthogonalMultidimensionalTimeseries(CFDataset):
@@ -152,7 +153,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     try:
                         v[i, :] = vvalues
                     except BaseException:
-                        logger.debug('{} was not written. Likely a metadata variable'.format(v.name))
+                        L.debug('{} was not written. Likely a metadata variable'.format(v.name))
 
             # Set global attributes
             nc.update_attributes(attributes)
@@ -167,43 +168,34 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
     def to_dataframe(self, clean_cols=False, clean_rows=False, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
-        # Don't pass around the attributes store them in the class
+
+        axv = get_mapped_axes_variables(self, axes)
 
         # T
-        tvar = self.t_axes()[0]
-        t = get_masked_datetime_array(tvar[:], tvar)
-        logger.debug(['time data size: ', t.size])
-
-        svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
-        # Stations
-        # TODO: Make sure there is a test for a file with multiple time variables
-        try:
-            s = normalize_array(svar)
-        except ValueError:
-            s = np.asarray(list(range(len(svar))), dtype=np.integer)
-        s = np.repeat(s, t.size)
-        logger.debug(['station data size: ', s.size])
+        t = get_masked_datetime_array(axv.t[:], axv.t)
+        L.debug(['time data size: ', t.size])
 
         # X
-        xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:].repeat(t.size), attrs=self.vatts(xvar.name))
-        logger.debug(['x data size: ', x.size])
+        x = generic_masked(axv.x[:].repeat(t.size), attrs=self.vatts(axv.x.name))
+        L.debug(['x data size: ', x.size])
 
         # Y
-        yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:].repeat(t.size), attrs=self.vatts(yvar.name))
-        logger.debug(['y data size: ', y.size])
+        y = generic_masked(axv.y[:].repeat(t.size), attrs=self.vatts(axv.y.name))
+        L.debug(['y data size: ', y.size])
 
         # Z
-        zvar = self.z_axes()[0]
-        z = generic_masked(zvar[:].repeat(t.size), attrs=self.vatts(zvar.name))
-        logger.debug(['z data size: ', z.size])
+        z = generic_masked(axv.z[:].repeat(t.size), attrs=self.vatts(axv.z.name))
+        L.debug(['z data size: ', z.size])
+
+        svar = axv.station
+        s = normalize_countable_array(svar)
+        s = np.repeat(s, t.size)
+        L.debug(['station data size: ', s.size])
 
         # now repeat t per station
-
         # figure out if this is a single-station file
         # do this by checking the dimensions of the Z var
-        if zvar.ndim == 1:
+        if axv.z.ndim == 1:
             t = np.repeat(t, len(svar))
 
         df_data = OrderedDict([
@@ -215,37 +207,36 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         ])
 
         building_index_to_drop = np.ma.zeros(t.size, dtype=bool)
+
+        # Axes variables are already processed so skip them
         extract_vars = copy(self.variables)
-        del extract_vars[svar.name]
-        del extract_vars[xvar.name]
-        del extract_vars[yvar.name]
-        del extract_vars[zvar.name]
-        del extract_vars[tvar.name]
+        for ncvar in axv._asdict().values():
+            if ncvar is not None and ncvar.name in extract_vars:
+                del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
-            if dvar[:].flatten().size > t.size:
-                logger.warning("Variable {} is not the correct size, skipping.".format(dnam))
-                continue
-
             vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
-            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Carry through size 1 variables
+            if vdata.size == 1:
+                vdata = vdata[0]
+            else:
+                if dvar[:].flatten().size != t.size:
+                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    continue
+
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Convert to datetime objects for identified time variables
             try:
                 if re.match(r'.* since .*', dvar.units):
                     vdata = nc4.num2date(vdata.data[:], dvar.units, getattr(dvar, 'calendar', 'standard'))
             except AttributeError:
                 pass
 
-            if vdata.size == 1:
-                vdata = vdata[0]
             df_data[dnam] = vdata
 
-        df = pd.DataFrame()
-        for k, v in df_data.items():
-            try:
-                df[k] = v
-            except ValueError as e:
-                logger.exception("Could not write {} as {}. {}".format(k, v, e))
-                raise
+        df = pd.DataFrame(df_data)
 
         # Drop all data columns with no data
         if clean_cols:

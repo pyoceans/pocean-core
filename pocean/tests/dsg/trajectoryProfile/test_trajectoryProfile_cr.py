@@ -37,9 +37,16 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         with ContiguousRaggedTrajectoryProfile(self.missing_time) as t:
             t.to_dataframe()
 
-    def test_crtp_calculated_metadata(self):
+    def test_crtp_calculated_metadata_single(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+
         with ContiguousRaggedTrajectoryProfile(self.single) as st:
-            s = st.calculated_metadata()
+            s = st.calculated_metadata(axes=axes)
             assert s.min_t.round('S') == dtparse('2014-11-25 18:57:30')
             assert s.max_t.round('S') == dtparse('2014-11-27 07:10:30')
             assert len(s.trajectories) == 1
@@ -54,8 +61,16 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(first_loc[1], 34.30818)
             assert len(traj.profiles) == 17
 
+    def test_crtp_calculated_metadata_multi(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+
         with ContiguousRaggedTrajectoryProfile(self.multi) as mt:
-            m = mt.calculated_metadata()
+            m = mt.calculated_metadata(axes=axes)
             assert m.min_t.round('S') == dtparse('1990-01-01 00:00:00')
             assert m.max_t.round('S') == dtparse('1990-01-03 02:00:00')
             assert len(m.trajectories) == 5
@@ -87,8 +102,16 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert traj4.profiles[19].x == -44
             assert traj4.profiles[19].y == 47
 
+    def test_crtp_calculated_metadata_missing_time(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+
         with ContiguousRaggedTrajectoryProfile(self.missing_time) as mmt:
-            t = mmt.calculated_metadata()
+            t = mmt.calculated_metadata(axes=axes)
             assert t.min_t == dtparse('2014-11-16 21:32:29.952500')
             assert t.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert len(t.trajectories) == 1
@@ -105,9 +128,16 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(first_loc[1],  43.5022166666667)
             assert len(traj.profiles) == 13
 
-    def test_just_missing_time(self):
+    def test_crtp_just_missing_time(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+
         with ContiguousRaggedTrajectoryProfile(self.missing_time) as mmt:
-            t = mmt.calculated_metadata()
+            t = mmt.calculated_metadata(axes=axes)
             assert t.min_t == dtparse('2014-11-16 21:32:29.952500')
             assert t.max_t == dtparse('2014-11-17 07:59:08.398500')
             assert len(t.trajectories) == 1
@@ -123,9 +153,16 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(first_loc[1],  43.5022166666667)
             assert len(traj.profiles) == 13
 
-    def test_just_missing_locations(self):
+    def test_crtp_just_missing_locations(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+
         with ContiguousRaggedTrajectoryProfile(self.nan_locations) as ml:
-            t = ml.calculated_metadata()
+            t = ml.calculated_metadata(axes=axes)
             assert len(t.trajectories) == 1
 
             traj = t.trajectories["clark-20150709T1803"]

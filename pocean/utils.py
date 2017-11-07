@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+import six
 import base64
 import operator
 import itertools
@@ -108,6 +109,24 @@ def normalize_array(var):
         return var[:]
 
 
+def normalize_countable_array(cvar, count_if_none=None):
+    try:
+        p = normalize_array(cvar)
+        if isinstance(p, six.string_types):
+            p = np.asarray([p])
+        elif hasattr(p, 'mask') and np.all(p.mask == True):  # noqa
+            # All masked out so compute the index by counting!
+            raise ValueError
+    except BaseException:
+        logger.warning('Could not pull a countable array... using a calculated index')
+        if cvar is None and count_if_none is not None:
+            p = np.asarray(list(range(int(count_if_none))), dtype=np.integer)
+        else:
+            p = np.asarray(list(range(len(cvar))), dtype=np.integer)
+
+    return p
+
+
 def safe_attribute_typing(zdtype, value):
     try:
         return zdtype.type(value)
@@ -201,6 +220,73 @@ def get_masked_datetime_array(t, tvar):
     nt = np.ma.MaskedArray(dts)
     nt[t_mask] = np.ma.masked
     return nt
+
+
+def get_mapped_axes_variables(ncd, axes=None):
+    axes = get_default_axes(axes or {})
+
+    ax = namedtuple('AxisVariables', 'trajectory station profile t x y z')
+
+    # Z
+    if axes.z in ncd.variables:
+        zvar = ncd.variables[axes.z]
+    else:
+        zvar = ncd.z_axes()[0]
+
+    # T
+    if axes.t in ncd.variables:
+        tvar = ncd.variables[axes.t]
+    else:
+        tvar = ncd.t_axes()[0]
+
+    # X
+    if axes.x in ncd.variables:
+        xvar = ncd.variables[axes.x]
+    else:
+        xvar = ncd.x_axes()[0]
+
+    # Y
+    if axes.y in ncd.variables:
+        yvar = ncd.variables[axes.y]
+    else:
+        yvar = ncd.y_axes()[0]
+
+    # Trajectory
+    if axes.trajectory in ncd.variables:
+        rvar = ncd.variables[axes.trajectory]
+    else:
+        try:
+            rvar = ncd.filter_by_attrs(cf_role='trajectory_id')[0]
+        except IndexError:
+            rvar = None
+
+    # Profile
+    if axes.profile in ncd.variables:
+        pvar = ncd.variables[axes.profile]
+    else:
+        try:
+            pvar = ncd.filter_by_attrs(cf_role='profile_id')[0]
+        except IndexError:
+            pvar = None
+
+    # Station
+    if axes.station in ncd.variables:
+        svar = ncd.variables[axes.station]
+    else:
+        try:
+            svar = ncd.filter_by_attrs(cf_role='timeseries_id')[0]
+        except IndexError:
+            svar = None
+
+    return ax(
+        rvar,
+        svar,
+        pvar,
+        tvar,
+        xvar,
+        yvar,
+        zvar
+    )
 
 
 def get_dtype(obj):

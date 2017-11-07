@@ -3,7 +3,6 @@
 from copy import copy
 from collections import OrderedDict
 
-import six
 import numpy as np
 import pandas as pd
 import netCDF4 as nc4
@@ -14,12 +13,13 @@ from pocean.utils import (
     generic_masked,
     get_default_axes,
     get_dtype,
+    get_mapped_axes_variables,
     get_masked_datetime_array,
-    normalize_array,
+    normalize_countable_array,
 )
 from pocean.cf import CFDataset
 from pocean.cf import cf_safe_name
-from pocean import logger  # noqa
+from pocean import logger as L  # noqa
 
 
 class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
@@ -164,36 +164,29 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
-        svar = self.filter_by_attrs(cf_role='timeseries_id')[0]
-        try:
-            s = normalize_array(svar)
-            if isinstance(s, six.string_types):
-                s = np.asarray([s])
-        except ValueError:
-            s = np.asarray(list(range(len(svar))), dtype=np.integer)
-        n_stations = s.size
+
+        axv = get_mapped_axes_variables(self, axes)
+
+        svar = axv.station
+        s = normalize_countable_array(svar)
 
         # T
-        tvar = self.t_axes()[0]
-        t = get_masked_datetime_array(tvar[:], tvar)
+        t = get_masked_datetime_array(axv.t[:], axv.t)
         n_times = t.size
 
         # X
-        xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name))
+        x = generic_masked(axv.x[:], attrs=self.vatts(axv.x.name))
 
         # Y
-        yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name))
+        y = generic_masked(axv.y[:], attrs=self.vatts(axv.y.name))
 
         # Z
-        zvar = self.z_axes()[0]
-        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name))
+        z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name))
         n_z = z.size
 
         # denormalize table structure
-        t = np.repeat(t, n_stations * n_z)
-        z = np.tile(np.repeat(z, n_stations), n_times)
+        t = np.repeat(t, s.size * n_z)
+        z = np.tile(np.repeat(z, s.size), n_times)
         s = np.tile(s, n_z * n_times)
         y = np.tile(y, n_times * n_z)
         x = np.tile(x, n_times * n_z)
@@ -206,23 +199,27 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             (axes.station, s),
         ])
 
-        extract_vars = copy(self.variables)
-        del extract_vars[svar.name]
-        del extract_vars[xvar.name]
-        del extract_vars[yvar.name]
-        del extract_vars[zvar.name]
-        del extract_vars[tvar.name]
-
         building_index_to_drop = np.ones(t.size, dtype=bool)
-        for i, (dnam, dvar) in enumerate(extract_vars.items()):
-            if dvar[:].flatten().size != t.size:
-                logger.warning("Variable {} is not the correct size, skipping.".format(dnam))
-                continue
 
+        # Axes variables are already processed so skip them
+        extract_vars = copy(self.variables)
+        for ncvar in axv._asdict().values():
+            if ncvar is not None and ncvar.name in extract_vars:
+                del extract_vars[ncvar.name]
+
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
             vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
-            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Carry through size 1 variables
             if vdata.size == 1:
                 vdata = vdata[0]
+            else:
+                if dvar[:].flatten().size != t.size:
+                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    continue
+
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
             df_data[dnam] = vdata
 
         df = pd.DataFrame(df_data)

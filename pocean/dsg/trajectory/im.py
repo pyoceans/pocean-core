@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+from copy import copy
 from collections import OrderedDict
 
 import six
@@ -12,8 +13,10 @@ from pocean.utils import (
     generic_masked,
     get_default_axes,
     get_dtype,
+    get_mapped_axes_variables,
     get_masked_datetime_array,
     normalize_array,
+    normalize_countable_array,
 )
 from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.trajectory import trajectory_calculated_metadata
@@ -198,39 +201,31 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
 
-        # Z
-        zvar = self.z_axes()[0]
-        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name)).flatten()
-        L.debug(['z data size: ', z.size])
+        axv = get_mapped_axes_variables(self, axes)
 
         # T
-        tvar = self.t_axes()[0]
-        t = get_masked_datetime_array(tvar[:], tvar).flatten()
+        t = get_masked_datetime_array(axv.t[:], axv.t).flatten()
         L.debug(['time data size: ', t.size])
 
         # X
-        xvar = self.x_axes()[0]
-        x = generic_masked(xvar[:], attrs=self.vatts(xvar.name)).flatten()
+        x = generic_masked(axv.x[:], attrs=self.vatts(axv.x.name)).flatten()
         L.debug(['x data size: ', x.size])
 
         # Y
-        yvar = self.y_axes()[0]
-        y = generic_masked(yvar[:], attrs=self.vatts(yvar.name)).flatten()
+        y = generic_masked(axv.y[:], attrs=self.vatts(axv.y.name)).flatten()
         L.debug(['y data size: ', y.size])
 
+        # Z
+        z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name)).flatten()
+        L.debug(['z data size: ', z.size])
+
         # Trajectories
-        pvar = self.filter_by_attrs(cf_role='trajectory_id')[0]
-        try:
-            p = normalize_array(pvar)
-            if isinstance(p, six.string_types):
-                p = np.asarray([p])
-        except BaseException:
-            L.exception('Could not pull trajectory values from the variable, using indexes.')
-            p = np.asarray(list(range(len(pvar))), dtype=np.integer)
+        rvar = axv.trajectory
+        p = normalize_countable_array(rvar)
 
         # The Dimension that the trajectory id variable doesn't have is what
         # the trajectory data needs to be repeated by
-        dim_diff = self.dimensions[list(set(tvar.dimensions).difference(set(pvar.dimensions)))[0]]
+        dim_diff = self.dimensions[list(set(axv.t.dimensions).difference(set(rvar.dimensions)))[0]]
         if dim_diff:
             p = p.repeat(dim_diff.size)
         L.debug(['trajectory data size: ', p.size])
@@ -244,11 +239,27 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
-        extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
-        for i, dvar in enumerate(extract_vars):
-            vdata = np.ma.fix_invalid(np.ma.MaskedArray(dvar[:].round(3).flatten()))
-            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
-            df_data[dvar.name] = vdata
+
+        # Axes variables are already processed so skip them
+        extract_vars = copy(self.variables)
+        for ncvar in axv._asdict().values():
+            if ncvar is not None and ncvar.name in extract_vars:
+                del extract_vars[ncvar.name]
+
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
+            vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+
+            # Carry through size 1 variables
+            if vdata.size == 1:
+                vdata = vdata[0]
+            else:
+                if dvar[:].flatten().size != t.size:
+                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    continue
+
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            df_data[dnam] = vdata
 
         df = pd.DataFrame(df_data)
 
