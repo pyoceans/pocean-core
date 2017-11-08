@@ -60,7 +60,7 @@ class EnhancedDataset(Dataset):
         else:
             return super().__getattr__(name)
 
-    def apply_meta(self, meta):
+    def apply_meta(self, meta, create_vars=True, create_dims=True):
         """Apply a meta interface object to a netCDF4 compatible object"""
         ds = meta.get('dimensions', OrderedDict())
         gs = meta.get('attributes', OrderedDict())
@@ -72,6 +72,11 @@ class EnhancedDataset(Dataset):
             if dsize and dsize < 0:
                 continue
             if dname not in self.dimensions:
+
+                # Don't create new dimensions
+                if create_dims is False:
+                    continue
+
                 self.createDimension(dname, size=dsize)
             else:
                 dfilesize = self.dimensions[dname].size
@@ -90,6 +95,11 @@ class EnhancedDataset(Dataset):
             vatts = untype_attributes(vvalue.get('attributes', {}))
 
             if vname not in self.variables:
+
+                # Don't create new variables
+                if create_vars is False:
+                    continue
+
                 if 'shape' not in vvalue and 'type' not in vvalue:
                     L.debug("Skipping {} creation, no shape or no type defined".format(vname))
                     continue
