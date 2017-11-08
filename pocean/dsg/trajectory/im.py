@@ -201,7 +201,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
 
-        axv = get_mapped_axes_variables(self, axes)
+        axv = get_mapped_axes_variables(self, axes, skip=[axes.profile, axes.station])
 
         # T
         t = get_masked_datetime_array(axv.t[:], axv.t).flatten()

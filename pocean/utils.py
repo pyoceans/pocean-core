@@ -222,8 +222,9 @@ def get_masked_datetime_array(t, tvar):
     return nt
 
 
-def get_mapped_axes_variables(ncd, axes=None):
+def get_mapped_axes_variables(ncd, axes=None, skip=None):
     axes = get_default_axes(axes or {})
+    skip = skip or []
 
     ax = namedtuple('AxisVariables', 'trajectory station profile t x y z')
 
@@ -252,7 +253,9 @@ def get_mapped_axes_variables(ncd, axes=None):
         yvar = ncd.y_axes()[0]
 
     # Trajectory
-    if axes.trajectory in ncd.variables:
+    if axes.trajectory in skip:
+        rvar = None
+    elif axes.trajectory in ncd.variables:
         rvar = ncd.variables[axes.trajectory]
     else:
         try:
@@ -261,7 +264,9 @@ def get_mapped_axes_variables(ncd, axes=None):
             rvar = None
 
     # Profile
-    if axes.profile in ncd.variables:
+    if axes.profile in skip:
+        pvar = None
+    elif axes.profile in ncd.variables:
         pvar = ncd.variables[axes.profile]
     else:
         try:
@@ -270,7 +275,9 @@ def get_mapped_axes_variables(ncd, axes=None):
             pvar = None
 
     # Station
-    if axes.station in ncd.variables:
+    if axes.station in skip:
+        svar = None
+    elif axes.station in ncd.variables:
         svar = ncd.variables[axes.station]
     else:
         try:
