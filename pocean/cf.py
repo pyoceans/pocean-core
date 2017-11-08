@@ -153,6 +153,9 @@ class CFDataset(EnhancedDataset):
         ))
         return zvars
 
+    def is_valid(self):
+        return self.__class__.is_mine(self)
+
     def data_vars(self):
         return self.filter_by_attrs(
             coordinates=lambda x: x is not None,
