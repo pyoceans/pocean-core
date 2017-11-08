@@ -116,7 +116,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
             # Add back in the z axes that was removed when calculating data_columns
             data_columns = data_columns + [axes.z]
-            for c in data_columns:
+            skips = ['trajectoryIndex', 'rowSize']
+            for c in [ d for d in data_columns if d not in skips ]:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
                     v = create_ncvar_from_series(nc, var_name, ('obs',), df[c])
