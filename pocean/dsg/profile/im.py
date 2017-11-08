@@ -119,15 +119,8 @@ class IncompleteMultidimensionalProfile(CFDataset):
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
                     if var_name not in nc.variables:
-                        if np.issubdtype(pdf[c].dtype, 'S') or pdf[c].dtype == object:
-                            # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(pdf[c]), (axes.profile, 'z'))
-                        else:
-                            v = nc.createVariable(var_name, get_dtype(pdf[c]), (axes.profile, 'z'), fill_value=pdf[c].dtype.type(cls.default_fill_value))
-
-                        if var_name not in attributes:
-                            attributes[var_name] = {}
-                        attributes[var_name] = dict_update(attributes[var_name], {
+                        v = create_ncvar_from_series(nc, var_name, (axes.profile, axes.z), pdf[c])
+                        attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                             'coordinates' : '{} {} {} {}'.format(
                                 axes.t, axes.z, axes.x, axes.y
                             )
@@ -135,11 +128,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
                     else:
                         v = nc.variables[var_name]
 
-                    if hasattr(v, '_FillValue'):
-                        vvalues = pdf[c].fillna(v._FillValue).values
-                    else:
-                        # Use an empty string... better than nothing!
-                        vvalues = pdf[c].fillna('').values
+                    vvalues = get_ncdata_from_series(pdf[c], v)
 
                     sl = slice(0, vvalues.size)
                     v[i, sl] = vvalues

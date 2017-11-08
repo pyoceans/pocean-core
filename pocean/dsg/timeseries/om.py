@@ -9,12 +9,14 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
+    create_ncvar_from_series,
     dict_update,
     generic_masked,
     get_default_axes,
     get_dtype,
     get_mapped_axes_variables,
     get_masked_datetime_array,
+    get_ncdata_from_series,
     normalize_countable_array,
 )
 from pocean.cf import CFDataset
@@ -115,26 +117,11 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 z[i] = sdf[axes.z].iloc[0]
 
                 for c in data_columns:
-
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
                     if var_name not in nc.variables:
-                        if var_name not in attributes:
-                            attributes[var_name] = {}
-                        if sdf[c].dtype == np.dtype('datetime64[ns]'):
-                            fv = np.dtype('f8').type(cls.default_fill_value)
-                            v = nc.createVariable(var_name, 'f8', (axes.station, axes.t,), fill_value=fv)
-                            tvalues = pd.Series(nc4.date2num(sdf[c].tolist(), units=cls.default_time_unit))
-                            attributes[var_name] = dict_update(attributes[var_name], {
-                                'units': cls.default_time_unit
-                            })
-                        elif np.issubdtype(sdf[c].dtype, 'S') or sdf[c].dtype == object:
-                            # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(sdf[c]), (axes.station, axes.t,))
-                        else:
-                            v = nc.createVariable(var_name, get_dtype(sdf[c]), (axes.station, axes.t,), fill_value=sdf[c].dtype.type(cls.default_fill_value))
-
-                        attributes[var_name] = dict_update(attributes[var_name], {
+                        v = create_ncvar_from_series(nc, var_name, (axes.station, axes.t), sdf[c])
+                        attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                             'coordinates' : '{} {} {} {}'.format(
                                 axes.t, axes.z, axes.x, axes.y
                             )
@@ -142,14 +129,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     else:
                         v = nc.variables[var_name]
 
-                    if sdf[c].dtype == np.dtype('datetime64[ns]'):
-                        vvalues = tvalues.fillna(v._FillValue).values
-                    elif hasattr(v, '_FillValue'):
-                        vvalues = sdf[c].fillna(v._FillValue).values
-                    else:
-                        # Use an empty string... better than nothing!
-                        vvalues = sdf[c].fillna('').values
-
+                    vvalues = get_ncdata_from_series(sdf[c], v)
                     try:
                         v[i, :] = vvalues
                     except BaseException:
@@ -210,6 +190,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
+
             vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
 
             # Carry through size 1 variables
@@ -221,13 +202,6 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     continue
 
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
-
-            # Convert to datetime objects for identified time variables
-            try:
-                if re.match(r'.* since .*', dvar.units):
-                    vdata = nc4.num2date(vdata.data[:], dvar.units, getattr(dvar, 'calendar', 'standard'))
-            except AttributeError:
-                pass
 
             df_data[dnam] = vdata
 

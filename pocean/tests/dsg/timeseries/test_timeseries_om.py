@@ -21,7 +21,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
     def test_omp_load(self):
         OrthogonalMultidimensionalTimeseries(self.single).close()
 
-    def test_omp_dataframe(self):
+    def test_timeseries_omp_dataframe(self):
         fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
@@ -41,10 +41,3 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
     #         assert s.profiles[1].t == dtparse('2005-07-09 01:48:00')
     #         assert np.isclose(s.profiles[1].x, -149.3582)
     #         assert np.isclose(s.profiles[1].y, 60.0248)
-
-    # def test_json_attributes(self):
-    #     ds = os.path.join(os.path.dirname(__file__), 'resources', 'tt.nc')
-    #     om = OrthogonalMultidimensionalTimeseries(ds)
-    #     om.to_dataframe()
-    #     om.json_attributes()
-    #     om.close()

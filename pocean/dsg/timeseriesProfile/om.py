@@ -8,6 +8,7 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
+    create_ncvar_from_series,
     dict_update,
     downcast_dataframe,
     generic_masked,
@@ -15,6 +16,7 @@ from pocean.utils import (
     get_dtype,
     get_mapped_axes_variables,
     get_masked_datetime_array,
+    get_ncdata_from_series,
     normalize_countable_array,
 )
 from pocean.cf import CFDataset
@@ -130,26 +132,16 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 # Create variable if it doesn't exist
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
-                    if np.issubdtype(df[c].dtype, 'S') or df[c].dtype == object:
-                        # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                        v = nc.createVariable(var_name, get_dtype(df[c]), default_dimensions)
-                    else:
-                        v = nc.createVariable(var_name, get_dtype(df[c]), default_dimensions, fill_value=df[c].dtype.type(cls.default_fill_value))
-
-                    if var_name not in attributes:
-                        attributes[var_name] = {}
-                    attributes[var_name] = dict_update(attributes[var_name], {
-                        'coordinates' : 'time latitude longitude z',
+                    v = create_ncvar_from_series(nc, var_name, default_dimensions, df[c])
+                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
+                        'coordinates' : '{} {} {} {}'.format(
+                            axes.t, axes.z, axes.x, axes.y
+                        )
                     })
                 else:
                     v = nc.variables[var_name]
 
-                if hasattr(v, '_FillValue'):
-                    vvalues = df[c].fillna(v._FillValue).values
-                else:
-                    # Use an empty string... better than nothing!
-                    vvalues = df[c].fillna('').values
-
+                vvalues = get_ncdata_from_series(df[c], v)
                 v[ts()] = vvalues.reshape(len(unique_t), unique_z.size, unique_s.size)
 
             nc.update_attributes(attributes)

@@ -203,6 +203,33 @@ def get_fill_value(var):
     return None
 
 
+def create_ncvar_from_series(ncd, var_name, dimensions, series):
+    from pocean.cf import CFDataset
+
+    if np.issubdtype(series.dtype, np.datetime64):
+        # Datetimes always saved as float64
+        fv = np.dtype('f8').type(CFDataset.default_fill_value)
+        v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv)
+        v.units = CFDataset.default_time_unit
+        v.calendar = 'standard'
+    elif np.issubdtype(series.dtype, 'S') or series.dtype == object:
+        # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
+        v = ncd.createVariable(var_name, get_dtype(series), dimensions)
+    else:
+        v = ncd.createVariable(var_name, get_dtype(series), dimensions, fill_value=series.dtype.type(CFDataset.default_fill_value))
+
+    return v
+
+
+def get_ncdata_from_series(series, ncvar):
+    if np.issubdtype(series.dtype, np.datetime64):
+        nums = nc4.date2num(series.tolist(), units=ncvar.units, calendar=ncvar.calendar)
+        return np.ma.masked_invalid(nums)
+    else:
+        fv = get_fill_value(ncvar) or np.nan
+        return series.fillna(fv).values
+
+
 def get_masked_datetime_array(t, tvar):
     # If we are passed in a scalar... return a scalar
     if isinstance(t, np.ma.core.MaskedConstant):

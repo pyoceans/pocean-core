@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+import re
 from copy import copy
 from collections import OrderedDict
 
@@ -9,12 +10,15 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
+    create_ncvar_from_series,
     dict_update,
     generic_masked,
     get_default_axes,
     get_dtype,
+    get_fill_value,
     get_mapped_axes_variables,
     get_masked_datetime_array,
+    get_ncdata_from_series,
     normalize_array,
     normalize_countable_array,
 )
@@ -113,8 +117,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 max_obs = trajectory_group.size().max()
             nc.createDimension('obs', max_obs)
 
-            unique_trajectories = df[axes.trajectory].unique()
-            if reduce_dims is True and len(unique_trajectories) == 1:
+            num_trajectories = len(trajectory_group)
+            if reduce_dims is True and num_trajectories == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
                 def ts(t_index, size):
                     return np.s_[0:size]
@@ -124,11 +128,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 def ts(t_index, size):
                     return np.s_[t_index, 0:size]
                 default_dimensions = (axes.trajectory, 'obs')
-                nc.createDimension(axes.trajectory, unique_trajectories.size)
+                nc.createDimension(axes.trajectory, num_trajectories)
                 trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
-
-            # Metadata variables
-            nc.createVariable('crs', 'i4')
 
             # Create all of the variables
             time = nc.createVariable(axes.t, 'f8', default_dimensions, fill_value=np.dtype('f8').type(cls.default_fill_value))
@@ -148,28 +149,21 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 # masked_invalid moves np.nan to a masked value
                 time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
 
-                lats = gdf[axes.y].fillna(latitude._FillValue).values
+                lats = gdf[axes.y].fillna(get_fill_value(latitude)).values
                 latitude[ts(i, lats.size)] = lats
 
-                lons = gdf[axes.x].fillna(longitude._FillValue).values
+                lons = gdf[axes.x].fillna(get_fill_value(longitude)).values
                 longitude[ts(i, lons.size)] = lons
 
-                zs = gdf[axes.z].fillna(z._FillValue).values
+                zs = gdf[axes.z].fillna(get_fill_value(z)).values
                 z[ts(i, zs.size)] = zs
 
                 for c in data_columns:
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
                     if var_name not in nc.variables:
-                        if np.issubdtype(gdf[c].dtype, 'S') or gdf[c].dtype == object:
-                            # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-                            v = nc.createVariable(var_name, get_dtype(gdf[c]), default_dimensions)
-                        else:
-                            v = nc.createVariable(var_name, get_dtype(gdf[c]), default_dimensions, fill_value=gdf[c].dtype.type(cls.default_fill_value))
-
-                        if var_name not in attributes:
-                            attributes[var_name] = {}
-                        attributes[var_name] = dict_update(attributes[var_name], {
+                        v = create_ncvar_from_series(nc, var_name, default_dimensions, gdf[c])
+                        attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                             'coordinates' : '{} {} {} {}'.format(
                                 axes.t, axes.z, axes.x, axes.y
                             )
@@ -177,17 +171,14 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                     else:
                         v = nc.variables[var_name]
 
-                    if hasattr(v, '_FillValue'):
-                        vvalues = gdf[c].fillna(v._FillValue).values
-                    else:
-                        # Use an empty string... better than nothing!
-                        vvalues = gdf[c].fillna('').values
-
-                    # Why do we need a slice object?
-                    # sl = slice(0, vvalues.size)
+                    vvalues = get_ncdata_from_series(gdf[c], v)
                     v[ts(i, vvalues.size)] = vvalues
 
-            # Set global attributes
+            # Metadata variables
+            if 'crs' not in nc.variables:
+                nc.createVariable('crs', 'i4')
+
+            # Set attributes
             nc.update_attributes(attributes)
 
         return IncompleteMultidimensionalTrajectory(output, **kwargs)
