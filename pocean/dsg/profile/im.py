@@ -170,27 +170,22 @@ class IncompleteMultidimensionalProfile(CFDataset):
         except ValueError:
             p = np.asarray(list(range(len(pvar))), dtype=np.integer)
         p = p.repeat(zs)
-        logger.debug(['profile data size: ', p.size])
 
         # Z
         z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
-        logger.debug(['z data size: ', z.size])
 
         # T
         tvar = self.t_axes()[0]
         t = tvar[:].repeat(zs)
         nt = get_masked_datetime_array(t, tvar).flatten()
-        logger.debug(['time data size: ', nt.size])
 
         # X
         xvar = self.x_axes()[0]
         x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
-        logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = self.y_axes()[0]
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
-        logger.debug(['y data size: ', y.size])
 
         df_data = OrderedDict([
             (axes.t, nt),

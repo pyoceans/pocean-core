@@ -205,19 +205,15 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
         # T
         t = get_masked_datetime_array(axv.t[:], axv.t).flatten()
-        L.debug(['time data size: ', t.size])
 
         # X
         x = generic_masked(axv.x[:], attrs=self.vatts(axv.x.name)).flatten()
-        L.debug(['x data size: ', x.size])
 
         # Y
         y = generic_masked(axv.y[:], attrs=self.vatts(axv.y.name)).flatten()
-        L.debug(['y data size: ', y.size])
 
         # Z
         z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name)).flatten()
-        L.debug(['z data size: ', z.size])
 
         # Trajectories
         rvar = axv.trajectory
@@ -228,7 +224,6 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         dim_diff = self.dimensions[list(set(axv.t.dimensions).difference(set(rvar.dimensions)))[0]]
         if dim_diff:
             p = p.repeat(dim_diff.size)
-        L.debug(['trajectory data size: ', p.size])
 
         df_data = OrderedDict([
             (axes.t, t),

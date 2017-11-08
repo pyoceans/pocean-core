@@ -107,7 +107,6 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         p = normalize_countable_array(pvar)
         ps = p.size
         p = p.repeat(zs)
-        logger.debug(['profile data size: ', p.size])
 
         # Z
         z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name))
@@ -115,23 +114,19 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             z = np.tile(z, ps)
         except ValueError:
             z = z.flatten()
-        logger.debug(['z data size: ', z.size])
 
         # T
         tvar = axv.t
         t = tvar[:].repeat(zs)
         nt = get_masked_datetime_array(t, tvar).flatten()
-        logger.debug(['time data size: ', nt.size])
 
         # X
         xvar = axv.x
         x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
-        logger.debug(['x data size: ', x.size])
 
         # Y
         yvar = axv.y
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
-        logger.debug(['y data size: ', y.size])
 
         df_data = OrderedDict([
             (axes.t, nt),

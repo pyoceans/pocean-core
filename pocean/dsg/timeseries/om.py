@@ -173,24 +173,19 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # T
         t = get_masked_datetime_array(axv.t[:], axv.t)
-        L.debug(['time data size: ', t.size])
 
         # X
         x = generic_masked(axv.x[:].repeat(t.size), attrs=self.vatts(axv.x.name))
-        L.debug(['x data size: ', x.size])
 
         # Y
         y = generic_masked(axv.y[:].repeat(t.size), attrs=self.vatts(axv.y.name))
-        L.debug(['y data size: ', y.size])
 
         # Z
         z = generic_masked(axv.z[:].repeat(t.size), attrs=self.vatts(axv.z.name))
-        L.debug(['z data size: ', z.size])
 
         svar = axv.station
         s = normalize_countable_array(svar)
         s = np.repeat(s, t.size)
-        L.debug(['station data size: ', s.size])
 
         # now repeat t per station
         # figure out if this is a single-station file
