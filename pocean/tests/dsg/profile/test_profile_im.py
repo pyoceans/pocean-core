@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import tempfile
 import unittest
 
 from dateutil.parser import parse as dtparse
 import numpy as np
 from pocean.dsg import IncompleteMultidimensionalProfile
+from pocean.tests.dsg.test_new import test_is_mine
 
 import logging
 from pocean import logger
@@ -21,8 +23,14 @@ class TestIncompleteMultidimensionalProfile(unittest.TestCase):
         IncompleteMultidimensionalProfile(self.multi).close()
 
     def test_imp_dataframe(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with IncompleteMultidimensionalProfile(self.multi) as ncd:
-            ncd.to_dataframe()
+            df = ncd.to_dataframe()
+            with IncompleteMultidimensionalProfile.from_dataframe(df, single_tmp) as result_ncd:
+                assert 'profile' in result_ncd.dimensions
+        test_is_mine(IncompleteMultidimensionalProfile, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
 
     def test_imp_calculated_metadata(self):
         with IncompleteMultidimensionalProfile(self.multi) as ncd:

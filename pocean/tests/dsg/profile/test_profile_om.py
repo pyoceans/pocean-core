@@ -1,12 +1,13 @@
 #!python
 # coding=utf-8
 import os
-
+import tempfile
 import unittest
+
 from dateutil.parser import parse as dtparse
 import numpy as np
-
 from pocean.dsg import OrthogonalMultidimensionalProfile
+from pocean.tests.dsg.test_new import test_is_mine
 
 import logging
 from pocean import logger
@@ -24,12 +25,27 @@ class TestOrthogonalMultidimensionalProfile(unittest.TestCase):
         OrthogonalMultidimensionalProfile(self.single).close()
         OrthogonalMultidimensionalProfile(self.multi).close()
 
-    def test_omp_dataframe(self):
-        with OrthogonalMultidimensionalProfile(self.single) as s:
-            s.to_dataframe()
+    def test_omp_dataframe_single(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
+        with OrthogonalMultidimensionalProfile(self.single) as ncd:
+            df = ncd.to_dataframe()
+            with self.assertRaises(NotImplementedError):
+                with OrthogonalMultidimensionalProfile.from_dataframe(df, single_tmp) as result_ncd:
+                    assert 'profile' in result_ncd.dimensions
+                test_is_mine(OrthogonalMultidimensionalProfile, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
 
-        with OrthogonalMultidimensionalProfile(self.multi) as m:
-            m.to_dataframe()
+    def test_omp_dataframe_multi(self):
+        fid, multi_tmp = tempfile.mkstemp(suffix='.nc')
+        with OrthogonalMultidimensionalProfile(self.multi) as ncd:
+            df = ncd.to_dataframe()
+            with self.assertRaises(NotImplementedError):
+                with OrthogonalMultidimensionalProfile.from_dataframe(df, multi_tmp) as result_ncd:
+                    assert 'profile' in result_ncd.dimensions
+                test_is_mine(OrthogonalMultidimensionalProfile, multi_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(multi_tmp)
 
     def test_omp_calculated_metadata(self):
         with OrthogonalMultidimensionalProfile(self.single) as ncd:

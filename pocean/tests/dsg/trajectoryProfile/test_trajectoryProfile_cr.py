@@ -1,11 +1,13 @@
 import os
 import math
-
+import tempfile
 import unittest
-from dateutil.parser import parse as dtparse
+
 import numpy as np
 from shapely.wkt import loads as wktloads
+from dateutil.parser import parse as dtparse
 
+from pocean.tests.dsg.test_new import test_is_mine
 from pocean.dsg import ContiguousRaggedTrajectoryProfile
 
 import logging
@@ -27,15 +29,56 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         ContiguousRaggedTrajectoryProfile(self.multi).close()
         ContiguousRaggedTrajectoryProfile(self.missing_time).close()
 
-    def test_crtp_dataframe(self):
-        with ContiguousRaggedTrajectoryProfile(self.single) as s:
-            s.to_dataframe()
+    def test_crtp_dataframe_single(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+        fid, tmpnc = tempfile.mkstemp(suffix='.nc')
+        with ContiguousRaggedTrajectoryProfile(self.single) as ncd:
+            df = ncd.to_dataframe(axes=axes)
+            with ContiguousRaggedTrajectoryProfile.from_dataframe(df, tmpnc, axes=axes) as result_ncd:
+                assert 'profile' in result_ncd.dimensions
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(ContiguousRaggedTrajectoryProfile, tmpnc)  # Try to load it again
+        os.close(fid)
+        os.remove(tmpnc)
 
-        with ContiguousRaggedTrajectoryProfile(self.multi) as m:
-            m.to_dataframe()
+    def test_crtp_dataframe_multi(self):
+        axes = {
+            't': 'time',
+            'x': 'lon',
+            'y': 'lat',
+            'z': 'z',
+        }
+        fid, tmpnc = tempfile.mkstemp(suffix='.nc')
+        with ContiguousRaggedTrajectoryProfile(self.multi) as ncd:
+            df = ncd.to_dataframe(axes=axes)
+            with ContiguousRaggedTrajectoryProfile.from_dataframe(df, tmpnc, axes=axes) as result_ncd:
+                assert 'profile' in result_ncd.dimensions
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(ContiguousRaggedTrajectoryProfile, tmpnc)  # Try to load it again
+        os.close(fid)
+        os.remove(tmpnc)
 
-        with ContiguousRaggedTrajectoryProfile(self.missing_time) as t:
-            t.to_dataframe()
+    def test_crtp_dataframe_missing_time(self):
+        axes = {
+            't': 'precise_time',
+            'x': 'precise_lon',
+            'y': 'precise_lat',
+            'z': 'depth',
+        }
+        fid, tmpnc = tempfile.mkstemp(suffix='.nc')
+        with ContiguousRaggedTrajectoryProfile(self.missing_time) as ncd:
+            df = ncd.to_dataframe(axes=axes)
+            with ContiguousRaggedTrajectoryProfile.from_dataframe(df, tmpnc, axes=axes) as result_ncd:
+                assert 'profile' in result_ncd.dimensions
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(ContiguousRaggedTrajectoryProfile, tmpnc)  # Try to load it again
+        os.close(fid)
+        os.remove(tmpnc)
 
     def test_crtp_calculated_metadata_single(self):
         axes = {
