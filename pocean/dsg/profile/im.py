@@ -7,11 +7,13 @@ import pandas as pd
 import netCDF4 as nc4
 
 from pocean.utils import (
+    create_ncvar_from_series,
     dict_update,
     generic_masked,
     get_default_axes,
     get_dtype,
     get_masked_datetime_array,
+    get_ncdata_from_series,
     normalize_array,
 )
 from pocean.cf import CFDataset, cf_safe_name

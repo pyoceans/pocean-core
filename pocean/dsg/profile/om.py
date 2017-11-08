@@ -85,6 +85,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         return True
 
+    @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
