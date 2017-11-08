@@ -222,8 +222,12 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series):
 
 
 def get_ncdata_from_series(series, ncvar):
+    from pocean.cf import CFDataset
+
     if np.issubdtype(series.dtype, np.datetime64):
-        nums = nc4.date2num(series.tolist(), units=ncvar.units, calendar=ncvar.calendar)
+        units = getattr(ncvar, 'units', CFDataset.default_time_unit)
+        calendar = getattr(ncvar, 'calendar', 'standard')
+        nums = nc4.date2num(series.tolist(), units=units, calendar=calendar)
         return np.ma.masked_invalid(nums)
     else:
         fv = get_fill_value(ncvar) or np.nan
