@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import re
 from copy import copy
 from collections import OrderedDict
 
