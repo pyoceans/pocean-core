@@ -1,19 +1,26 @@
 #!python
 # coding=utf-8
+import re
 from copy import copy
 from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
+import netCDF4 as nc4
 
 from pocean.utils import (
+    create_ncvar_from_series,
+    dict_update,
     generic_masked,
     get_default_axes,
+    get_dtype,
+    get_fill_value,
     get_mapped_axes_variables,
     get_masked_datetime_array,
+    get_ncdata_from_series,
     normalize_countable_array,
 )
-from pocean.cf import CFDataset
+from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.trajectoryProfile import trajectory_profile_calculated_metadata
 
 from pocean import logger as L  # noqa
@@ -56,8 +63,80 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
         return True
 
+    @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        raise NotImplementedError
+        axes = get_default_axes(kwargs.pop('axes', {}))
+
+        _ = kwargs.pop('reduce_dims', False)
+        _ = kwargs.pop('unlimited', False)
+
+        with ContiguousRaggedTrajectoryProfile(output, 'w') as nc:
+
+            trajectory_groups = df.groupby(axes.trajectory)
+            unique_trajectories = list(trajectory_groups.groups.keys())
+            num_trajectories = len(unique_trajectories)
+
+            nc.createDimension(axes.trajectory, num_trajectories)
+            trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
+            trajectory[:] = np.array(unique_trajectories)
+
+            # Calculate the max number of profiles
+            unique_profiles = df[axes.profile].unique()
+            num_profiles = len(unique_profiles)
+
+            nc.createDimension(axes.profile, num_profiles)
+            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (axes.profile,))
+            profile[:] = np.array(unique_profiles)
+
+            # Get unique obs by grouping on traj and profile and getting the max size
+            num_obs = len(df)
+            nc.createDimension('obs', num_obs)
+
+            # The trajectory this profile belongs to
+            t_ind = nc.createVariable('trajectoryIndex', 'i4', (axes.profile,))
+            # Number of observations in each profile
+            row_size = nc.createVariable('rowSize', 'i4', (axes.profile,))
+
+            # Create all of the axis variables
+            time = nc.createVariable(axes.t, 'f8', (axes.profile,), fill_value=np.dtype('f8').type(cls.default_fill_value))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.profile,), fill_value=df[axes.y].dtype.type(cls.default_fill_value))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.profile,), fill_value=df[axes.x].dtype.type(cls.default_fill_value))
+
+            # Axes variables are already processed so skip them
+            data_columns = [ d for d in df.columns if d not in axes ]
+            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
+
+            for i, (_, trg) in enumerate(trajectory_groups):
+                for j, (_, pfg) in enumerate(trg.groupby(axes.profile)):
+                    time[j] = get_ncdata_from_series(pfg[axes.t], time)[0]
+                    latitude[j] = get_ncdata_from_series(pfg[axes.y], latitude)[0]
+                    longitude[j] = get_ncdata_from_series(pfg[axes.x], longitude)[0]
+                    row_size[j] = len(pfg)
+                    t_ind[j] = i
+
+            # Add back in the z axes that was removed when calculating data_columns
+            data_columns = data_columns + [axes.z]
+            for c in data_columns:
+                var_name = cf_safe_name(c)
+                if var_name not in nc.variables:
+                    v = create_ncvar_from_series(nc, var_name, ('obs',), df[c])
+                else:
+                    v = nc.variables[var_name]
+                vvalues = get_ncdata_from_series(df[c], v)
+                try:
+                    v[:] = vvalues
+                except BaseException:
+                    L.exception('Failed to add {}'.format(c))
+                    continue
+
+            # Metadata variables
+            if 'crs' not in nc.variables:
+                nc.createVariable('crs', 'i4')
+
+            # Set attributes
+            nc.update_attributes(attributes)
+
+        return ContiguousRaggedTrajectoryProfile(output, **kwargs)
 
     def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
@@ -81,7 +160,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         p_dim = self.dimensions[r_index_var.dimensions[0]]       # Profile dimension
 
         # We should probably use this below to test for dimensionality of variables?
-        #r_dim = self.dimensions[r_index_var.instance_dimension]  # Trajectory dimension
+        # r_dim = self.dimensions[r_index_var.instance_dimension]  # Trajectory dimension
 
         # The count variable (row_size) contains the number of elements for
         # each profile, which must be written contiguously. The count variable
@@ -184,3 +263,42 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             df = df.iloc[~building_index_to_drop]
 
         return df
+
+    def nc_attributes(self, axes):
+        atts = super(ContiguousRaggedTrajectoryProfile, self).nc_attributes()
+        return dict_update(atts, {
+            'global' : {
+                'featureType': 'trajectoryProfile',
+                'cdm_data_type': 'TrajectoryProfile'
+            },
+            axes.trajectory: {
+                'cf_role': 'trajectory_id',
+                'long_name' : 'trajectory identifier',
+                'ioos_category': 'identifier'
+            },
+            axes.profile: {
+                'cf_role': 'profile_id',
+                'long_name' : 'profile identifier',
+                'ioos_category': 'identifier'
+            },
+            axes.x: {
+                'axis': 'X'
+            },
+            axes.y: {
+                'axis': 'Y'
+            },
+            axes.z: {
+                'axis': 'Z'
+            },
+            axes.t: {
+                'units': self.default_time_unit,
+                'standard_name': 'time',
+                'axis': 'T'
+            },
+            'trajectoryIndex': {
+                'instance_dimension': axes.trajectory
+            },
+            'rowSize': {
+                'sample_dimension': 'obs'
+            }
+        })
