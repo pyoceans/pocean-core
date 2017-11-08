@@ -120,6 +120,11 @@
 <code class="descname">default_time_unit</code><em class="property"> = 'seconds since 1990-01-01 00:00:00Z'</em><a class="headerlink" href="#pocean.cf.CFDataset.default_time_unit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="pocean.cf.CFDataset.is_valid">
+<code class="descname">is_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="pocean.cf.CFDataset.load">
 <em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.load" title="Permalink to this definition">¶</a></dt>
@@ -192,7 +197,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">netCDF4._netCDF4.Dataset</span></code></p>
 <dl class="method">
 <dt id="pocean.dataset.EnhancedDataset.apply_meta">
-<code class="descname">apply_meta</code><span class="sig-paren">(</span><em>meta</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_meta" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply_meta</code><span class="sig-paren">(</span><em>meta</em>, <em>create_vars=True</em>, <em>create_dims=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a meta interface object to a netCDF4 compatible object</p>
 </dd></dl>
 
@@ -316,6 +321,11 @@ holding dtype, shape and the data, base64 encoded.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="pocean.utils.create_ncvar_from_series">
+<code class="descclassname">pocean.utils.</code><code class="descname">create_ncvar_from_series</code><span class="sig-paren">(</span><em>ncd</em>, <em>var_name</em>, <em>dimensions</em>, <em>series</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.create_ncvar_from_series" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="pocean.utils.dict_update">
 <code class="descclassname">pocean.utils.</code><code class="descname">dict_update</code><span class="sig-paren">(</span><em>d</em>, <em>u</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.dict_update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -350,8 +360,18 @@ valid_max attributes.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="pocean.utils.get_mapped_axes_variables">
+<code class="descclassname">pocean.utils.</code><code class="descname">get_mapped_axes_variables</code><span class="sig-paren">(</span><em>ncd</em>, <em>axes=None</em>, <em>skip=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_mapped_axes_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="pocean.utils.get_masked_datetime_array">
 <code class="descclassname">pocean.utils.</code><code class="descname">get_masked_datetime_array</code><span class="sig-paren">(</span><em>t</em>, <em>tvar</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_masked_datetime_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.utils.get_ncdata_from_series">
+<code class="descclassname">pocean.utils.</code><code class="descname">get_ncdata_from_series</code><span class="sig-paren">(</span><em>series</em>, <em>ncvar</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_ncdata_from_series" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -366,6 +386,11 @@ valid_max attributes.</p>
 used to normalize string types between py2 and py3 as well as netcdf3 and
 netcdf4. It has no effect on types other than chars/strings</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="pocean.utils.normalize_countable_array">
+<code class="descclassname">pocean.utils.</code><code class="descname">normalize_countable_array</code><span class="sig-paren">(</span><em>cvar</em>, <em>count_if_none=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.normalize_countable_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="pocean.utils.pyscalar">
