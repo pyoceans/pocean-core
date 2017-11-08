@@ -213,7 +213,7 @@ def get_masked_datetime_array(t, tvar):
 
     dts = nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
     if isinstance(dts, datetime):
-        dts = np.array([t.isoformat()], dtype='datetime64')
+        dts = np.array([dts.isoformat()], dtype='datetime64')
 
     # Patch the time variable back to its original mask, since num2date
     # breaks any missing/fill values
