@@ -41,6 +41,7 @@ class CFDataset(EnhancedDataset):
         fpath = os.path.realpath(path)
         subs = list(all_subclasses(cls))
 
+        dsg = None
         try:
             dsg = cls(fpath)
             for klass in subs:
@@ -48,8 +49,11 @@ class CFDataset(EnhancedDataset):
                 if hasattr(klass, 'is_mine'):
                     if klass.is_mine(dsg):
                         return klass(path)
+        except OSError:
+            raise
         finally:
-            dsg.close()
+            if hasattr(dsg, 'close'):
+                dsg.close()
 
         subnames = ', '.join([ s.__name__ for s in subs ])
         raise ValueError(
