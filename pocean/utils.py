@@ -204,6 +204,12 @@ def get_fill_value(var):
 
 
 def get_masked_datetime_array(t, tvar):
+    # If we are passed in a scalar... return a scalar
+    if isinstance(t, np.ma.core.MaskedConstant):
+        return t
+    elif np.isscalar(t):
+        return nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
+
     t_mask = []
     tfill = get_fill_value(tvar)
     if tfill is not None:
