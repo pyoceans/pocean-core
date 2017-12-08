@@ -12,6 +12,7 @@ import numpy as np
 import netCDF4 as nc4
 
 from . import logger
+L = logger
 
 
 def downcast_dataframe(df):
@@ -118,7 +119,7 @@ def normalize_countable_array(cvar, count_if_none=None):
             # All masked out so compute the index by counting!
             raise ValueError
     except BaseException:
-        logger.warning('Could not pull a countable array... using a calculated index')
+        L.warning('Could not pull a countable array... using a calculated index')
         if cvar is None and count_if_none is not None:
             p = np.asarray(list(range(int(count_if_none))), dtype=np.integer)
         else:
@@ -131,7 +132,7 @@ def safe_attribute_typing(zdtype, value):
     try:
         return zdtype.type(value)
     except ValueError:
-        logger.warning("Could not convert {} to type {}".format(value, zdtype))
+        L.warning("Could not convert {} to type {}".format(value, zdtype))
         return None
 
 
@@ -142,8 +143,20 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     The valid_range attribute takes precendence over the valid_min and
     valid_max attributes.
     """
-    if np.issubdtype('S', arr.dtype):
-        return np.ma.masked_array(arr)
+
+    # Get the min/max of values that the hardware supports
+    if np.issubdtype(arr.dtype, int):
+        ifunc = np.iinfo
+    elif np.issubdtype(arr.dtype, float):
+        ifunc = np.finfo
+    else:
+        if np.issubdtype('S', arr.dtype) or np.issubdtype('U', arr.dtype):
+            mask_nan = False
+
+        if mask_nan is True:
+            return np.ma.masked_array(np.ma.fix_invalid(arr))
+        else:
+            return np.ma.masked_array(arr)
 
     attrs = attrs or {}
 
@@ -155,12 +168,6 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
         vr = attrs['valid_range']
         minv = safe_attribute_typing(arr.dtype, vr[0])
         maxv = safe_attribute_typing(arr.dtype, vr[1])
-
-    # Get the min/max of values that the hardware supports
-    if np.issubdtype(arr.dtype, int):
-        ifunc = np.iinfo
-    elif np.issubdtype(arr.dtype, float):
-        ifunc = np.finfo
 
     try:
         info = ifunc(arr.dtype)

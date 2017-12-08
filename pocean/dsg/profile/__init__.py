@@ -8,12 +8,15 @@ from pocean.utils import (
     unique_justseen,
 )
 
+from pocean.utils import logger as L # noqa
+
 profile_meta = namedtuple('Profile', [
     'min_z',
     'max_z',
     't',
     'x',
     'y',
+    'id',
     'geometry'
 ])
 profiles_meta = namedtuple('ProfileCollection', [
@@ -37,6 +40,7 @@ def profile_calculated_metadata(df, axes, geometries=True):
             t=first_row[axes.t],
             x=first_row[axes.x],
             y=first_row[axes.y],
+            id=pid,
             geometry=Point(first_row[axes.x], first_row[axes.y])
         )
 
