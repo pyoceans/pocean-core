@@ -8,7 +8,7 @@ from pocean.utils import (
     unique_justseen,
 )
 
-from pocean.utils import logger as L # noqa
+from pocean.utils import logger as L  # noqa
 
 profile_meta = namedtuple('Profile', [
     'min_z',
