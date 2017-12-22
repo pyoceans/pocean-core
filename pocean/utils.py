@@ -241,19 +241,19 @@ def get_ncdata_from_series(series, ncvar):
         return series.fillna(fv).values
 
 
-def get_masked_datetime_array(t, tvar):
+def get_masked_datetime_array(t, tvar, mask_nan=True):
     # If we are passed in a scalar... return a scalar
     if isinstance(t, np.ma.core.MaskedConstant):
         return t
     elif np.isscalar(t):
         return nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
 
-    t_mask = []
-    tfill = get_fill_value(tvar)
-    if tfill is not None:
-        t_mask = np.copy(np.ma.getmaskarray(t))
-        # Temporarily set to 1 so num2date works
-        t[t_mask] = 1
+    if mask_nan is True:
+        t = np.ma.masked_invalid(t)
+
+    # Temporarily set to 1 so num2date works
+    t_mask = np.copy(np.ma.getmaskarray(t))
+    t[t_mask] = 1
 
     dts = nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
     if isinstance(dts, datetime):
