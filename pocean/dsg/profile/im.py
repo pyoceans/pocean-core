@@ -192,11 +192,11 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dvar.name))
 
             # Profile, z dimension
             elif dvar.dimensions == zvar.dimensions:
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dvar.name))
 
             else:
                 logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))

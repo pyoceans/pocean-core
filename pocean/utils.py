@@ -93,7 +93,7 @@ def normalize_array(var):
     used to normalize string types between py2 and py3 as well as netcdf3 and
     netcdf4. It has no effect on types other than chars/strings
     """
-    if np.issubdtype(var.dtype, np.dtype('S1')):
+    if np.issubdtype(var.dtype, np.str_) or np.issubdtype(var.dtype, np.bytes_):
         if var.dtype == str:
             # Python 2 on netCDF4 'string' variables needs this.
             # Python 3 returns false for np.issubdtype(var.dtype, 'S1')
@@ -145,12 +145,12 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     """
 
     # Get the min/max of values that the hardware supports
-    if np.issubdtype(arr.dtype, np.dtype(int)):
+    if np.issubdtype(arr.dtype, np.integer):
         ifunc = np.iinfo
-    elif np.issubdtype(arr.dtype, np.dtype(float)):
+    elif np.issubdtype(arr.dtype, np.floating):
         ifunc = np.finfo
     else:
-        if np.issubdtype('S', arr.dtype) or np.issubdtype('U', arr.dtype):
+        if np.issubdtype(arr.dtype, np.str_) or np.issubdtype(arr.dtype, np.bytes_):
             mask_nan = False
 
         if mask_nan is True:
@@ -219,7 +219,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series):
         v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv)
         v.units = CFDataset.default_time_unit
         v.calendar = 'standard'
-    elif np.issubdtype(series.dtype, 'S') or series.dtype == object:
+    elif np.issubdtype(series.dtype, np.str_) or np.issubdtype(series.dtype, np.bytes_) or series.dtype == object:
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
         v = ncd.createVariable(var_name, get_dtype(series), dimensions)
     else:

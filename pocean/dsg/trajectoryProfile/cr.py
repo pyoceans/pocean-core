@@ -236,13 +236,16 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
             # Sample dimensions
             elif dvar.dimensions == (o_dim.name,):
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
                 # Carry through size 1 variables
                 if vdata.size == 1:
+                    if vdata[0] is np.ma.masked:
+                        L.warning("Skipping variable {} that is completely masked".format(dnam))
+                        continue
                     vdata = vdata[0]
                 else:
                     L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))

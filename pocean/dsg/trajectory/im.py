@@ -232,10 +232,13 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
-            vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+            vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
 
             # Carry through size 1 variables
             if vdata.size == 1:
+                if vdata[0] is np.ma.masked:
+                    L.warning("Skipping variable {} that is completely masked".format(dnam))
+                    continue
                 vdata = vdata[0]
             else:
                 if dvar[:].flatten().size != t.size:

@@ -18,7 +18,7 @@ from pocean.utils import (
 from pocean.cf import CFDataset
 from pocean.dsg.profile import profile_calculated_metadata
 
-from pocean import logger
+from pocean import logger as L  # noqa
 
 
 class OrthogonalMultidimensionalProfile(CFDataset):
@@ -149,26 +149,29 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam))
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Z dimension
             elif dvar.dimensions == zvar.dimensions:
-                vdata = generic_masked(np.tile(dvar[:], ps).flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(np.tile(dvar[:], ps).flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Profile, z dimension
             elif dvar.dimensions == pvar.dimensions + zvar.dimensions:
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
-                vdata = generic_masked(dvar[:].flatten(), attrs=self.vatts(dnam))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
                 # Carry through size 1 variables
                 if vdata.size == 1:
+                    if vdata[0] is np.ma.masked:
+                        L.warning("Skipping variable {} that is completely masked".format(dnam))
+                        continue
                     vdata = vdata[0]
                 else:
-                    logger.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
+                    L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
                     continue
 
             df_data[dnam] = vdata

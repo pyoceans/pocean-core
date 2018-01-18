@@ -1,5 +1,5 @@
 netcdf4
-numpy
+numpy>=1.14
 pandas>=0.21.0
 pygc>=1.2.0
 python-dateutil
