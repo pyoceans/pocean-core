@@ -260,7 +260,9 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     # There is no max date for nc4.
     min_nums = nc4.date2num([datetime.min, datetime.max], tvar.units, t_cal)
     t = np.ma.masked_outside(t, *min_nums)
-
+    # Avoid deprecation warnings between numpy 1.11 and 1.14
+    # After 1.14 this is the default behavior
+    t._sharedmask = False
     # Temporarily set to 1 so num2date works
     t_mask = np.copy(np.ma.getmaskarray(t))
     t[t_mask] = 1
