@@ -251,11 +251,21 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     if mask_nan is True:
         t = np.ma.masked_invalid(t)
 
+    t_cal = getattr(tvar, 'calendar', 'standard')
+
+    # Get the min value we can have and mask anything else
+    # This is limied by **python** datetime objects and not
+    # nc4 objects. The min nc4 datetime object is
+    # min_date = nc4.netcdftime.datetime(-4713, 1, 1, 12, 0, 0, 40)
+    # There is no max date for nc4.
+    min_nums = nc4.date2num([datetime.min, datetime.max], tvar.units, t_cal)
+    t = np.ma.masked_outside(t, *min_nums)
+
     # Temporarily set to 1 so num2date works
     t_mask = np.copy(np.ma.getmaskarray(t))
     t[t_mask] = 1
 
-    dts = nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
+    dts = nc4.num2date(t, tvar.units, t_cal)
     if isinstance(dts, datetime):
         dts = np.array([dts.isoformat()], dtype='datetime64')
 
