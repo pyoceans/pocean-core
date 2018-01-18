@@ -93,7 +93,7 @@ def normalize_array(var):
     used to normalize string types between py2 and py3 as well as netcdf3 and
     netcdf4. It has no effect on types other than chars/strings
     """
-    if np.issubdtype(var.dtype, 'S1'):
+    if np.issubdtype(var.dtype, np.dtype('S1')):
         if var.dtype == str:
             # Python 2 on netCDF4 'string' variables needs this.
             # Python 3 returns false for np.issubdtype(var.dtype, 'S1')
@@ -145,9 +145,9 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     """
 
     # Get the min/max of values that the hardware supports
-    if np.issubdtype(arr.dtype, int):
+    if np.issubdtype(arr.dtype, np.dtype(int)):
         ifunc = np.iinfo
-    elif np.issubdtype(arr.dtype, float):
+    elif np.issubdtype(arr.dtype, np.dtype(float)):
         ifunc = np.finfo
     else:
         if np.issubdtype('S', arr.dtype) or np.issubdtype('U', arr.dtype):
