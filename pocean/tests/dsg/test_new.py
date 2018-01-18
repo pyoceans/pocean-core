@@ -10,7 +10,7 @@ from pocean.dsg import *
 
 import logging
 from pocean import logger
-logger.level = logging.DEBUG
+logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 
 
@@ -42,9 +42,9 @@ def test_is_mine(klass, fp):
     allsubs = list(all_subclasses(CFDataset))
     subs = [ s for s in allsubs if s != klass ]
     with CFDataset(fp) as dsg:
-        logger.info('\nTesting {}'.format(klass.__name__))
+        logger.debug('\nTesting {}'.format(klass.__name__))
         assert klass.is_mine(dsg) is True
         for s in subs:
             if hasattr(s, 'is_mine'):
-                logger.info('  * Trying {}...'.format(s.__name__))
+                logger.debug('  * Trying {}...'.format(s.__name__))
                 assert s.is_mine(dsg) is False
