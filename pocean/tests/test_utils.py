@@ -5,10 +5,12 @@ import shutil
 import unittest
 import tempfile
 
+import pytest
 import numpy as np
+import netCDF4 as nc4
 
 from pocean.dataset import EnhancedDataset
-from pocean.utils import generic_masked, get_default_axes
+from pocean.utils import generic_masked, get_default_axes, normalize_array
 
 import logging
 from pocean import logger
@@ -161,3 +163,85 @@ class TestNetcdfUtils(unittest.TestCase):
         self.assertEqual('foo_99', cf_safe_name('foo-99'))
         self.assertEqual('foo_99_', cf_safe_name('foo(99)'))
         self.assertEqual('v__foo_99_', cf_safe_name('_foo(99)'))
+
+
+class TestNormalizeArray(unittest.TestCase):
+
+    def setUp(self):
+        self.fh, self.fp = tempfile.mkstemp(suffix='.nc', prefix='pocean_testing_')
+
+    def tearDown(self):
+        os.close(self.fh)
+        if os.path.exists(self.fp):
+            os.remove(self.fp)
+
+    def test_normalization_of_string_arrays_netcdf4(self):
+        thestr = 'bosadfsdfkljskfusdiofu987987987om'
+
+        with nc4.Dataset(self.fp, 'w', format="NETCDF4") as ncd:
+
+            dimsize = len(thestr)
+            ncd.createDimension('n', dimsize)
+
+            # Single str (no dimension)
+            ncd.createVariable('single_str', str)
+            ncd.createVariable('single_unicode_', np.unicode_)
+            ncd.createVariable('single_U', '<U1')
+            ncd.createVariable('single_S', 'S1', ('n',))
+
+            for k, v in ncd.variables.items():
+                if k.startswith('single_'):
+                    if v.dimensions:
+                        v[:] = nc4.stringtoarr(thestr, dimsize)
+                    else:
+                        v[0] = thestr
+
+            # Array of str
+            ncd.createVariable('many_str', str, ('n',))
+            ncd.createVariable('many_unicode_', np.unicode_, ('n',))
+            ncd.createVariable('many_U', '<U1', ('n',))
+            ncd.createVariable('many_S', 'S1', ('n', 'n',))
+
+            for k, v in ncd.variables.items():
+                if k.startswith('many_'):
+                    if len(v.dimensions) > 1:
+                        v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize)
+                    else:
+                        v[:] = np.tile(thestr, dimsize)
+
+        with nc4.Dataset(self.fp) as ncd:
+            assert normalize_array(ncd.variables['single_str']) == thestr
+            assert normalize_array(ncd.variables['single_unicode_']) == thestr
+            assert normalize_array(ncd.variables['single_U']) == thestr
+            assert normalize_array(ncd.variables['single_S']) == thestr
+
+            assert np.all(normalize_array(ncd.variables['many_str']) == [thestr] * len(thestr))
+            assert np.all(normalize_array(ncd.variables['many_unicode_']) == [thestr] * len(thestr))
+            assert np.all(normalize_array(ncd.variables['many_U']) == [thestr] * len(thestr))
+            assert np.all(normalize_array(ncd.variables['many_S']) == [thestr] * len(thestr))
+
+    def test_normalization_of_string_arrays_netcdf3(self):
+        thestr = 'boodsfasfasdfm'
+
+        with nc4.Dataset(self.fp, 'w', format="NETCDF3_CLASSIC") as ncd:
+
+            dimsize = len(thestr)
+            ncd.createDimension('n', dimsize)
+
+            # Single str (no dimension)
+            ncd.createVariable('single_S', 'S1', ('n',))
+
+            for k, v in ncd.variables.items():
+                if k.startswith('single_'):
+                    v[:] = nc4.stringtoarr(thestr, dimsize)
+
+            # Array of strq
+            ncd.createVariable('many_S', 'S1', ('n', 'n',))
+
+            for k, v in ncd.variables.items():
+                if k.startswith('many_'):
+                    v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize)
+
+        with nc4.Dataset(self.fp) as ncd:
+            assert normalize_array(ncd.variables['single_S']) == thestr
+            assert np.all(normalize_array(ncd.variables['many_S']) == [thestr] * dimsize)

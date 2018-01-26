@@ -93,19 +93,28 @@ def normalize_array(var):
     used to normalize string types between py2 and py3 as well as netcdf3 and
     netcdf4. It has no effect on types other than chars/strings
     """
-    if np.issubdtype(var.dtype, np.str_) or np.issubdtype(var.dtype, np.bytes_):
-        if var.dtype == str:
-            # Python 2 on netCDF4 'string' variables needs this.
-            # Python 3 returns false for np.issubdtype(var.dtype, 'S1')
+    # This is for single-value variables. netCDF4 converts them to a single string
+    if var.dtype in six.string_types:
+        # Python 2 on netCDF4 'string' variables needs this.
+        # Python 3 returns false for np.issubdtype(var.dtype, 'S1')
+        return var[:]
+
+    elif hasattr(var.dtype, 'kind') and var.dtype.kind in ['U', 'S']:
+
+        if var.size == 1:
             return var[:]
 
-        def decoder(x):
-            if hasattr(x, 'decode'):
-                return str(x.decode('utf-8'))
-            else:
-                return str(x)
-        vfunc = np.vectorize(decoder)
-        return vfunc(nc4.chartostring(var[:]))
+        if var.dtype.kind == 'S':
+            def decoder(x):
+                if hasattr(x, 'decode'):
+                    return str(x.decode('utf-8'))
+                else:
+                    return str(x)
+            vfunc = np.vectorize(decoder)
+            return vfunc(nc4.chartostring(var[:]))
+        else:
+            return nc4.chartostring(var[:])
+
     else:
         return var[:]
 
@@ -114,10 +123,9 @@ def normalize_countable_array(cvar, count_if_none=None):
     try:
         p = normalize_array(cvar)
         if isinstance(p, six.string_types):
-            p = np.asarray([p])
+            p = np.asarray([p], dtype=str)
         elif hasattr(p, 'mask') and np.all(p.mask == True):  # noqa
-            # All masked out so compute the index by counting!
-            raise ValueError
+            raise ValueError('All countable values were masked!')
     except BaseException:
         L.warning('Could not pull a countable array... using a calculated index')
         if cvar is None and count_if_none is not None:
@@ -150,7 +158,7 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     elif np.issubdtype(arr.dtype, np.floating):
         ifunc = np.finfo
     else:
-        if np.issubdtype(arr.dtype, np.str_) or np.issubdtype(arr.dtype, np.bytes_):
+        if arr.dtype.kind in ['U', 'S']:
             mask_nan = False
 
         if mask_nan is True:
@@ -219,7 +227,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series):
         v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv)
         v.units = CFDataset.default_time_unit
         v.calendar = 'standard'
-    elif np.issubdtype(series.dtype, np.str_) or np.issubdtype(series.dtype, np.bytes_) or series.dtype == object:
+    elif series.dtype.kind in ['U', 'S'] or series.dtype in six.string_types + (object,):
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
         v = ncd.createVariable(var_name, get_dtype(series), dimensions)
     else:
