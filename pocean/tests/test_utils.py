@@ -5,7 +5,6 @@ import shutil
 import unittest
 import tempfile
 
-import pytest
 import numpy as np
 import netCDF4 as nc4
 
