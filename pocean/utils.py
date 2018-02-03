@@ -246,7 +246,7 @@ def get_ncdata_from_series(series, ncvar):
         return np.ma.masked_invalid(nums)
     else:
         fv = get_fill_value(ncvar) or np.nan
-        return series.fillna(fv).values
+        return series.fillna(fv).values.astype(ncvar.dtype)
 
 
 def get_masked_datetime_array(t, tvar, mask_nan=True):
