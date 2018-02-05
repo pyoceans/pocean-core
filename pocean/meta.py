@@ -1,6 +1,7 @@
 #!python
 # coding=utf-8
 import os
+import collections
 from copy import deepcopy
 from collections import OrderedDict, Mapping
 
@@ -123,6 +124,9 @@ def ncpyattributes(obj, verbose=True):
         if hasattr(v, 'dtype'):
             newt = v.dtype.name
         else:
+            if isinstance(v, collections.Iterable):
+                # Use the type of the first one
+                v = v[0]
             newt = type(v).__name__
 
         if verbose is True:
