@@ -105,12 +105,15 @@ class EnhancedDataset(Dataset):
                     continue
                 shape = vvalue.get('shape', [])  # Dimension names
                 dtype = string_to_dtype(vvalue.get('type'))
-                fillmiss = vatts.get('_FillValue', vatts.get('missing_value', None))
+                # I'm fairly certain that using 'np.ma.masked' here is safe and will always
+                # translate to a NaN value for the dtype. We can't use `np.nan` or `math.nan`
+                # since they are reserved for floats.
+                fillmiss = vatts.get('_FillValue', vatts.get('missing_value', np.ma.masked))
                 newvar = self.createVariable(
                     vname,
                     dtype,
                     dimensions=shape,
-                    fill_value=fillmiss
+                    fill_value=dtype.type(fillmiss)
                 )
             else:
                 newvar = self.variables[vname]
