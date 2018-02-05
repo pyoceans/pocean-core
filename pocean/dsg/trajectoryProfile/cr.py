@@ -87,7 +87,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
             # Get unique obs by grouping on traj and profile and getting the max size
             num_obs = len(df)
-            nc.createDimension('obs', num_obs)
+            nc.createDimension(axes.sample, num_obs)
 
             # The trajectory this profile belongs to
             t_ind = nc.createVariable('trajectoryIndex', 'i4', (axes.profile,))
@@ -117,7 +117,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             for c in [ d for d in data_columns if d not in skips ]:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
-                    v = create_ncvar_from_series(nc, var_name, ('obs',), df[c])
+                    v = create_ncvar_from_series(nc, var_name, (axes.sample,), df[c])
                 else:
                     v = nc.variables[var_name]
                 vvalues = get_ncdata_from_series(df[c], v)
@@ -300,6 +300,6 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                 'instance_dimension': axes.trajectory
             },
             'rowSize': {
-                'sample_dimension': 'obs'
+                'sample_dimension': axes.sample
             }
         })

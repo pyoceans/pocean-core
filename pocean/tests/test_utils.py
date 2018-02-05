@@ -27,6 +27,7 @@ class TestUtils(unittest.TestCase):
             'trajectory',
             'station',
             'profile',
+            'obs',
             't',
             'x',
             'y',
@@ -37,6 +38,7 @@ class TestUtils(unittest.TestCase):
             'trajectory': 'a',
             'station':    'b',
             'profile':    'c',
+            'sample':     'h',
             't':          'd',
             'x':          'e',
             'y':          'f',
@@ -46,6 +48,7 @@ class TestUtils(unittest.TestCase):
             'a',
             'b',
             'c',
+            'h',
             'd',
             'e',
             'f',
@@ -61,6 +64,7 @@ class TestUtils(unittest.TestCase):
             'a',
             'b',
             'c',
+            'obs',
             't',
             'x',
             'y',
@@ -81,6 +85,22 @@ class TestUtils(unittest.TestCase):
         }
         with self.assertRaises(ValueError):
             get_default_axes(bad_defaults)
+
+        # but you can with the sample dimension
+        bad_defaults = {
+            't': 'time',
+            'sample': 'time'
+        }
+        assert get_default_axes(bad_defaults) == (
+            'trajectory',
+            'station',
+            'profile',
+            'time',
+            'time',
+            'x',
+            'y',
+            'z',
+        )
 
     def test_single_attr_filter(self):
         nc = EnhancedDataset(self.input_file)

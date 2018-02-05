@@ -114,19 +114,19 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 max_obs = None
             else:
                 max_obs = trajectory_group.size().max()
-            nc.createDimension('obs', max_obs)
+            nc.createDimension(axes.sample, max_obs)
 
             num_trajectories = len(trajectory_group)
             if reduce_dims is True and num_trajectories == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
                 def ts(t_index, size):
                     return np.s_[0:size]
-                default_dimensions = ('obs',)
+                default_dimensions = (axes.sample,)
                 trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]))
             else:
                 def ts(t_index, size):
                     return np.s_[t_index, 0:size]
-                default_dimensions = (axes.trajectory, 'obs')
+                default_dimensions = (axes.trajectory, axes.sample)
                 nc.createDimension(axes.trajectory, num_trajectories)
                 trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
 

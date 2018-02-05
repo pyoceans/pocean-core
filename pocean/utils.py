@@ -38,6 +38,9 @@ def get_default_axes(axes=None):
     if isinstance(axes, tuple):
         axes = axes._asdict()
 
+    # Sample is only a dimension to remove from duplicate calc
+    sample_dim = axes.pop('sample', 'obs')
+
     # Make sure there are no duplicate values for axis names
     counts = Counter(axes.values())
     for v, c in counts.items():
@@ -48,6 +51,7 @@ def get_default_axes(axes=None):
         'trajectory': 'trajectory',
         'station':    'station',
         'profile':    'profile',
+        'sample':     sample_dim,
         't':          't',
         'x':          'x',
         'y':          'y',
@@ -56,7 +60,7 @@ def get_default_axes(axes=None):
 
     return namedtuple_with_defaults(
         'AxisDefaults',
-        'trajectory station profile t x y z',
+        'trajectory station profile sample t x y z',
         default_axes
     )(**axes)
 
