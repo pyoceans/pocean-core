@@ -4,6 +4,9 @@ import os
 import unittest
 import tempfile
 
+from numpy import testing as npt
+
+from pocean.cf import CFDataset
 from pocean.dataset import EnhancedDataset
 from pocean.meta import MetaInterface, ncpyattributes
 
@@ -125,3 +128,37 @@ class TestJsonDataset(unittest.TestCase):
                         oldatts,
                         newatts
                     )
+
+    def test_serialize_and_reload_data(self):
+        ncfile = os.path.join(os.path.dirname(__file__), "resources/qc-month.nc")
+
+        with CFDataset(ncfile) as cfncd:
+
+            # Data from netCDF variable
+            ncdata = cfncd.variables['data1'][:]
+
+            # Not filled
+            meta = cfncd.json(return_data=True, fill_data=False)
+            jsdata = meta['variables']['data1']['data']
+            npt.assert_array_equal(ncdata, jsdata)
+
+            with tempfile.NamedTemporaryFile() as f:
+                with CFDataset(f.name, 'w') as newcf:
+                    newcf.apply_json(meta)
+
+                with CFDataset(f.name, 'r') as rcf:
+                    newncdata = rcf.variables['data1'][:]
+                    npt.assert_array_equal(ncdata, newncdata)
+
+            # Filled
+            meta = cfncd.json(return_data=True, fill_data=True)
+            jsdata = meta['variables']['data1']['data']
+            npt.assert_array_equal(ncdata, jsdata)
+
+            with tempfile.NamedTemporaryFile() as f:
+                with CFDataset(f.name, 'w') as newcf:
+                    newcf.apply_json(meta)
+
+                with CFDataset(f.name, 'r') as rcf:
+                    newncdata = rcf.variables['data1'][:]
+                    npt.assert_array_equal(ncdata, newncdata)

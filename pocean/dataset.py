@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+import math
 import warnings
 from collections import OrderedDict
 
@@ -9,6 +10,7 @@ from netCDF4 import Dataset
 
 from .utils import (
     BasicNumpyEncoder,
+    generic_masked,
 )
 from .meta import (
     MetaInterface,
@@ -43,12 +45,12 @@ class EnhancedDataset(Dataset):
     def filter_by_attrs(self, *args, **kwargs):
         return self.get_variables_by_attributes(*args, **kwargs)
 
-    def __apply_meta_interface__(self, meta):
+    def __apply_meta_interface__(self, meta, **kwargs):
         warnings.warn(
             '`__apply_meta_interface__` is deprecated. Use `apply_meta()` instead',
             DeprecationWarning
         )
-        return self.apply_meta(meta)
+        return self.apply_meta(meta, **kwargs)
 
     def __getattr__(self, name):
         if name in ['__meta_interface__', '_meta']:
@@ -60,7 +62,58 @@ class EnhancedDataset(Dataset):
         else:
             return super().__getattr__(name)
 
-    def apply_meta(self, meta, create_vars=True, create_dims=True):
+    def apply_meta(self, *args, **kwargs):
+        """ Shortcut to the JSON object without writing any data"""
+        kwargs['create_data'] = False
+        return self.apply_json(*args, **kwargs)
+
+    def meta(self, *args, **kwargs):
+        """ Shortcut to the JSON object without any data"""
+        kwargs['return_data'] = False
+        return self.json(*args, **kwargs)
+
+    def json(self, return_data=True, fill_data=True):
+        ds = OrderedDict()
+        vs = OrderedDict()
+        gs = ncpyattributes({ ga: self.getncattr(ga) for ga in self.ncattrs() })
+
+        # Dimensions
+        for dname, dim in self.dimensions.items():
+            if dim.isunlimited():
+                ds[dname] = None
+            else:
+                ds[dname] = dim.size
+
+        # Variables
+        for k, v in self.variables.items():
+
+            typed = v.dtype
+            if isinstance(typed, np.dtype):
+                typed = str(typed.name)
+            elif isinstance(typed, type):
+                typed = typed.__name__
+
+            vattrs = { va: v.getncattr(va) for va in v.ncattrs() }
+            vardict = {
+                'attributes': ncpyattributes(vattrs),
+                'shape': v.dimensions,
+                'type': typed
+            }
+            if return_data is True:
+                vdata = generic_masked(v[:], attrs=vattrs)
+                if fill_data is True:
+                    vdata = vdata.filled()
+                vardict['data'] = vdata.tolist()
+
+            vs[k] = vardict
+
+        return MetaInterface(
+            dimensions=ds,
+            variables=vs,
+            attributes=gs
+        )
+
+    def apply_json(self, meta, create_vars=True, create_dims=True, create_data=True):
         """Apply a meta interface object to a netCDF4 compatible object"""
         ds = meta.get('dimensions', OrderedDict())
         gs = meta.get('attributes', OrderedDict())
@@ -104,19 +157,35 @@ class EnhancedDataset(Dataset):
                     L.debug("Skipping {} creation, no shape or no type defined".format(vname))
                     continue
                 shape = vvalue.get('shape', [])  # Dimension names
-                dtype = string_to_dtype(vvalue.get('type'))
-                # I'm fairly certain that using 'np.ma.masked' here is safe and will always
-                # translate to a NaN value for the dtype. We can't use `np.nan` or `math.nan`
-                # since they are reserved for floats.
-                fillmiss = vatts.get('_FillValue', vatts.get('missing_value', np.ma.masked))
+                vardtype = string_to_dtype(vvalue.get('type'))
+
+                if np.issubdtype(vardtype, np.floating):
+                    defaultfill = vardtype.type(math.nan)  # We can use `nan` for floats
+                elif vardtype.kind in ['U', 'S']:
+                    defaultfill = None  # No fillvalue on VLENs
+                else:
+                    # Use a masked value which evaluates to different things depending on the dtype
+                    # For integers is resolves to `0`.
+                    defaultfill = vardtype.type(np.ma.masked)
+
+                fillmiss = vatts.get('_FillValue', vatts.get('missing_value', defaultfill))
                 newvar = self.createVariable(
                     vname,
-                    dtype,
+                    vardtype,
                     dimensions=shape,
-                    fill_value=dtype.type(fillmiss)
+                    fill_value=fillmiss
                 )
             else:
                 newvar = self.variables[vname]
+
+            # Now assign the data if is exists
+            if create_data is True and 'data' in vvalue:
+                # Because the JSON format can be flattened already we are just
+                # going to always reshape the data to the variable shape
+                data = generic_masked(
+                    np.array(vvalue['data'], dtype=newvar.dtype).flatten()
+                ).reshape(newvar.shape)
+                newvar[:] = data
 
             # Don't re-assign fill value attributes
             if '_FillValue' in vatts:
@@ -125,39 +194,6 @@ class EnhancedDataset(Dataset):
                 del vatts['missing_value']
 
             newvar.setncatts(vatts)
-
-    def meta(self):
-        ds = OrderedDict()
-        vs = OrderedDict()
-        gs = ncpyattributes({ ga: self.getncattr(ga) for ga in self.ncattrs() })
-
-        # Dimensions
-        for dname, dim in self.dimensions.items():
-            if dim.isunlimited():
-                ds[dname] = None
-            else:
-                ds[dname] = dim.size
-
-        # Variables
-        for k, v in self.variables.items():
-
-            typed = v.dtype
-            if isinstance(typed, np.dtype):
-                typed = str(typed.name)
-            elif isinstance(typed, type):
-                typed = typed.__name__
-
-            vs[k] = {
-                'attributes': ncpyattributes({ va: v.getncattr(va) for va in v.ncattrs() }),
-                'shape': v.dimensions,
-                'type': typed
-            }
-
-        return MetaInterface(
-            dimensions=ds,
-            variables=vs,
-            attributes=gs
-        )
 
     def to_json(self, *args, **kwargs):
         return json.dumps(self.to_dict(), *args, **kwargs)
