@@ -1,5 +1,5 @@
-pocean\.dsg\.trajectoryProfile package
-======================================
+pocean.dsg.trajectoryProfile package
+====================================
 
 .. automodule:: pocean.dsg.trajectoryProfile
     :members:
@@ -9,8 +9,8 @@ pocean\.dsg\.trajectoryProfile package
 Submodules
 ----------
 
-pocean\.dsg\.trajectoryProfile\.cr module
------------------------------------------
+pocean.dsg.trajectoryProfile.cr module
+--------------------------------------
 
 .. automodule:: pocean.dsg.trajectoryProfile.cr
     :members:
