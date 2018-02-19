@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import math
 import warnings
 from collections import OrderedDict
 
@@ -160,7 +159,7 @@ class EnhancedDataset(Dataset):
                 vardtype = string_to_dtype(vvalue.get('type'))
 
                 if np.issubdtype(vardtype, np.floating):
-                    defaultfill = vardtype.type(math.nan)  # We can use `nan` for floats
+                    defaultfill = vardtype.type(np.nan)  # We can use `nan` for floats
                 elif vardtype.kind in ['U', 'S']:
                     defaultfill = None  # No fillvalue on VLENs
                 else:
