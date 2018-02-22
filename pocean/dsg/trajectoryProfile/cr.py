@@ -154,7 +154,11 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         # integer. Each value in the index variable is the zero-based trajectory
         # index that the profile belongs to i.e. profile p belongs to trajectory
         # i=trajectory_index(p), as in section H.2.5.
-        r_index_var = self.filter_by_attrs(instance_dimension=lambda x: x is not None)[0]
+        r_index_var = self.filter_by_attrs(instance_dimension=lambda x: x is not None)
+        if not r_index_var:
+            raise ValueError('Could not find the `instance_dimension` attribute in {!r}'.format(self))
+        else:
+            r_index_var = r_index_var[0]
         p_dim = self.dimensions[r_index_var.dimensions[0]]       # Profile dimension
 
         # We should probably use this below to test for dimensionality of variables?
