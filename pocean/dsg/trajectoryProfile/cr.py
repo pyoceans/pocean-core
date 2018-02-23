@@ -156,7 +156,10 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         # i=trajectory_index(p), as in section H.2.5.
         r_index_var = self.filter_by_attrs(instance_dimension=lambda x: x is not None)
         if not r_index_var:
-            raise ValueError('Could not find the `instance_dimension` attribute in {!r}'.format(self))
+            raise ValueError(
+                'Could not find the "instance_dimension" attribute on any variables, '
+                'is this a valid {}?'.format(self.__class__.__name__)
+                )
         else:
             r_index_var = r_index_var[0]
         p_dim = self.dimensions[r_index_var.dimensions[0]]       # Profile dimension
@@ -170,7 +173,14 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
         # value is the sample dimension (obs in this example) being counted. It
         # must have the profile dimension as its sole dimension, and must be
         # type integer
-        o_index_var = self.filter_by_attrs(sample_dimension=lambda x: x is not None)[0]
+        o_index_var = self.filter_by_attrs(sample_dimension=lambda x: x is not None)
+        if not o_index_var:
+            raise ValueError(
+                'Could not find the "sample_dimension" attribute on any variables, '
+                'is this a valid {}?'.format(self.__class__.__name__)
+                )
+        else:
+            o_index_var = o_index_var[0]
         o_dim = self.dimensions[o_index_var.sample_dimension]  # Sample dimension
 
         profile_indexes = normalize_countable_array(axv.profile, count_if_none=p_dim.size)
