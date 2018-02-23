@@ -1,6 +1,6 @@
 package:
   name: pocean-core
-  version: "1.3.3"
+  version: "dev"
 
 source:
   path: ../

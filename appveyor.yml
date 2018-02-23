@@ -2,7 +2,7 @@ environment:
   # The CONDA_PY is just to ensure we will test with vc 9, vc 10, and vc 14.
   matrix:
     - TARGET_ARCH: x64
-      CONDA_PY: 35
+      CONDA_PY: 27
       CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
 
     - TARGET_ARCH: x64
@@ -23,21 +23,20 @@ install:
            throw "There are newer queued builds for this pull request, failing early." }
 
     # Add path, activate `conda` and update conda.
-    - cmd: set "PATH=%CONDA_INSTALL_LOCN%\\Scripts;%CONDA_INSTALL_LOCN%\\Library\\bin;%PATH%"
-    - cmd: conda update --yes --quiet conda
     - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
+    - cmd: conda.exe config --set always_yes yes --set changeps1 no --set show_channel_urls true
+    - cmd: conda.exe update conda
 
     - cmd: set PYTHONUNBUFFERED=1
 
-    - cmd: conda config --set show_channel_urls true
-    - cmd: conda config --add channels conda-forge
-    - cmd: conda install --yes conda-build
+    - cmd: conda.exe config --add channels conda-forge
+    - cmd: conda.exe info --all
+    - cmd: conda.exe install conda-build
+    - cmd: conda.exe list
 
-    # Conda build tools.
-    - cmd: conda info
 
 # Skip .NET project specific build phase.
 build: off
 
 test_script:
-    - "conda build conda-recipe --quiet"
+    - "conda build conda.recipe"
