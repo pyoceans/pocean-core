@@ -124,9 +124,13 @@ def ncpyattributes(obj, verbose=True):
         if hasattr(v, 'dtype'):
             newt = v.dtype.name
         else:
-            if isinstance(v, collections.Iterable):
+            if isinstance(v, collections.Iterable) and v:
                 # Use the type of the first one
                 v = v[0]
+            else:
+                # This is likely an empty value
+                # so just default to an emptry string
+                v = ''
             newt = type(v).__name__
 
         if verbose is True:
