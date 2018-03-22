@@ -60,12 +60,14 @@ class IncompleteMultidimensionalProfile(CFDataset):
             x = dsg.x_axes()[0]
             y = dsg.y_axes()[0]
             z = dsg.z_axes()[0]
+            assert len(z.dimensions) == 2
+
             assert t.size == pvar.size
             assert x.size == pvar.size
             assert y.size == pvar.size
             p_dim = dsg.dimensions[pvar.dimensions[0]]
             z_dim = dsg.dimensions[[ d for d in z.dimensions if d != p_dim.name ][0]]
-            for dv in dsg.data_vars() + [z]:
+            for dv in dsg.data_vars():
                 assert len(dv.dimensions) in [1, 2]  # dimensioned by profile or profile, z
                 assert z_dim.name in dv.dimensions or p_dim.name in dv.dimensions
                 assert dv.size in [z_dim.size, p_dim.size, z_dim.size * p_dim.size]
