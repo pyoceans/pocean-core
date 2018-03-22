@@ -39,10 +39,10 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             pvars = dsg.filter_by_attrs(cf_role='profile_id')
             assert len(pvars) == 1
             assert dsg.featureType.lower() == 'profile'
-            assert len(dsg.t_axes()) == 1
-            assert len(dsg.x_axes()) == 1
-            assert len(dsg.y_axes()) == 1
-            assert len(dsg.z_axes()) == 1
+            assert len(dsg.t_axes()) >= 1
+            assert len(dsg.x_axes()) >= 1
+            assert len(dsg.y_axes()) >= 1
+            assert len(dsg.z_axes()) >= 1
 
             # Allow for string variables
             pvar = pvars[0]
@@ -75,12 +75,11 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                 assert y.size == pvar.size
                 p_dim = dsg.dimensions[pvar.dimensions[0]]
                 for dv in dsg.data_vars():
-                    assert len(dv.dimensions) == 2
-                    assert z_dim.name in dv.dimensions
-                    assert p_dim.name in dv.dimensions
-                    assert dv.size == z_dim.size * p_dim.size
+                    assert len(dv.dimensions) in [1, 2]  # dimensioned by profile or profile, z
+                    assert z_dim.name in dv.dimensions or p_dim.name in dv.dimensions
+                    assert dv.size in [z_dim.size, p_dim.size, z_dim.size * p_dim.size]
 
-        except BaseException:
+        except BaseException as e:
             return False
 
         return True
@@ -110,7 +109,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         p = p.repeat(zs)
 
         # Z
-        z = generic_masked(axv.z[:], attrs=self.vatts(axv.z.name))
+        z = generic_masked(zvar[:], attrs=self.vatts(zvar.name))
         try:
             z = np.tile(z, ps)
         except ValueError:

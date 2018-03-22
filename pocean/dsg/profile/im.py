@@ -1,5 +1,6 @@
 #!python
 # coding=utf-8
+from copy import copy
 from collections import OrderedDict
 
 import numpy as np
@@ -12,14 +13,15 @@ from pocean.utils import (
     generic_masked,
     get_default_axes,
     get_dtype,
+    get_mapped_axes_variables,
     get_masked_datetime_array,
     get_ncdata_from_series,
-    normalize_array,
+    normalize_countable_array,
 )
 from pocean.cf import CFDataset, cf_safe_name
 from pocean.dsg.profile import profile_calculated_metadata
 
-from pocean import logger
+from pocean import logger as L  # noqa
 
 
 class IncompleteMultidimensionalProfile(CFDataset):
@@ -42,10 +44,10 @@ class IncompleteMultidimensionalProfile(CFDataset):
             pvars = dsg.filter_by_attrs(cf_role='profile_id')
             assert len(pvars) == 1
             assert dsg.featureType.lower() == 'profile'
-            assert len(dsg.t_axes()) == 1
-            assert len(dsg.x_axes()) == 1
-            assert len(dsg.y_axes()) == 1
-            assert len(dsg.z_axes()) == 1
+            assert len(dsg.t_axes()) >= 1
+            assert len(dsg.x_axes()) >= 1
+            assert len(dsg.y_axes()) >= 1
+            assert len(dsg.z_axes()) >= 1
 
             # Allow for string variables
             pvar = pvars[0]
@@ -64,10 +66,9 @@ class IncompleteMultidimensionalProfile(CFDataset):
             p_dim = dsg.dimensions[pvar.dimensions[0]]
             z_dim = dsg.dimensions[[ d for d in z.dimensions if d != p_dim.name ][0]]
             for dv in dsg.data_vars() + [z]:
-                assert len(dv.dimensions) == 2
-                assert z_dim.name in dv.dimensions
-                assert p_dim.name in dv.dimensions
-                assert dv.size == z_dim.size * p_dim.size
+                assert len(dv.dimensions) in [1, 2]  # dimensioned by profile or profile, z
+                assert z_dim.name in dv.dimensions or p_dim.name in dv.dimensions
+                assert dv.size in [z_dim.size, p_dim.size, z_dim.size * p_dim.size]
 
         except BaseException:
             return False
@@ -148,34 +149,34 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
+
+        axv = get_mapped_axes_variables(self, axes)
+
         # Multiple profiles in the file
-        pvar = self.filter_by_attrs(cf_role='profile_id')[0]
+        pvar = axv.profile
         p_dim = self.dimensions[pvar.dimensions[0]]
 
-        zvar = self.z_axes()[0]
+        zvar = axv.z
         zs = len(self.dimensions[[ d for d in zvar.dimensions if d != p_dim.name ][0]])
 
         # Profiles
-        try:
-            p = normalize_array(pvar)
-        except ValueError:
-            p = np.asarray(list(range(len(pvar))), dtype=np.integer)
+        p = normalize_countable_array(pvar)
         p = p.repeat(zs)
 
         # Z
         z = generic_masked(zvar[:].flatten(), attrs=self.vatts(zvar.name))
 
         # T
-        tvar = self.t_axes()[0]
+        tvar = axv.t
         t = tvar[:].repeat(zs)
         nt = get_masked_datetime_array(t, tvar).flatten()
 
         # X
-        xvar = self.x_axes()[0]
+        xvar = axv.x
         x = generic_masked(xvar[:].repeat(zs), attrs=self.vatts(xvar.name))
 
         # Y
-        yvar = self.y_axes()[0]
+        yvar = axv.y
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
 
         df_data = OrderedDict([
@@ -187,23 +188,37 @@ class IncompleteMultidimensionalProfile(CFDataset):
         ])
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
-        extract_vars = list(set(self.data_vars() + self.ancillary_vars()))
-        for i, dvar in enumerate(extract_vars):
+
+        extract_vars = copy(self.variables)
+        for ncvar in axv._asdict().values():
+            if ncvar is not None and ncvar.name in extract_vars:
+                del extract_vars[ncvar.name]
+
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
 
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam))
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Profile, z dimension
             elif dvar.dimensions == zvar.dimensions:
-                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dvar.name))
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
-                logger.warning("Skipping variable {}... it didn't seem like a data variable".format(dvar))
-                continue
+                vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
+                # Carry through size 1 variables
+                if vdata.size == 1:
+                    if vdata[0] is np.ma.masked:
+                        L.warning("Skipping variable {} that is completely masked".format(dnam))
+                        continue
+                    vdata = vdata[0]
+                else:
+                    L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
+                    continue
 
-            building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
-            df_data[dvar.name] = vdata
+            df_data[dnam] = vdata
 
         df = pd.DataFrame(df_data)
 
