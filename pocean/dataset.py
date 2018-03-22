@@ -8,7 +8,7 @@ import simplejson as json
 from netCDF4 import Dataset
 
 from .utils import (
-    BasicNumpyEncoder,
+    JSONEncoder,
     generic_masked,
 )
 from .meta import (
@@ -229,7 +229,7 @@ class EnhancedDataset(Dataset):
                 except BaseException:
                     L.exception("Could not apply custom variable attribue function")
 
-        return json.loads(json.dumps(js, cls=BasicNumpyEncoder))
+        return json.loads(json.dumps(js, cls=JSONEncoder))
 
     def update_attributes(self, attributes):
         for k, v in attributes.pop('global', {}).items():

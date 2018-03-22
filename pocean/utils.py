@@ -1,13 +1,15 @@
 #!python
 # coding=utf-8
 import six
-import base64
+import uuid
+import decimal
 import operator
 import itertools
 import simplejson as json
-from datetime import datetime
+from datetime import datetime, date, time
 from collections import namedtuple, Mapping, Counter
 
+import pandas as pd
 import numpy as np
 import netCDF4 as nc4
 
@@ -390,7 +392,7 @@ def dict_update(d, u):
     return d
 
 
-class BasicNumpyEncoder(json.JSONEncoder):
+class JSONEncoder(json.JSONEncoder):
 
     def default(self, obj):
         """If input object is an ndarray it will be converted into a list
@@ -399,28 +401,13 @@ class BasicNumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         elif isinstance(obj, np.generic):
             return np.asscalar(obj)
-        # Let the base class default method raise the TypeError
-        return json.JSONEncoder(self, obj)
-
-
-class NumpyEncoder(json.JSONEncoder):
-
-    def default(self, obj):
-        """If input object is an ndarray it will be converted into a dict
-        holding dtype, shape and the data, base64 encoded.
-        """
-        if isinstance(obj, np.ndarray):
-            if obj.flags['C_CONTIGUOUS']:
-                obj_data = obj.data
-            else:
-                cont_obj = np.ascontiguousarray(obj)
-                assert(cont_obj.flags['C_CONTIGUOUS'])
-                obj_data = cont_obj.data
-            data_b64 = base64.b64encode(obj_data)
-            return dict(__ndarray__=data_b64,
-                        dtype=str(obj.dtype),
-                        shape=obj.shape)
-        elif isinstance(obj, np.generic):
-            return np.asscalar(obj)
-        # Let the base class default method raise the TypeError
-        return json.JSONEncoder(self, obj)
+        elif isinstance(obj, pd.Timestamp):
+            return obj.to_pydatetime().isoformat()
+        elif isinstance(obj, (datetime, date, time)):
+            return obj.isoformat()
+        elif isinstance(obj, (decimal.Decimal, uuid.UUID)):
+            return str(obj)
+        elif pd.isna(obj):
+            return None
+        else:
+            return json.JSONEncoder(self, obj)
