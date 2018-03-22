@@ -230,8 +230,11 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
         building_index_to_drop = np.ones(o_dim.size, dtype=bool)
 
-        # Axes variables are already processed so skip them
         extract_vars = copy(self.variables)
+        # Skip the traj and row index variables
+        del extract_vars[o_index_var.name]
+        del extract_vars[r_index_var.name]
+        # Axes variables are already processed so skip them
         for ncvar in axv._asdict().values():
             if ncvar is not None and ncvar.name in extract_vars:
                 del extract_vars[ncvar.name]
