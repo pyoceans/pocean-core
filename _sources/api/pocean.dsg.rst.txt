@@ -12,6 +12,8 @@ Subpackages
 .. toctree::
 
     pocean.dsg.profile
+    pocean.dsg.timeseries
+    pocean.dsg.timeseriesProfile
     pocean.dsg.trajectory
     pocean.dsg.trajectoryProfile
 

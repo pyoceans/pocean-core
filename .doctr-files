@@ -5,6 +5,7 @@
 ./_sources/api/pocean.dsg.timeseriesProfile.rst.txt
 ./_sources/api/pocean.dsg.trajectory.rst.txt
 ./_sources/api/pocean.dsg.trajectoryProfile.rst.txt
+./_sources/api/pocean.grid.rst.txt
 ./_sources/api/pocean.rst.txt
 ./_sources/development.rst.txt
 ./_sources/index.rst.txt
@@ -38,6 +39,7 @@
 ./api/pocean.dsg.timeseriesProfile.html
 ./api/pocean.dsg.trajectory.html
 ./api/pocean.dsg.trajectoryProfile.html
+./api/pocean.grid.html
 ./api/pocean.html
 ./development.html
 ./genindex.html

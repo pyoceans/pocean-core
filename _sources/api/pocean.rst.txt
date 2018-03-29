@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
 
     pocean.dsg
+    pocean.grid
 
 Submodules
 ----------
