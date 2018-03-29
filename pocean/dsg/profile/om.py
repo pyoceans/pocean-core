@@ -51,7 +51,6 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             # 2 = array of character arrays
             assert 0 <= len(pvar.dimensions) <= 2
 
-
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]
             y = dsg.y_axes()[0]

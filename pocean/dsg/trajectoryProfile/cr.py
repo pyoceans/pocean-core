@@ -159,7 +159,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             raise ValueError(
                 'Could not find the "instance_dimension" attribute on any variables, '
                 'is this a valid {}?'.format(self.__class__.__name__)
-                )
+            )
         else:
             r_index_var = r_index_var[0]
         p_dim = self.dimensions[r_index_var.dimensions[0]]       # Profile dimension
@@ -178,7 +178,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             raise ValueError(
                 'Could not find the "sample_dimension" attribute on any variables, '
                 'is this a valid {}?'.format(self.__class__.__name__)
-                )
+            )
         else:
             o_index_var = o_index_var[0]
         o_dim = self.dimensions[o_index_var.sample_dimension]  # Sample dimension
