@@ -51,8 +51,6 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             # 2 = array of character arrays
             assert 0 <= len(pvar.dimensions) <= 2
 
-            ps = normalize_array(pvar)
-            is_single = isinstance(ps, six.string_types) or ps.size == 1
 
             t = dsg.t_axes()[0]
             x = dsg.x_axes()[0]
@@ -60,6 +58,9 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             z = dsg.z_axes()[0]
             assert len(z.dimensions) == 1
             z_dim = dsg.dimensions[z.dimensions[0]]
+
+            ps = normalize_array(pvar)
+            is_single = isinstance(ps, six.string_types) or (ps.size == 1 and len(t.dimensions) == 0)
 
             if is_single:
                 assert t.size == 1
