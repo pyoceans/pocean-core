@@ -397,6 +397,11 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         """If input object is an ndarray it will be converted into a list
         """
+        try:
+            from pathlib import Path
+        except ImportError:
+            Path = str
+
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         elif isinstance(obj, np.generic):
@@ -407,7 +412,9 @@ class JSONEncoder(json.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, (decimal.Decimal, uuid.UUID)):
             return str(obj)
+        elif isinstance(obj, Path):
+            return str(obj)
         elif pd.isna(obj):
             return None
         else:
-            return json.JSONEncoder(self, obj)
+            return json.JSONEncoder.default(self, obj)
