@@ -8,3 +8,4 @@ dist/*
 .cache
 docs/api
 docs/_site
+.pytest_cache/

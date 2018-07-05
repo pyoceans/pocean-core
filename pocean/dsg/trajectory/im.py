@@ -43,11 +43,10 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             tvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(tvars) == 1
             assert dsg.featureType.lower() == 'trajectory'
-
-            assert len(dsg.t_axes()) == 1
-            assert len(dsg.x_axes()) == 1
-            assert len(dsg.y_axes()) == 1
-            assert len(dsg.z_axes()) == 1
+            assert len(dsg.t_axes()) >= 1
+            assert len(dsg.x_axes()) >= 1
+            assert len(dsg.y_axes()) >= 1
+            assert len(dsg.z_axes()) >= 1
 
             # Allow for string variables
             tvar = tvars[0]
@@ -59,11 +58,14 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             ts = normalize_array(tvar)
             is_single = False
 
-            if isinstance(ts, six.string_types):
+            if tvar.ndim == 0:
+                is_single = True
+            elif tvar.ndim == 2:
+                is_single = False
+            elif isinstance(ts, six.string_types):
                 # Non-dimensioned string variable
                 is_single = True
-            elif ts.size == 1 and tvar.dtype != str:
-                # Other non-string types
+            elif tvar.ndim == 1 and hasattr(ts, 'dtype') and ts.dtype.kind in ['U', 'S']:
                 is_single = True
 
             t = dsg.t_axes()[0]

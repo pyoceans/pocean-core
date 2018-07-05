@@ -59,7 +59,17 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             z_dim = dsg.dimensions[z.dimensions[0]]
 
             ps = normalize_array(pvar)
-            is_single = isinstance(ps, six.string_types) or (ps.size == 1 and len(t.dimensions) == 0)
+            is_single = False
+
+            if pvar.ndim == 0:
+                is_single = True
+            elif pvar.ndim == 2:
+                is_single = False
+            elif isinstance(ps, six.string_types):
+                # Non-dimensioned string variable
+                is_single = True
+            elif pvar.ndim == 1 and hasattr(ps, 'dtype') and ps.dtype.kind in ['U', 'S']:
+                is_single = True
 
             if is_single:
                 assert t.size == 1

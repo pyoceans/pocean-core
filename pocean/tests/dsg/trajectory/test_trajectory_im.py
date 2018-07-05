@@ -7,6 +7,7 @@ import unittest
 from dateutil.parser import parse as dtparse
 import numpy as np
 
+from pocean.cf import CFDataset
 from pocean.dsg import IncompleteMultidimensionalTrajectory
 from pocean.tests.dsg.test_new import test_is_mine
 
@@ -20,6 +21,8 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
 
     def test_imt_multi(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
+
+        CFDataset.load(filepath)
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
@@ -47,8 +50,41 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             os.close(fid)
             os.remove(tmpfile)
 
+    def test_imt_multi_not_string(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple-nonstring.nc')
+
+        CFDataset.load(filepath)
+
+        with IncompleteMultidimensionalTrajectory(filepath) as ncd:
+            fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+            df = ncd.to_dataframe(clean_rows=False)
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile) as result_ncd:
+                assert 'trajectory' in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
+                # Could not reduce dims since there was more than one trajectory
+                assert 'trajectory' not in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, unlimited=True) as result_ncd:
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True, unlimited=True) as result_ncd:
+                # Could not reduce dims since there was more than one trajectory
+                assert 'trajectory' not in result_ncd.dimensions
+                assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            os.close(fid)
+            os.remove(tmpfile)
+
     def test_imt_single(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
+
+        CFDataset.load(filepath)
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')

@@ -6,6 +6,8 @@ import unittest
 
 from dateutil.parser import parse as dtparse
 import numpy as np
+
+from pocean.cf import CFDataset
 from pocean.dsg import OrthogonalMultidimensionalProfile
 from pocean.tests.dsg.test_new import test_is_mine
 
@@ -26,6 +28,8 @@ class TestOrthogonalMultidimensionalProfile(unittest.TestCase):
         OrthogonalMultidimensionalProfile(self.multi).close()
 
     def test_omp_dataframe_single(self):
+        CFDataset.load(self.single)
+
         fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalProfile(self.single) as ncd:
             df = ncd.to_dataframe()
@@ -37,6 +41,8 @@ class TestOrthogonalMultidimensionalProfile(unittest.TestCase):
         os.remove(single_tmp)
 
     def test_omp_dataframe_multi(self):
+        CFDataset.load(self.multi)
+
         fid, multi_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalProfile(self.multi) as ncd:
             df = ncd.to_dataframe()
