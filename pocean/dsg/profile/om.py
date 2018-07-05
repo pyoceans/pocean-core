@@ -89,7 +89,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                     assert z_dim.name in dv.dimensions or p_dim.name in dv.dimensions
                     assert dv.size in [z_dim.size, p_dim.size, z_dim.size * p_dim.size]
 
-        except BaseException as e:
+        except BaseException:
             return False
 
         return True

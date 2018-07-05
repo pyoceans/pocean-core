@@ -22,7 +22,7 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
     def test_imt_multi(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
 
-        CFDataset.load(filepath)
+        CFDataset.load(filepath).close()
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
@@ -53,7 +53,7 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
     def test_imt_multi_not_string(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple-nonstring.nc')
 
-        CFDataset.load(filepath)
+        CFDataset.load(filepath).close()
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
@@ -84,7 +84,7 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
     def test_imt_single(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
 
-        CFDataset.load(filepath)
+        CFDataset.load(filepath).close()
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             fid, tmpfile = tempfile.mkstemp(suffix='.nc')
