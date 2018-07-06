@@ -19,11 +19,15 @@ matrix:
       env: TEST_TARGET=coding_standards
     - python: 3.6
       env: TEST_TARGET=docs
+    - python: 3.6
+      env: TEST_TARGET=makerelease
   allow_failures:
     - python: 3.6
       env: TEST_TARGET=coding_standards
     - python: 3.6
       env: TEST_TARGET=docs
+    - python: 3.6
+      env: TEST_TARGET=makerelease
 
 before_install:
   # Install miniconda
@@ -77,8 +81,12 @@ script:
       ./docs/deploy.sh ;
     fi
 
+  - if [[ $TEST_TARGET == 'makerelease' ]]; then
+      echo "Making a release..." ;
+    fi
+
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TEST_TARGET" == "default" ] && [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_TAG" != "" ] && [ "$TEST_TARGET" == "makerelease" ]; then
       conda install -n root conda-build=3 conda=4.4 anaconda-client ;
       conda build conda.recipe;
       anaconda -t $ANACONDA_TOKEN upload --force -u axiom-data-science $HOME/miniconda/**/pocean-core-*.tar.bz2 ;
@@ -88,5 +96,9 @@ deploy:
   provider: releases
   api_key:
     secure: cvbHcXSGGwwcx50E+66M+ij9RqRgNqD6q7gNGpA/UTbxXdZoXqucbino1t0TVto0OV/ZXJMqbmqe8TGIjHOg8k8UpEYWHZw6etbIM/VpD1KHqqyiWp2GSu6E59FeHj3w93X4QOl4wUpVJN1u24e+Gd3f492aupnjFHNetdbN38TI29S8KG7RBQQ9VX1je29BwLNrC5XI4OwCXS4cV6DdWedBD5W7dGNkyjgj+HV0SOTCO/VRDsHTZJMyAqCYf7esH5/vBCY9vEWVvUwXPFszcy8VBCyVQsgguWkwYQBQvxD8MXzLA24L7b1d8Ec9X04K5EyJrcEEyIA4BfammoehuRFoSfLxx5pGZfU9kRE0YbiidJ0OdkjUdorSUoSHNSpgz/jOJZxjJuS8d+kVUkvQ0Ksfs2GV07weCA3hlwI1BFDa58CCziNg8Dw4y0lnuF0Fx5+b/DB+ISFhJuI+xa3ZtT6ZgY2hGHKm9qBSwF3KUk4dRHManEYlU87rnlZRP8RwXwB4At3qO3qR48glsrKBQRGXcqvtcGvs9Nenp5L1h+ChkjtBIw1qd9/ZZpqkQec7o0h2AwglOClAz+j9d3rVuqFUcuMLZ1OU8XdMX2JfRgL1Unr5J5QSbVBhes/2nXsMWmrcFTJzk11dBcP65H4URGJD7aGS16rjOHubxY/ntHk=
+  file_glob: true
+  file: "$HOME/miniconda/**/pocean-core-*.tar.bz2"
+  skip_cleanup: true
   on:
     tags: true
+    condition: $TEST_TARGET == "makerelease"
