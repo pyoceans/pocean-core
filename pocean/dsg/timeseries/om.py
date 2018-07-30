@@ -119,7 +119,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
                     if var_name not in nc.variables:
-                        v = create_ncvar_from_series(nc, var_name, (axes.station, axes.t), sdf[c])
+                        v = create_ncvar_from_series(
+                            nc,
+                            var_name,
+                            (axes.station, axes.t),
+                            sdf[c],
+                            zlib=True,
+                            complevel=1
+                        )
                         attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                             'coordinates' : '{} {} {} {}'.format(
                                 axes.t, axes.z, axes.x, axes.y

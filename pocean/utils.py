@@ -224,20 +224,26 @@ def get_fill_value(var):
     return None
 
 
-def create_ncvar_from_series(ncd, var_name, dimensions, series):
+def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     from pocean.cf import CFDataset
 
     if np.issubdtype(series.dtype, np.datetime64):
         # Datetimes always saved as float64
         fv = np.dtype('f8').type(CFDataset.default_fill_value)
-        v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv)
+        v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv, **kwargs)
         v.units = CFDataset.default_time_unit
         v.calendar = 'standard'
     elif series.dtype.kind in ['U', 'S'] or series.dtype in six.string_types + (object,):
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
-        v = ncd.createVariable(var_name, get_dtype(series), dimensions)
+        v = ncd.createVariable(var_name, get_dtype(series), dimensions, **kwargs)
     else:
-        v = ncd.createVariable(var_name, get_dtype(series), dimensions, fill_value=series.dtype.type(CFDataset.default_fill_value))
+        v = ncd.createVariable(
+            var_name,
+            get_dtype(series),
+            dimensions,
+            fill_value=series.dtype.type(CFDataset.default_fill_value),
+            **kwargs
+        )
 
     return v
 

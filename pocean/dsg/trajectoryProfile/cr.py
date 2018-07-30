@@ -117,7 +117,14 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             for c in [ d for d in data_columns if d not in skips ]:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
-                    v = create_ncvar_from_series(nc, var_name, (axes.sample,), df[c])
+                    v = create_ncvar_from_series(
+                        nc,
+                        var_name,
+                        (axes.sample,),
+                        df[c],
+                        zlib=True,
+                        complevel=1
+                    )
                 else:
                     v = nc.variables[var_name]
                 vvalues = get_ncdata_from_series(df[c], v)
