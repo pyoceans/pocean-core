@@ -9,3 +9,4 @@ dist/*
 docs/api
 docs/_site
 .pytest_cache/
+.envrc
