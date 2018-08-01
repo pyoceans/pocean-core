@@ -233,9 +233,25 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
         v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv, **kwargs)
         v.units = CFDataset.default_time_unit
         v.calendar = 'standard'
-    elif series.dtype.kind in ['U', 'S'] or series.dtype in six.string_types + (object,):
+    elif series.dtype.kind in ['U', 'S'] or series.dtype in six.string_types:
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
         v = ncd.createVariable(var_name, get_dtype(series), dimensions, **kwargs)
+    elif series.dtype == np.object:
+        # Try to downcast to an int and then just take the type of the result
+        # If we can't convert to a numeric use a string
+        try:
+            filled_down = pd.to_numeric(series.fillna(0), downcast='integer')
+        except BaseException:
+            # Fall back to a string type
+            v = ncd.createVariable(var_name, get_dtype(series), dimensions, **kwargs)
+        else:
+            v = ncd.createVariable(
+                var_name,
+                get_dtype(filled_down),
+                dimensions,
+                fill_value=filled_down.dtype.type(CFDataset.default_fill_value),
+                **kwargs
+            )
     else:
         v = ncd.createVariable(
             var_name,
