@@ -103,6 +103,21 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             data_columns = [ d for d in df.columns if d not in axes ]
             attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
+            # Variables defined on only the profile axis
+            profile_vars = kwargs.pop('profile_vars', [])
+            profile_columns = [ p for p in profile_vars if p in data_columns ]
+            for c in profile_columns:
+                var_name = cf_safe_name(c)
+                if var_name not in nc.variables:
+                    create_ncvar_from_series(
+                        nc,
+                        var_name,
+                        (axes.profile,),
+                        df[c],
+                        zlib=True,
+                        complevel=1
+                    )
+
             for i, (_, trg) in enumerate(trajectory_groups):
                 for j, (_, pfg) in enumerate(trg.groupby(axes.profile)):
                     time[j] = get_ncdata_from_series(pfg[axes.t], time)[0]
@@ -111,10 +126,25 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     row_size[j] = len(pfg)
                     t_ind[j] = i
 
+                    # Save any profile variables on the "profile" index using the first value found
+                    # in the column.
+                    for c in profile_columns:
+                        var_name = cf_safe_name(c)
+                        if var_name not in nc.variables:
+                            continue
+                        v = nc.variables[var_name]
+                        vvalues = get_ncdata_from_series(df[c], v)[0]
+                        try:
+                            v[j] = vvalues
+                        except BaseException:
+                            L.exception('Failed to add {}'.format(c))
+                            continue
+
             # Add back in the z axes that was removed when calculating data_columns
-            data_columns = data_columns + [axes.z]
+            # and ignore variables that were stored in the profile index
+            sample_columns = [ f for f in data_columns + [axes.z] if f not in profile_columns ]
             skips = ['trajectoryIndex', 'rowSize']
-            for c in [ d for d in data_columns if d not in skips ]:
+            for c in [ d for d in sample_columns if d not in skips ]:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
                     v = create_ncvar_from_series(
