@@ -196,7 +196,6 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
-
             vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
 
             # Carry through size 1 variables
@@ -204,13 +203,18 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 if vdata[0] is np.ma.masked:
                     L.warning("Skipping variable {} that is completely masked".format(dnam))
                     continue
-                vdata = vdata[0]
             else:
                 if dvar[:].flatten().size != t.size:
                     L.warning("Variable {} is not the correct size, skipping.".format(dnam))
                     continue
 
+            # Mark rows with data so we don't remove them with clear_rows
+            if vdata.size == building_index_to_drop.size:
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Handle scalars here at the end
+            if vdata.size == 1:
+                vdata = vdata[0]
 
             df_data[dnam] = vdata
 

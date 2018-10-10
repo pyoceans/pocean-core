@@ -208,12 +208,10 @@ class IncompleteMultidimensionalProfile(CFDataset):
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
                 vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam))
-                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Profile, z dimension
             elif dvar.dimensions == zvar.dimensions:
                 vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
-                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
                 vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
@@ -222,10 +220,17 @@ class IncompleteMultidimensionalProfile(CFDataset):
                     if vdata[0] is np.ma.masked:
                         L.warning("Skipping variable {} that is completely masked".format(dnam))
                         continue
-                    vdata = vdata[0]
                 else:
                     L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
                     continue
+
+            # Mark rows with data so we don't remove them with clear_rows
+            if vdata.size == building_index_to_drop.size:
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Handle scalars here at the end
+            if vdata.size == 1:
+                vdata = vdata[0]
 
             df_data[dnam] = vdata
 

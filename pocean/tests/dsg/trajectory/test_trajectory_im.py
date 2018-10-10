@@ -19,6 +19,13 @@ logger.handlers = [logging.StreamHandler()]
 
 class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
 
+    def test_im_single_row(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-singlerow.nc')
+
+        with IncompleteMultidimensionalTrajectory(filepath) as s:
+            df = s.to_dataframe(clean_rows=True)
+            assert len(df) == 1
+
     def test_imt_multi(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-multiple.nc')
 
