@@ -128,7 +128,45 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
             attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
-            for c in data_columns:
+            # Variables defined on only the time axis and not the depth axis
+            detach_z_vars = kwargs.pop('detach_z', [])
+            detach_z_columnms = [ p for p in detach_z_vars if p in data_columns ]
+            for c in detach_z_columnms:
+                var_name = cf_safe_name(c)
+                if var_name not in nc.variables:
+                    v = create_ncvar_from_series(
+                        nc,
+                        var_name,
+                        default_dimensions[0::2],  # this removes the second dimension (z)
+                        df[c],
+                        zlib=True,
+                        complevel=1
+                    )
+                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
+                        'coordinates' : '{} {} {}'.format(
+                            axes.t, axes.x, axes.y
+                        )
+                    })
+                else:
+                    v = nc.variables[var_name]
+
+                # Because we need access to the fillvalues here, we ask not to return
+                # the values with them already filled.
+                vvalues = get_ncdata_from_series(df[c], v, fillna=False)
+                # Reshape to the full array, with Z
+                vvalues = vvalues.reshape(len(unique_t), unique_z.size, unique_s.size)
+                # The Z axis is always the second axis, take the mean over that axis
+                vvalues = np.apply_along_axis(np.nanmean, 1, vvalues).flatten()
+                # Now reshape to the array without Z
+                vvalues = vvalues.reshape(len(unique_t), unique_s.size)
+                try:
+                    v[ts()[2:]] = vvalues
+                except BaseException:
+                    L.exception('Failed to add {}'.format(c))
+                    continue
+
+            full_columns = [ f for f in data_columns if f not in detach_z_columnms ]
+            for c in full_columns:
                 # Create variable if it doesn't exist
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
@@ -214,8 +252,20 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 if vdata[0] is np.ma.masked:
                     L.warning("Skipping variable {} that is completely masked".format(dnam))
                     continue
+
+            # Carry through profile only variables
+            elif dvar.dimensions == axv.t.dimensions:
+                # Make the first value valid and fill with nans
+                vdata = vdata.repeat(n_z).reshape((n_times, n_z))
+                # Set everything after the first value to missing
+                vdata[:, 1:] = np.ma.masked
+                vdata = vdata.flatten()
+                if vdata.size != t.size:
+                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    continue
+
             else:
-                if dvar[:].flatten().size != t.size:
+                if vdata.size != t.size:
                     L.warning("Variable {} is not the correct size, skipping.".format(dnam))
                     continue
 
