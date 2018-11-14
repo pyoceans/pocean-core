@@ -133,7 +133,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                         if var_name not in nc.variables:
                             continue
                         v = nc.variables[var_name]
-                        vvalues = get_ncdata_from_series(df[c], v)[0]
+                        vvalues = get_ncdata_from_series(pfg[c], v)[0]
                         try:
                             v[j] = vvalues
                         except BaseException:
