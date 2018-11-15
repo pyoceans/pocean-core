@@ -69,7 +69,7 @@ class CFDataset(EnhancedDataset):
     def t_axes(self):
         tvars = list(set(
             self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 't'
+                axis=lambda x: x and str(x).lower() == 't'
             ) +
             self.filter_by_attrs(
                 standard_name=lambda x: x in ['time', 'forecast_reference_time']
@@ -96,13 +96,13 @@ class CFDataset(EnhancedDataset):
         ]
         xvars = list(set(
             self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'x'
+                axis=lambda x: x and str(x).lower() == 'x'
             ) +
             self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in xnames
+                standard_name=lambda x: x and str(x).lower() in xnames
             ) +
             self.filter_by_attrs(
-                units=lambda x: x and x.lower() in xunits
+                units=lambda x: x and str(x).lower() in xunits
             )
         ))
         return xvars
@@ -119,13 +119,13 @@ class CFDataset(EnhancedDataset):
         ]
         yvars = list(set(
             self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'y'
+                axis=lambda x: x and str(x).lower() == 'y'
             ) +
             self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in ynames
+                standard_name=lambda x: x and str(x).lower() in ynames
             ) +
             self.filter_by_attrs(
-                units=lambda x: x and x.lower() in yunits
+                units=lambda x: x and str(x).lower() in yunits
             )
         ))
         return yvars
@@ -146,13 +146,13 @@ class CFDataset(EnhancedDataset):
         ]
         zvars = list(set(
             self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'z'
+                axis=lambda x: x and str(x).lower() == 'z'
             ) +
             self.filter_by_attrs(
-                positive=lambda x: x and x.lower() in ['up', 'down']
+                positive=lambda x: x and str(x).lower() in ['up', 'down']
             ) +
             self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in znames
+                standard_name=lambda x: x and str(x).lower() in znames
             )
         ))
         return zvars

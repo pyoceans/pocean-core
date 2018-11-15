@@ -267,7 +267,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     return v
 
 
-def get_ncdata_from_series(series, ncvar):
+def get_ncdata_from_series(series, ncvar, fillna=True):
     from pocean.cf import CFDataset
 
     if np.issubdtype(series.dtype, np.datetime64):
@@ -276,8 +276,11 @@ def get_ncdata_from_series(series, ncvar):
         nums = nc4.date2num(series.tolist(), units=units, calendar=calendar)
         return np.ma.masked_invalid(nums)
     else:
-        fv = get_fill_value(ncvar) or np.nan
-        return series.fillna(fv).values.astype(ncvar.dtype)
+        if fillna is True:
+            fv = get_fill_value(ncvar) or np.nan
+            return series.fillna(fv).values.astype(ncvar.dtype)
+        else:
+            return series.values.astype(ncvar.dtype)
 
 
 def get_masked_datetime_array(t, tvar, mask_nan=True):

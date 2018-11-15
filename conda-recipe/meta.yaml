@@ -25,6 +25,7 @@ requirements:
     - shapely
     - simplejson
     - six
+    - cftime ==1.0.1
 
 test:
   source_files:
