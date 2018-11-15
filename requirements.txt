@@ -7,3 +7,4 @@ pytz
 shapely
 simplejson
 six
+cftime==1.0.1  # tempfix for real_datetime issue
