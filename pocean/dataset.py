@@ -10,6 +10,7 @@ from netCDF4 import Dataset
 from .utils import (
     JSONEncoder,
     generic_masked,
+    safe_attribute_typing
 )
 from .meta import (
     MetaInterface,
@@ -19,6 +20,20 @@ from .meta import (
 )
 from . import logger as L
 
+
+# Attribute that need to be of the same type as the variables
+_TYPE_SENSITIVE_ATTRIBUTES = [
+    '_FillValue',
+    'missing_value',
+    'valid_min',
+    'valid_max',
+    'valid_range',
+    'display_min',
+    'display_max',
+    'display_range',
+    'colorBarMinimum',
+    'colorBarMaximum',
+]
 
 class EnhancedDataset(Dataset):
 
@@ -191,6 +206,11 @@ class EnhancedDataset(Dataset):
                 del vatts['_FillValue']
             if 'missing_value' in vatts:
                 del vatts['missing_value']
+
+            # Convert any attribute that need to match the variables dtype to that dtype
+            for sattr in _TYPE_SENSITIVE_ATTRIBUTES:
+                if sattr in vatts:
+                    vatts[sattr] = safe_attribute_typing(newvar.dtype, vatts[sattr])
 
             newvar.setncatts(vatts)
 
