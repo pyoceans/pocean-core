@@ -242,7 +242,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
         try:
             filled_down = pd.to_numeric(series.fillna(0), downcast='integer')
             # Catch boolean values... to_numeric() results in boolean for True / False
-            if np.issubdtype(filled_down.dtype, np.bool):
+            if np.issubdtype(filled_down.dtype, np.bool_):
                 raise ValueError('datatype error: boolean needs to be converted to string')
         except BaseException:
             # Fall back to a string type
