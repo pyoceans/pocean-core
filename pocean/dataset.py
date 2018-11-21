@@ -35,6 +35,7 @@ _TYPE_SENSITIVE_ATTRIBUTES = [
     'colorBarMaximum',
 ]
 
+
 class EnhancedDataset(Dataset):
 
     def __del__(self):

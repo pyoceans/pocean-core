@@ -74,8 +74,7 @@ script:
     fi
 
   - if [[ $TEST_TARGET == "coding_standards" ]]; then
-      py.test --disable-warnings --pep8 -m pep8 ;
-      py.test --disable-warnings --flakes -m flakes ;
+      py.test --disable-warnings --flake8 -m flake8 ;
     fi
 
   - if [[ $TEST_TARGET == 'docs' ]]; then

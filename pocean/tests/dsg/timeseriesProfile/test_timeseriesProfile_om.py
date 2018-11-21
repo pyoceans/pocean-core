@@ -213,9 +213,9 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
                 detach_z=['top', 'bottom', 'middle'],
                 reduce_dims=True,
             ) as ncd2:
-                t2 = ncd.variables['top'][:]
-                m2 = ncd.variables['middle'][:]
-                b2 = ncd.variables['bottom'][:]
+                t2 = ncd2.variables['top'][:]
+                m2 = ncd2.variables['middle'][:]
+                b2 = ncd2.variables['bottom'][:]
 
                 assert t2.size == 10
                 assert m2.size == 10
