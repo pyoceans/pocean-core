@@ -1,4 +1,3 @@
 py
 pytest
-pytest-flakes
-pytest-pep8
+pytest-flake8
