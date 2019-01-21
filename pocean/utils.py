@@ -86,7 +86,7 @@ def all_subclasses(cls, skips=None):
     if skips is None:
         skips = []
 
-    for subclass in cls.__subclasses__():
+    for subclass in list(set(cls.__subclasses__())):
         if subclass not in skips:
             yield subclass
         for subc in all_subclasses(subclass):
