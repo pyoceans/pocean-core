@@ -9,6 +9,12 @@ import simplejson as json
 from datetime import datetime, date, time
 from collections import namedtuple, Mapping, Counter
 
+try:
+    # PY2 support
+    from urlparse import urlparse as uparse
+except ImportError:
+    from urllib.parse import urlparse as uparse
+
 import pandas as pd
 import numpy as np
 import netCDF4 as nc4
@@ -22,6 +28,14 @@ def downcast_dataframe(df):
         if np.issubdtype(df[column].dtype, np.int64):
             df[column] = df[column].astype(np.int32)
     return df
+
+
+def is_url(url):
+    try:
+        result = uparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
 
 
 def namedtuple_with_defaults(typename, field_names, default_values=()):
