@@ -37,7 +37,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
     """
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             rvars = dsg.filter_by_attrs(cf_role='timeseries_id')
             assert len(rvars) == 1
@@ -67,6 +67,8 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             assert 0 <= len(rvar.dimensions) <= 2
 
         except AssertionError:
+            if strict is True:
+                raise
             return False
 
         return True
@@ -76,10 +78,33 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         axes = get_default_axes(kwargs.pop('axes', {}))
         data_columns = [ d for d in df.columns if d not in axes ]
 
+        reduce_dims = kwargs.pop('reduce_dims', False)
+        _ = kwargs.pop('unlimited', False)
+
         with OrthogonalMultidimensionalTimeseries(output, 'w') as nc:
 
             station_group = df.groupby(axes.station)
             num_stations = len(station_group)
+            has_z = axes.z is not None
+
+            if reduce_dims is True and num_stations == 1:
+                # If a station, we can reduce that dimension if it is of size 1
+                def ts(i):
+                    return np.s_[:]
+                default_dimensions = (axes.t,)
+                station_dimensions = ()
+            else:
+                def ts(i):
+                    return np.s_[i, :]
+                default_dimensions = (axes.station, axes.t)
+                station_dimensions = (axes.station,)
+                nc.createDimension(axes.station, num_stations)
+
+            # Set the coordinates attribute correctly
+            coordinates = [axes.t, axes.x, axes.y]
+            if has_z is True:
+                coordinates.insert(1, axes.z)
+            coordinates = ' '.join(coordinates)
 
             # assume all groups are the same size and have identical times
             _, sdf = list(station_group)[0]
@@ -90,30 +115,25 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             # Create all of the variables
             nc.createDimension(axes.t, t.size)
-            nc.createDimension(axes.station, num_stations)
-            station = nc.createVariable(axes.station, get_dtype(df.station), (axes.station,))
-
             time = nc.createVariable(axes.t, 'f8', (axes.t,))
-            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.station,))
-            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.station,))
-            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (axes.station,), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
+            station = nc.createVariable(axes.station, get_dtype(df.station), station_dimensions)
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), station_dimensions)
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), station_dimensions)
+            if has_z is True:
+                z = nc.createVariable(axes.z, get_dtype(df[axes.z]), station_dimensions, fill_value=df[axes.z].dtype.type(cls.default_fill_value))
 
             attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
-            # tolist() converts to a python datetime object without timezone and has NaTs.
-            g = t.tolist()
-            # date2num convers NaTs to np.nan
-            gg = nc4.date2num(g, units=cls.default_time_unit)
-            # masked_invalid moves np.nan to a masked value
-            time[:] = np.ma.masked_invalid(gg)
+            time[:] = get_ncdata_from_series(t, time)
 
             for i, (uid, sdf) in enumerate(station_group):
                 station[i] = uid
                 latitude[i] = sdf[axes.y].iloc[0]
                 longitude[i] = sdf[axes.x].iloc[0]
 
-                # TODO: write a test for a Z with a _FillValue
-                z[i] = sdf[axes.z].iloc[0]
+                if has_z is True:
+                    # TODO: write a test for a Z with a _FillValue
+                    z[i] = sdf[axes.z].iloc[0]
 
                 for c in data_columns:
                     # Create variable if it doesn't exist
@@ -122,22 +142,20 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                         v = create_ncvar_from_series(
                             nc,
                             var_name,
-                            (axes.station, axes.t),
+                            default_dimensions,
                             sdf[c],
                             zlib=True,
                             complevel=1
                         )
                         attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                            'coordinates' : '{} {} {} {}'.format(
-                                axes.t, axes.z, axes.x, axes.y
-                            )
+                            'coordinates' : coordinates
                         })
                     else:
                         v = nc.variables[var_name]
 
                     vvalues = get_ncdata_from_series(sdf[c], v)
                     try:
-                        v[i, :] = vvalues
+                        v[ts(i)] = vvalues
                     except BaseException:
                         L.debug('{} was not written. Likely a metadata variable'.format(v.name))
 
