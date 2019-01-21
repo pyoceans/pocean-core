@@ -27,7 +27,7 @@ from pocean import logger as L  # noqa
 class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             assert dsg.featureType.lower() == 'timeseriesprofile'
             assert len(dsg.t_axes()) >= 1
@@ -57,6 +57,8 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             assert len(r_index_vars) == 0
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True

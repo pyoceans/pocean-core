@@ -38,7 +38,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     """
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             tvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(tvars) == 1
@@ -96,6 +96,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                     assert dv.size == t_dim.size * o_dim.size
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True
