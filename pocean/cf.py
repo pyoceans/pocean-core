@@ -7,7 +7,7 @@ from datetime import datetime
 import six
 from six import u as astr
 
-from .utils import all_subclasses
+from .utils import all_subclasses, is_url
 from .dataset import EnhancedDataset
 from . import logger
 
@@ -39,12 +39,14 @@ class CFDataset(EnhancedDataset):
 
         """
 
-        fpath = os.path.realpath(path)
+        if not is_url(path):
+            path = os.path.realpath(path)
+
         subs = list(all_subclasses(cls))
 
         dsg = None
         try:
-            dsg = cls(fpath)
+            dsg = cls(path)
             for klass in subs:
                 logger.debug('Trying {}...'.format(klass.__name__))
                 if hasattr(klass, 'is_mine'):
@@ -59,7 +61,7 @@ class CFDataset(EnhancedDataset):
         subnames = ', '.join([ s.__name__ for s in subs ])
         raise ValueError(
             'Could not open {} as any type of CF Dataset. Tried: {}.'.format(
-                fpath,
+                path,
                 subnames
             )
         )
@@ -136,8 +138,8 @@ class CFDataset(EnhancedDataset):
         )))
         return zvars
 
-    def is_valid(self):
-        return self.__class__.is_mine(self)
+    def is_valid(self, *args, **kwargs):
+        return self.__class__.is_mine(self, *args, **kwargs)
 
     def data_vars(self):
         return self.filter_by_attrs(

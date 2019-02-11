@@ -6,7 +6,7 @@ from collections import OrderedDict
 import six
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
+from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -38,7 +38,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     """
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             tvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(tvars) == 1
@@ -96,6 +96,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                     assert dv.size == t_dim.size * o_dim.size
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True
@@ -146,7 +148,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 # tolist() converts to a python datetime object without timezone and has NaTs.
                 g = gdf[axes.t].tolist()
                 # date2num convers NaTs to np.nan
-                gg = nc4.date2num(g, units=cls.default_time_unit)
+                gg = date2num(g, units=cls.default_time_unit)
                 # masked_invalid moves np.nan to a masked value
                 time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
 

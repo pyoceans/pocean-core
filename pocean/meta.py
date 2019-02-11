@@ -117,7 +117,7 @@ def ncpyattributes(obj, verbose=True):
         if isinstance(v, np.ndarray):
             newv = v.tolist()
         elif hasattr(v, 'dtype'):
-            newv = np.asscalar(v)
+            newv = v.item()
         else:
             newv = v
 

@@ -8,7 +8,7 @@ from pocean import logger  # noqa
 class IncompleteMultidimensionalTimeseries(CFDataset):
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             rvars = dsg.filter_by_attrs(cf_role='timeseries_id')
             assert len(rvars) == 1
@@ -39,6 +39,8 @@ class IncompleteMultidimensionalTimeseries(CFDataset):
             assert 0 <= len(rvar.dimensions) <= 2
 
         except AssertionError:
+            if strict is True:
+                raise
             return False
 
         return True

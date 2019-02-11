@@ -34,7 +34,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
     """
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             pvars = dsg.filter_by_attrs(cf_role='profile_id')
             assert len(pvars) == 1
@@ -90,6 +90,8 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                     assert dv.size in [z_dim.size, p_dim.size, z_dim.size * p_dim.size]
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True

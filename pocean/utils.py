@@ -9,9 +9,16 @@ import simplejson as json
 from datetime import datetime, date, time
 from collections import namedtuple, Mapping, Counter
 
+try:
+    # PY2 support
+    from urlparse import urlparse as uparse
+except ImportError:
+    from urllib.parse import urlparse as uparse
+
 import pandas as pd
 import numpy as np
 import netCDF4 as nc4
+from cftime import num2date, date2num
 
 from . import logger
 L = logger
@@ -22,6 +29,14 @@ def downcast_dataframe(df):
         if np.issubdtype(df[column].dtype, np.int64):
             df[column] = df[column].astype(np.int32)
     return df
+
+
+def is_url(url):
+    try:
+        result = uparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
 
 
 def namedtuple_with_defaults(typename, field_names, default_values=()):
@@ -72,7 +87,7 @@ def all_subclasses(cls, skips=None):
     if skips is None:
         skips = []
 
-    for subclass in cls.__subclasses__():
+    for subclass in list(set(cls.__subclasses__())):
         if subclass not in skips:
             yield subclass
         for subc in all_subclasses(subclass):
@@ -213,7 +228,7 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
 
 
 def pyscalar(val):
-    return np.asscalar(val)
+    return val.item()
 
 
 def get_fill_value(var):
@@ -273,7 +288,7 @@ def get_ncdata_from_series(series, ncvar, fillna=True):
     if np.issubdtype(series.dtype, np.datetime64):
         units = getattr(ncvar, 'units', CFDataset.default_time_unit)
         calendar = getattr(ncvar, 'calendar', 'standard')
-        nums = nc4.date2num(series.tolist(), units=units, calendar=calendar)
+        nums = date2num(series.tolist(), units=units, calendar=calendar)
         return np.ma.masked_invalid(nums)
     else:
         if fillna is True:
@@ -288,7 +303,7 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     if isinstance(t, np.ma.core.MaskedConstant):
         return t
     elif np.isscalar(t):
-        return nc4.num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
+        return num2date(t, tvar.units, getattr(tvar, 'calendar', 'standard'))
 
     if mask_nan is True:
         t = np.ma.masked_invalid(t)
@@ -296,11 +311,11 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     t_cal = getattr(tvar, 'calendar', 'standard')
 
     # Get the min value we can have and mask anything else
-    # This is limied by **python** datetime objects and not
+    # This is limited by **python** datetime objects and not
     # nc4 objects. The min nc4 datetime object is
     # min_date = nc4.netcdftime.datetime(-4713, 1, 1, 12, 0, 0, 40)
     # There is no max date for nc4.
-    min_nums = nc4.date2num([datetime.min, datetime.max], tvar.units, t_cal)
+    min_nums = date2num([datetime.min, datetime.max], tvar.units, t_cal)
     t = np.ma.masked_outside(t, *min_nums)
     # Avoid deprecation warnings between numpy 1.11 and 1.14
     # After 1.14 this is the default behavior
@@ -309,7 +324,7 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     t_mask = np.copy(np.ma.getmaskarray(t))
     t[t_mask] = 1
 
-    dts = nc4.num2date(t, tvar.units, t_cal)
+    dts = num2date(t, tvar.units, t_cal)
     if isinstance(dts, datetime):
         dts = np.array([dts.isoformat()], dtype='datetime64')
 
@@ -433,7 +448,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         elif isinstance(obj, np.generic):
-            return np.asscalar(obj)
+            return obj.item()
         elif isinstance(obj, pd.Timestamp):
             return obj.to_pydatetime().isoformat()
         elif isinstance(obj, (datetime, date, time)):
