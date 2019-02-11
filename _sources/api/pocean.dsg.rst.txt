@@ -17,3 +17,15 @@ Subpackages
     pocean.dsg.trajectory
     pocean.dsg.trajectoryProfile
 
+Submodules
+----------
+
+pocean.dsg.utils module
+-----------------------
+
+.. automodule:: pocean.dsg.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

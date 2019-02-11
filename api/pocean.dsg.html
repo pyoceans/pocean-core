@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
@@ -59,7 +60,7 @@ variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -98,7 +99,7 @@ the data variables is optional.</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -172,7 +173,7 @@ coordinate variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -234,7 +235,7 @@ coordinate variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.ContiguousRaggedTimeseries.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -260,7 +261,7 @@ coordinate variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.IndexedRaggedTimeseries.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -286,7 +287,7 @@ coordinate variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -319,7 +320,7 @@ of the data variables is optional.</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -350,7 +351,7 @@ of the data variables is optional.</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.RaggedTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -376,7 +377,7 @@ of the data variables is optional.</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -402,7 +403,7 @@ of the data variables is optional.</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -456,6 +457,32 @@ of the data variables is optional.</p>
 </li>
 </ul>
 </div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pocean.dsg.utils">
+<span id="pocean-dsg-utils-module"></span><h2>pocean.dsg.utils module<a class="headerlink" href="#module-pocean.dsg.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pocean.dsg.utils.get_creation_attributes">
+<code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_creation_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.dsg.utils.get_geographic_attributes">
+<code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_geographic_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_geographic_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.dsg.utils.get_temporal_attributes">
+<code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_temporal_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pocean.dsg.utils.get_vertical_attributes">
+<code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_vertical_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_vertical_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
@@ -521,7 +548,7 @@ of the data variables is optional.</p>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

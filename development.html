@@ -13,6 +13,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
    
@@ -36,9 +37,15 @@
 <p>Create a conda environment</p>
 <p>…code bash</p>
 <blockquote>
-<div>$ conda create -n pocean35 python=3.5
-$ source activate pocean35
-$ conda install –file requirements.txt</div></blockquote>
+<div>$ conda create -n pocean37 python=3.7
+$ source activate pocean37
+$ conda install –file requirements.txt –file requirements-test.txt</div></blockquote>
+<div class="section" id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
+<p>…code bash</p>
+<blockquote>
+<div>$ pytest</div></blockquote>
+</div>
 </div>
 
 
@@ -103,7 +110,7 @@ $ conda install –file requirements.txt</div></blockquote>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
