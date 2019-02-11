@@ -228,7 +228,7 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
 
 
 def pyscalar(val):
-    return np.asscalar(val)
+    return val.item()
 
 
 def get_fill_value(var):
@@ -448,7 +448,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         elif isinstance(obj, np.generic):
-            return np.asscalar(obj)
+            return obj.item()
         elif isinstance(obj, pd.Timestamp):
             return obj.to_pydatetime().isoformat()
         elif isinstance(obj, (datetime, date, time)):
