@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
+from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -115,7 +115,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
             for i, (uid, pdf) in enumerate(profile_group):
                 profile[i] = uid
 
-                time[i] = nc4.date2num(pdf[axes.t].iloc[0], units=cls.default_time_unit)
+                time[i] = date2num(pdf[axes.t].iloc[0], units=cls.default_time_unit)
                 latitude[i] = pdf[axes.y].iloc[0]
                 longitude[i] = pdf[axes.x].iloc[0]
 

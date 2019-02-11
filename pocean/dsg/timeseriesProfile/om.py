@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
+from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -122,7 +122,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             else:
                 nc.createDimension(axes.t, len(unique_t))
             time = nc.createVariable(axes.t, 'f8', (axes.t,))
-            time[:] = nc4.date2num(unique_t, units=cls.default_time_unit)
+            time[:] = date2num(unique_t, units=cls.default_time_unit)
 
             nc.createDimension(axes.z, unique_z.size)
             z = nc.createVariable(axes.z, get_dtype(unique_z), (axes.z,))

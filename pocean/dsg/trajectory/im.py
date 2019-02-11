@@ -6,7 +6,7 @@ from collections import OrderedDict
 import six
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
+from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -148,7 +148,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 # tolist() converts to a python datetime object without timezone and has NaTs.
                 g = gdf[axes.t].tolist()
                 # date2num convers NaTs to np.nan
-                gg = nc4.date2num(g, units=cls.default_time_unit)
+                gg = date2num(g, units=cls.default_time_unit)
                 # masked_invalid moves np.nan to a masked value
                 time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
 
