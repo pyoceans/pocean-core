@@ -44,4 +44,8 @@ __all__ = [
     'RaggedTimeseriesProfile',
     'IncompleteMultidimensionalTimeseriesProfile',
     'OrthogonalMultidimensionalTimeseriesProfile',
+    'get_geographic_attributes',
+    'get_vertical_attributes',
+    'get_temporal_attributes',
+    'get_creation_attributes'
 ]

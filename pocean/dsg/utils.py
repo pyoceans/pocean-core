@@ -21,7 +21,7 @@ def get_geographic_attributes(df, axes=None):
     Coordinate values are latitude (decimal degrees_north) and longitude (decimal degrees_east).
     Longitude values are limited to [-180, 180).
 
-    :param df: data (Pandas DataFrame
+    :param df: data (Pandas DataFrame)
     :param axes: keys (x,y,z,t) are associated with actual column names (dictionary)
     :return: nested dictionary of variable and global attributes
     """
@@ -32,7 +32,7 @@ def get_geographic_attributes(df, axes=None):
     maxx = round(df[axes.x].max(), 6).astype('float')
     if minx == maxx and miny == maxy:
         geometry_wkt = 'POINT (' \
-           '{maxx:.6f} {maxy:.6f})'.format(
+            '{maxx:.6f} {maxy:.6f})'.format(
                 maxx=maxx,
                 maxy=maxy,
             )
@@ -86,7 +86,7 @@ def get_vertical_attributes(df, axes=None):
     Set these attributes separately according to the dataset.
     Note: values are cast from numpy.int to float
 
-    :param df: data (Pandas DataFrame
+    :param df: data (Pandas DataFrame)
     :param axes: keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.
     :return: nested dictionary of variable and global attributes
     """
@@ -115,10 +115,11 @@ def get_temporal_attributes(df, axes=None):
     """ Use values in a dataframe to set temporal attributes for the eventual netCDF file
     Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
 
-    :param df: data (Pandas DataFrame
+    :param df: data (Pandas DataFrame)
     :param axes: keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.
     :return: nested dictionary of variable and global attributes
     """
+
     axes = get_default_axes(axes)
     mint = df[axes.t].min()
     maxt = df[axes.t].max()
@@ -153,6 +154,8 @@ def get_temporal_attributes(df, axes=None):
 
 def get_creation_attributes(df, history=None):
     """ Query system for netCDF file creation times
+
+    :param df: data (Pandas DataFrame)  - unused, remove?
     :param history: text initalizing audit trail for modifications to the original data (optional, string)
     :return: dictionary of global attributes
     """
