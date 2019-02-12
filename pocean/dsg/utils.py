@@ -14,23 +14,41 @@ from pocean import logger as L  # noqa
 
 
 def get_geographic_attributes(df, axes=None):
+    """ Use values in a dataframe to set geographic attributes for the eventual netCDF file
+    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+    The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84 and is used with
+    GPS satellite navigation (http://spatialreference.org/ref/epsg/wgs-84/).  This is NCEI's default.
+    Coordinate values are latitude (decimal degrees_north) and longitude (decimal degrees_east).
+    Longitude values are limited to [-180, 180).
+
+    :param df: data (Pandas DataFrame
+    :param axes: keys (x,y,z,t) are associated with actual column names (dictionary)
+    :return: nested dictionary of variable and global attributes
+    """
     axes = get_default_axes(axes)
-    miny = round(df[axes.y].min(), 5)
-    maxy = round(df[axes.y].max(), 5)
-    minx = round(df[axes.x].min(), 5)
-    maxx = round(df[axes.x].max(), 5)
-    polygon_wkt = 'POLYGON ((' \
-        '{maxy:.6f} {minx:.6f}, '  \
-        '{maxy:.6f} {maxx:.6f}, '  \
-        '{miny:.6f} {maxx:.6f}, '  \
-        '{miny:.6f} {minx:.6f}, '  \
-        '{maxy:.6f} {minx:.6f}'    \
-        '))'.format(
-            miny=miny,
-            maxy=maxy,
-            minx=minx,
-            maxx=maxx
-        )
+    miny = round(df[axes.y].min(), 6).astype('float')
+    maxy = round(df[axes.y].max(), 6).astype('float')
+    minx = round(df[axes.x].min(), 6).astype('float')
+    maxx = round(df[axes.x].max(), 6).astype('float')
+    if minx == maxx and miny == maxy:
+        geometry_wkt = 'POINT (' \
+           '{maxx:.6f} {maxy:.6f})'.format(
+                maxx=maxx,
+                maxy=maxy,
+            )
+    else:
+        geometry_wkt = 'POLYGON ((' \
+            '{maxy:.6f} {minx:.6f}, '  \
+            '{maxy:.6f} {maxx:.6f}, '  \
+            '{miny:.6f} {maxx:.6f}, '  \
+            '{miny:.6f} {minx:.6f}, '  \
+            '{maxy:.6f} {minx:.6f}'    \
+            '))'.format(
+                miny=miny,
+                maxy=maxy,
+                minx=minx,
+                maxx=maxx
+            )
     return {
         'variables': {
             axes.y: {
@@ -51,17 +69,30 @@ def get_geographic_attributes(df, axes=None):
             'geospatial_lat_max': maxy,
             'geospatial_lon_min': minx,
             'geospatial_lon_max': maxx,
-            'geospatial_bounds': polygon_wkt,
+            'geospatial_bounds': geometry_wkt,
             'geospatial_bounds_crs': 'EPSG:4326',
         }
     }
 
 
 def get_vertical_attributes(df, axes=None):
-    axes = get_default_axes(axes)
+    """ Use values in a dataframe to set vertical attributes for the eventual netCDF file
+    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+    The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of
+      * 'EPSG:5829' (instantaneous height above sea level),
+      * 'EPSG:5831' (instantaneous depth below sea level), or
+      * 'EPSG:5703' (NAVD88 height).
+    Likewise, geospatial_vertical_positive cannot be assumed to be either 'up' or 'down'.
+    Set these attributes separately according to the dataset.
+    Note: values are cast from numpy.int to float
 
-    minz = round(df[axes.z].min(), 6)
-    maxz = round(df[axes.z].max(), 6)
+    :param df: data (Pandas DataFrame
+    :param axes: keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.
+    :return: nested dictionary of variable and global attributes
+    """
+    axes = get_default_axes(axes)
+    minz = round(df[axes.z].min(), 6).astype('float')
+    maxz = round(df[axes.z].max(), 6).astype('float')
 
     return {
         'variables': {
@@ -81,6 +112,13 @@ def get_vertical_attributes(df, axes=None):
 
 
 def get_temporal_attributes(df, axes=None):
+    """ Use values in a dataframe to set temporal attributes for the eventual netCDF file
+    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+
+    :param df: data (Pandas DataFrame
+    :param axes: keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.
+    :return: nested dictionary of variable and global attributes
+    """
     axes = get_default_axes(axes)
     mint = df[axes.t].min()
     maxt = df[axes.t].max()
@@ -113,7 +151,11 @@ def get_temporal_attributes(df, axes=None):
     }
 
 
-def get_creation_attributes(df, history=None):
+def make_creation_attributes(history=None):
+    """ Query system for netCDF file creation times
+    :param history: text initalizing audit trail for modifications to the original data (optional, string)
+    :return: dictionary of global attributes
+    """
     nc_create_ts = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
 
     attrs = {
