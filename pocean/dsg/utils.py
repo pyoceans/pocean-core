@@ -151,7 +151,7 @@ def get_temporal_attributes(df, axes=None):
     }
 
 
-def make_creation_attributes(history=None):
+def get_creation_attributes(df, history=None):
     """ Query system for netCDF file creation times
     :param history: text initalizing audit trail for modifications to the original data (optional, string)
     :return: dictionary of global attributes

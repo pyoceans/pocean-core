@@ -24,6 +24,11 @@ from .timeseriesProfile.r import RaggedTimeseriesProfile
 from .timeseriesProfile.im import IncompleteMultidimensionalTimeseriesProfile
 from .timeseriesProfile.om import OrthogonalMultidimensionalTimeseriesProfile
 
+# Attribute Utilities
+from .utils import get_geographic_attributes
+from .utils import get_vertical_attributes
+from .utils import get_temporal_attributes
+from .utils import get_creation_attributes
 
 __all__ = [
     'IncompleteMultidimensionalProfile',
