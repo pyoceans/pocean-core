@@ -26,10 +26,10 @@ def get_geographic_attributes(df, axes=None):
     :return: nested dictionary of variable and global attributes
     """
     axes = get_default_axes(axes)
-    miny = round(df[axes.y].min(), 6).astype('float')
-    maxy = round(df[axes.y].max(), 6).astype('float')
-    minx = round(df[axes.x].min(), 6).astype('float')
-    maxx = round(df[axes.x].max(), 6).astype('float')
+    miny = float(round(df[axes.y].min(), 6))
+    maxy = float(round(df[axes.y].max(), 6))
+    minx = float(round(df[axes.x].min(), 6))
+    maxx = float(round(df[axes.x].max(), 6))
     if minx == maxx and miny == maxy:
         geometry_wkt = 'POINT (' \
             '{maxx:.6f} {maxy:.6f})'.format(
@@ -91,8 +91,8 @@ def get_vertical_attributes(df, axes=None):
     :return: nested dictionary of variable and global attributes
     """
     axes = get_default_axes(axes)
-    minz = round(df[axes.z].min(), 6).astype('float')
-    maxz = round(df[axes.z].max(), 6).astype('float')
+    minz = float(round(df[axes.z].min(), 6))
+    maxz = float(round(df[axes.z].max(), 6))
 
     return {
         'variables': {
