@@ -29,6 +29,7 @@ from .utils import get_geographic_attributes
 from .utils import get_vertical_attributes
 from .utils import get_temporal_attributes
 from .utils import get_creation_attributes
+from .utils import get_calculated_attributes
 
 __all__ = [
     'IncompleteMultidimensionalProfile',
@@ -47,5 +48,6 @@ __all__ = [
     'get_geographic_attributes',
     'get_vertical_attributes',
     'get_temporal_attributes',
-    'get_creation_attributes'
+    'get_creation_attributes',
+    'get_calculated_attributes'
 ]

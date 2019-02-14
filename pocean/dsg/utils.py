@@ -8,9 +8,29 @@ import pandas as pd
 from pocean.utils import (
     get_default_axes,
     unique_justseen,
+    dict_update
 )
 
-from pocean import logger as L  # noqa
+# from pocean import logger as L  # noqa
+
+
+def get_calculated_attributes(df, axes=None, history=None):
+    """ Functions to automate netCDF attribute generation from the data itself
+    This is a wrapper for the other four functions, which could be called separately.
+
+    :param df: data (Pandas DataFrame)
+    :param axes: keys (x,y,z,t) are associated with actual column names (dictionary)
+    :param history: history: text initializing audit trail for modifications to the original data (optional, string)
+    :return: dictionary of global attributes
+    """
+
+    axes = get_default_axes(axes)
+    attrs = get_geographic_attributes(df, axes)
+    attrs = dict_update(attrs, get_vertical_attributes(df, axes))
+    attrs = dict_update(attrs, get_temporal_attributes(df, axes))
+    attrs = dict_update(attrs, get_creation_attributes(history))
+
+    return attrs
 
 
 def get_geographic_attributes(df, axes=None):
@@ -26,10 +46,10 @@ def get_geographic_attributes(df, axes=None):
     :return: nested dictionary of variable and global attributes
     """
     axes = get_default_axes(axes)
-    miny = float(round(df[axes.y].min(), 6))
-    maxy = float(round(df[axes.y].max(), 6))
-    minx = float(round(df[axes.x].min(), 6))
-    maxx = float(round(df[axes.x].max(), 6))
+    miny = round(float(df[axes.y].min()), 6)
+    maxy = round(float(df[axes.y].max()), 6)
+    minx = round(float(df[axes.x].min()), 6)
+    maxx = round(float(df[axes.x].max()), 6)
     if minx == maxx and miny == maxy:
         geometry_wkt = 'POINT (' \
             '{maxx:.6f} {maxy:.6f})'.format(
@@ -91,8 +111,8 @@ def get_vertical_attributes(df, axes=None):
     :return: nested dictionary of variable and global attributes
     """
     axes = get_default_axes(axes)
-    minz = float(round(df[axes.z].min(), 6))
-    maxz = float(round(df[axes.z].max(), 6))
+    minz = round(float(df[axes.z].min()), 6)
+    maxz = round(float(df[axes.z].max()), 6)
 
     return {
         'variables': {
@@ -152,11 +172,10 @@ def get_temporal_attributes(df, axes=None):
     }
 
 
-def get_creation_attributes(df, history=None):
+def get_creation_attributes(history=None):
     """ Query system for netCDF file creation times
 
-    :param df: data (Pandas DataFrame)  - unused, remove?
-    :param history: text initalizing audit trail for modifications to the original data (optional, string)
+    :param history: text initializing audit trail for modifications to the original data (optional, string)
     :return: dictionary of global attributes
     """
     nc_create_ts = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
