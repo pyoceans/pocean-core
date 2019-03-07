@@ -137,8 +137,7 @@ class TestDsgUtils(unittest.TestCase):
         }
 
     def test_get_creation(self):
-        # We pass in the df just to standardize on the metadata functions... it isn't used.
-        meta = utils.get_creation_attributes(self.times, history='DID THINGS')
+        meta = utils.get_creation_attributes(history='DID THINGS')
 
         now = datetime.utcnow().replace(tzinfo=pytz.utc)
 
