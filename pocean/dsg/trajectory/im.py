@@ -145,17 +145,13 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             for i, (uid, gdf) in enumerate(trajectory_group):
                 trajectory[i] = uid
 
-                # tolist() converts to a python datetime object without timezone and has NaTs.
-                g = gdf[axes.t].tolist()
-                # date2num convers NaTs to np.nan
-                gg = date2num(g, units=cls.default_time_unit)
-                # masked_invalid moves np.nan to a masked value
-                time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
+                times = get_ncdata_from_series(gdf[axes.t], time)
+                time[ts(i, times.size)] = times
 
-                lats = gdf[axes.y].fillna(get_fill_value(latitude)).values
+                lats = get_ncdata_from_series(gdf[axes.y], latitude)
                 latitude[ts(i, lats.size)] = lats
 
-                lons = gdf[axes.x].fillna(get_fill_value(longitude)).values
+                lons = get_ncdata_from_series(gdf[axes.x], longitude)
                 longitude[ts(i, lons.size)] = lons
 
                 zs = gdf[axes.z].fillna(get_fill_value(z)).values
