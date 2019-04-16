@@ -60,7 +60,7 @@ class ContiguousRaggedTrajectory(CFDataset):
         axes = get_default_axes(kwargs.pop('axes', {}))
 
         # Should never be a CR file with one trajectory so we ignore the "reduce_dims" attribute
-        _ = kwargs.pop('reduce_dims', False)
+        _ = kwargs.pop('reduce_dims', False)  # noqa
         unlimited = kwargs.pop('unlimited', False)
 
         with ContiguousRaggedTrajectory(output, 'w') as nc:

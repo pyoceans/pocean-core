@@ -6,7 +6,6 @@ from collections import OrderedDict
 import six
 import numpy as np
 import pandas as pd
-from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
