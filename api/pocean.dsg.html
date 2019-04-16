@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>pocean.dsg package &#8212; pocean-core 1.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -115,17 +113,27 @@ the data variables is optional.</p>
 <dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
 <dl class="method">
 <dt id="pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata">
-<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calculated_metadata</code><span class="sig-paren">(</span><em>df=None</em>, <em>geometries=True</em>, <em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.from_dataframe">
+<em class="property">classmethod </em><code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>output</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.is_mine">
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.from_dataframe">
-<code class="descname">from_dataframe</code><span class="sig-paren">(</span><em>df</em>, <em>output</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.nc_attributes">
+<code class="descname">nc_attributes</code><span class="sig-paren">(</span><em>axes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="pocean.dsg.ContiguousRaggedTrajectory.to_dataframe">
-<code class="descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="descname">to_dataframe</code><span class="sig-paren">(</span><em>clean_cols=True</em>, <em>clean_rows=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -204,7 +212,7 @@ coordinate variables must contain missing data values (section 9.6).</p>
 
 <dl class="classmethod">
 <dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine">
-<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">is_mine</code><span class="sig-paren">(</span><em>dsg</em>, <em>strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -427,21 +435,17 @@ The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84
 GPS satellite navigation (http://spatialreference.org/ref/epsg/wgs-84/).  This is NCEI’s default.
 Coordinate values are latitude (decimal degrees_north) and longitude (decimal degrees_east).
 Longitude values are limited to [-180, 180).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -452,29 +456,25 @@ Attribute names come from <a class="reference external" href="https://www.nodc.n
 The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of</p>
 <blockquote>
 <div><ul class="simple">
-<li>‘EPSG:5829’ (instantaneous height above sea level),</li>
-<li>‘EPSG:5831’ (instantaneous depth below sea level), or</li>
-<li>‘EPSG:5703’ (NAVD88 height).</li>
+<li><p>‘EPSG:5829’ (instantaneous height above sea level),</p></li>
+<li><p>‘EPSG:5831’ (instantaneous depth below sea level), or</p></li>
+<li><p>‘EPSG:5703’ (NAVD88 height).</p></li>
 </ul>
 </div></blockquote>
 <p>Likewise, geospatial_vertical_positive cannot be assumed to be either ‘up’ or ‘down’.
 Set these attributes separately according to the dataset.
 Note: values are cast from numpy.int to float</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -482,37 +482,31 @@ Note: values are cast from numpy.int to float</p>
 <code class="descclassname">pocean.dsg.</code><code class="descname">get_temporal_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set temporal attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="pocean.dsg.get_creation_attributes">
 <code class="descclassname">pocean.dsg.</code><code class="descname">get_creation_attributes</code><span class="sig-paren">(</span><em>history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query system for netCDF file creation times</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary of global attributes</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -520,22 +514,18 @@ Attribute names come from <a class="reference external" href="https://www.nodc.n
 <code class="descclassname">pocean.dsg.</code><code class="descname">get_calculated_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em>, <em>history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functions to automate netCDF attribute generation from the data itself
 This is a wrapper for the other four functions, which could be called separately.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</li>
-<li><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
+<li><p><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary of global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="section" id="subpackages">
@@ -588,38 +578,32 @@ This is a wrapper for the other four functions, which could be called separately
 <code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_calculated_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em>, <em>history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functions to automate netCDF attribute generation from the data itself
 This is a wrapper for the other four functions, which could be called separately.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</li>
-<li><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
+<li><p><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dictionary of global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="pocean.dsg.utils.get_creation_attributes">
 <code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_creation_attributes</code><span class="sig-paren">(</span><em>history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query system for netCDF file creation times</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary of global attributes</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -631,21 +615,17 @@ The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84
 GPS satellite navigation (http://spatialreference.org/ref/epsg/wgs-84/).  This is NCEI’s default.
 Coordinate values are latitude (decimal degrees_north) and longitude (decimal degrees_east).
 Longitude values are limited to [-180, 180).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -653,21 +633,17 @@ Longitude values are limited to [-180, 180).</p>
 <code class="descclassname">pocean.dsg.utils.</code><code class="descname">get_temporal_attributes</code><span class="sig-paren">(</span><em>df</em>, <em>axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set temporal attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -678,29 +654,25 @@ Attribute names come from <a class="reference external" href="https://www.nodc.n
 The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of</p>
 <blockquote>
 <div><ul class="simple">
-<li>‘EPSG:5829’ (instantaneous height above sea level),</li>
-<li>‘EPSG:5831’ (instantaneous depth below sea level), or</li>
-<li>‘EPSG:5703’ (NAVD88 height).</li>
+<li><p>‘EPSG:5829’ (instantaneous height above sea level),</p></li>
+<li><p>‘EPSG:5831’ (instantaneous depth below sea level), or</p></li>
+<li><p>‘EPSG:5703’ (NAVD88 height).</p></li>
 </ul>
 </div></blockquote>
 <p>Likewise, geospatial_vertical_positive cannot be assumed to be either ‘up’ or ‘down’.
 Set these attributes separately according to the dataset.
 Note: values are cast from numpy.int to float</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>df</strong> – data (Pandas DataFrame)</li>
-<li><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">nested dictionary of variable and global attributes</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -746,8 +718,6 @@ Note: values are cast from numpy.int to float</p>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -768,7 +738,7 @@ Note: values are cast from numpy.int to float</p>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
