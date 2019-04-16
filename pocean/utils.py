@@ -55,6 +55,7 @@ def get_default_axes(axes=None):
     if isinstance(axes, tuple):
         axes = axes._asdict()
 
+    axes = axes.copy()
     # Sample is only a dimension to remove from duplicate calc
     sample_dim = axes.pop('sample', 'obs')
 
