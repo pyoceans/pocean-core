@@ -26,7 +26,7 @@ from pocean import logger as L  # noqa
 class ContiguousRaggedTrajectoryProfile(CFDataset):
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             rvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(rvars) == 1
@@ -56,6 +56,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             assert 0 <= len(rvar.dimensions) <= 2
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True

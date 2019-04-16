@@ -24,11 +24,11 @@ setup(
     license             = 'MIT',
     author              = "Kyle Wilcox",
     author_email        = "kyle@axiomdatascience.com",
-    url                 = "https://github.com/axiom-data-science/pocean",
+    url                 = "https://github.com/pyoceans/pocean-core",
     packages            = find_packages(),
     install_requires    = reqs,
     classifiers         = [
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',

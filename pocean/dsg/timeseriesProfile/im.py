@@ -28,7 +28,7 @@ class IncompleteMultidimensionalTimeseriesProfile(CFDataset):
             )
             assert len(r_index_vars) == 0
 
-        except AssertionError:
+        except BaseException:
             if strict is True:
                 raise
             return False
