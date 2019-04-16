@@ -30,7 +30,7 @@ class IndexedRaggedTimeseries(CFDataset):
             # 2 = array of character arrays
             assert 0 <= len(rvar.dimensions) <= 2
 
-        except AssertionError:
+        except BaseException:
             if strict is True:
                 raise
             return False

@@ -29,7 +29,7 @@ class ContiguousRaggedTimeseries(CFDataset):
             # 1 = array of strings/ints/bytes/etc
             # 2 = array of character arrays
             assert 0 <= len(rvar.dimensions) <= 2
-        except AssertionError:
+        except BaseException:
             if strict is True:
                 raise
             return False

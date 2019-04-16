@@ -33,7 +33,7 @@ class RaggedTimeseriesProfile(CFDataset):
                 assert len(r_index_vars) == 1
                 assert r_index_vars[0].instance_dimension in dsg.dimensions  # Station dimension
 
-        except AssertionError:
+        except BaseException:
             if strict is True:
                 raise
             return False
