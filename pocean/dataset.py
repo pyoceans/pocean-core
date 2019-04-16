@@ -262,6 +262,12 @@ class EnhancedDataset(Dataset):
         for k, v in attributes.items():
             if k in self.variables:
                 for n, z in v.items():
+
+                    # Don't re-assign fill value attributes
+                    if n in ['_FillValue', 'missing_value']:
+                        L.warning('Refusing to set {} on {}'.format(n, k))
+                        continue
+
                     try:
                         self.variables[k].setncattr(n, z)
                     except BaseException:

@@ -107,3 +107,28 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
         os.close(fid)
         os.remove(single_tmp)
+
+    def test_supplying_attributes(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
+
+        attrs = {
+            'y': {
+                '_CoordinateAxisType': 'Lat',
+                '_FillValue': -9999.9,
+                'missing_value': -9999.9,
+            }
+        }
+
+        with OrthogonalMultidimensionalTimeseries(self.single) as s:
+            df = s.to_dataframe()
+            with OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp, attributes=attrs) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+                assert result_ncd.variables['y']._CoordinateAxisType == 'Lat'
+                with self.assertRaises(AttributeError):
+                    result_ncd.variables['y'].missing_value
+                with self.assertRaises(AttributeError):
+                    result_ncd.variables['y']._FillValue
+
+        test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
