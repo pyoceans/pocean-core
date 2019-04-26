@@ -1,13 +1,16 @@
 #!python
 # coding=utf-8
+import os
+import json
 import unittest
 from datetime import datetime, timedelta
+from dateutil.parser import parse as dtparse
 
 import pytz
 import pandas as pd
-from dateutil.parser import parse as dtparse
 
 from pocean.dsg import utils
+from pocean.cf import CFDataset
 from pocean import logger as L  # noqa
 
 
@@ -79,19 +82,12 @@ class TestDsgUtils(unittest.TestCase):
                 },
             },
             'attributes': {
-                'geospatial_lat_max': 4,
-                'geospatial_lat_min': 1,
-                'geospatial_lon_max': -1,
-                'geospatial_lon_min': -4,
-                'geospatial_bounds': (
-                    'POLYGON (('
-                    '4.000000 -4.000000, '
-                    '4.000000 -1.000000, '
-                    '1.000000 -1.000000, '
-                    '1.000000 -4.000000, '
-                    '4.000000 -4.000000'
-                    '))'
-                ),
+                'geospatial_lat_min': 1.0,
+                'geospatial_lat_max': 4.0,
+                'geospatial_lon_min': -4.0,
+                'geospatial_lon_max': -1.0,
+                'geospatial_bbox': 'POLYGON ((-4 1, -1 1, -1 4, -4 4, -4 1))',
+                'geospatial_bounds': 'LINESTRING (-1 1, -4 4)',
                 'geospatial_bounds_crs': 'EPSG:4326',
             }
         }
@@ -145,3 +141,43 @@ class TestDsgUtils(unittest.TestCase):
         assert (now - dtparse(meta['attributes']['date_issued'])) < timedelta(minutes=1)
         assert (now - dtparse(meta['attributes']['date_modified'])) < timedelta(minutes=1)
         assert 'DID THINGS' in meta['attributes']['history']
+
+    def test_wrap_dateline(self):
+        ncfile = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources/wrapping_dateline.nc")
+
+        with CFDataset.load(ncfile) as ncd:
+            axes = {
+                't': 'time',
+                'z': 'z',
+                'x': 'lon',
+                'y': 'lat',
+            }
+            df = ncd.to_dataframe(axes=axes)
+
+            meta = utils.get_geographic_attributes(df, axes=axes)
+
+            assert meta == {
+                "variables": {
+                    "lat": {
+                        "attributes": {
+                            "actual_min": 61.777,
+                            "actual_max": 67.068
+                        }
+                    },
+                    "lon": {
+                        "attributes": {
+                            "actual_min": -179.966,
+                            "actual_max": 179.858
+                        }
+                    }
+                },
+                "attributes": {
+                    "geospatial_lat_min": 61.777,
+                    "geospatial_lat_max": 67.068,
+                    "geospatial_lon_min": -179.966,
+                    "geospatial_lon_max": 179.858,
+                    "geospatial_bbox": "POLYGON ((174.792 61.777, 198.669 61.777, 198.669 67.068, 174.792 67.068, 174.792 61.777))",
+                    "geospatial_bounds": "POLYGON ((174.792 61.777, 174.9259999999999 62.206, 178.812 64.098, 192.86 67.029, 196.86 67.068, 197.094 67.044, 198.669 66.861, 187.784 64.188, 179.1079999999999 62.266, 176.169 61.862, 174.792 61.777))",
+                    "geospatial_bounds_crs": "EPSG:4326"
+                }
+            }

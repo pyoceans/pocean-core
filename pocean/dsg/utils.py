@@ -4,6 +4,7 @@ from __future__ import division
 from datetime import datetime
 
 import pandas as pd
+from shapely.geometry import Polygon, LineString
 
 from pocean.utils import (
     get_default_axes,
@@ -11,7 +12,7 @@ from pocean.utils import (
     dict_update
 )
 
-# from pocean import logger as L  # noqa
+from pocean import logger as L  # noqa
 
 
 def get_calculated_attributes(df, axes=None, history=None):
@@ -56,19 +57,17 @@ def get_geographic_attributes(df, axes=None):
                 maxx=maxx,
                 maxy=maxy,
             )
+        geometry_bbox = geometry_wkt
     else:
-        geometry_wkt = 'POLYGON ((' \
-            '{maxy:.6f} {minx:.6f}, '  \
-            '{maxy:.6f} {maxx:.6f}, '  \
-            '{miny:.6f} {maxx:.6f}, '  \
-            '{miny:.6f} {minx:.6f}, '  \
-            '{maxy:.6f} {minx:.6f}'    \
-            '))'.format(
-                miny=miny,
-                maxy=maxy,
-                minx=minx,
-                maxx=maxx
-            )
+        p = Polygon(zip(df[axes.x], df[axes.y]))
+        dateline = LineString([(180, 90), (-180, -90)])
+        # If we cross the dateline normalize the coordinates before polygon
+        if dateline.crosses(p):
+            newx = (df[axes.x] + 360) % 360
+            p = Polygon(zip(newx, df[axes.y]))
+        geometry_bbox = p.envelope.wkt
+        geometry_wkt = p.convex_hull.wkt
+
     return {
         'variables': {
             axes.y: {
@@ -89,6 +88,7 @@ def get_geographic_attributes(df, axes=None):
             'geospatial_lat_max': maxy,
             'geospatial_lon_min': minx,
             'geospatial_lon_max': maxx,
+            'geospatial_bbox': geometry_bbox,
             'geospatial_bounds': geometry_wkt,
             'geospatial_bounds_crs': 'EPSG:4326',
         }
