@@ -13,6 +13,34 @@ from pocean import logger
 logger.level = logging.DEBUG
 logger.handlers = [logging.StreamHandler()]
 
+import pandas as pd
+
+
+class TestIMPStrings(unittest.TestCase):
+
+    def setUp(self):
+        self.df = pd.read_csv('resources/basis_2011.csv', parse_dates=['time'])
+
+    def test_print_dtypes(self):
+        print(self.df.dtypes)
+
+    def test_write_nc(self):
+        output_path = 'resources/2011_basis_ctd.nc'
+
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'z',
+            'profile': 'stationid'
+        }
+
+        with IncompleteMultidimensionalProfile.from_dataframe(self.df,
+                                                              output_path,
+                                                              axes=axes,
+                                                              mode='a') as ncd:
+            ncd.renameDimension('stationid', 'profile')
+
 
 class TestIncompleteMultidimensionalProfile(unittest.TestCase):
 
