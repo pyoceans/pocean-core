@@ -4,7 +4,7 @@ from __future__ import division
 from datetime import datetime
 
 import pandas as pd
-from shapely.geometry import Polygon, LineString
+from shapely.geometry import Point, Polygon, LineString, box
 
 from pocean.utils import (
     get_default_axes,
@@ -47,47 +47,50 @@ def get_geographic_attributes(df, axes=None):
     :return: nested dictionary of variable and global attributes
     """
     axes = get_default_axes(axes)
-    miny = round(float(df[axes.y].min()), 6)
-    maxy = round(float(df[axes.y].max()), 6)
-    minx = round(float(df[axes.x].min()), 6)
-    maxx = round(float(df[axes.x].max()), 6)
-    if minx == maxx and miny == maxy:
-        geometry_wkt = 'POINT (' \
-            '{maxx:.6f} {maxy:.6f})'.format(
-                maxx=maxx,
-                maxy=maxy,
-            )
-        geometry_bbox = geometry_wkt
+
+    carry_miny = round(float(df[axes.y].min()), 6)
+    carry_maxy = round(float(df[axes.y].max()), 6)
+    carry_minx = round(float(df[axes.x].min()), 6)
+    carry_maxx = round(float(df[axes.x].max()), 6)
+
+    coords = list(zip(df[axes.x], df[axes.y]))
+    if len(set(coords)) == 1:
+        geoclass = Point
+    elif len(coords) > 2:
+        geoclass = Polygon
     else:
-        p = Polygon(zip(df[axes.x], df[axes.y]))
-        dateline = LineString([(180, 90), (-180, -90)])
-        # If we cross the dateline normalize the coordinates before polygon
-        if dateline.crosses(p):
-            newx = (df[axes.x] + 360) % 360
-            p = Polygon(zip(newx, df[axes.y]))
-        geometry_bbox = p.envelope.wkt
-        geometry_wkt = p.convex_hull.wkt
+        geoclass = LineString
+
+    p = geoclass(coords)
+    dateline = LineString([(180, 90), (-180, -90)])
+    # If we cross the dateline normalize the coordinates before polygon
+    if dateline.crosses(p):
+        newx = (df[axes.x] + 360) % 360
+        p = geoclass(zip(newx, df[axes.y]))
+
+    geometry_bbox = box(*p.bounds).wkt
+    geometry_wkt = p.convex_hull.wkt
 
     return {
         'variables': {
             axes.y: {
                 'attributes': {
-                    'actual_min': miny,
-                    'actual_max': maxy,
+                    'actual_min': carry_miny,
+                    'actual_max': carry_maxy,
                 }
             },
             axes.x: {
                 'attributes': {
-                    'actual_min': minx,
-                    'actual_max': maxx,
+                    'actual_min': carry_minx,
+                    'actual_max': carry_maxx,
                 }
             },
         },
         'attributes': {
-            'geospatial_lat_min': miny,
-            'geospatial_lat_max': maxy,
-            'geospatial_lon_min': minx,
-            'geospatial_lon_max': maxx,
+            'geospatial_lat_min': carry_miny,
+            'geospatial_lat_max': carry_maxy,
+            'geospatial_lon_min': carry_minx,
+            'geospatial_lon_max': carry_maxx,
             'geospatial_bbox': geometry_bbox,
             'geospatial_bounds': geometry_wkt,
             'geospatial_bounds_crs': 'EPSG:4326',

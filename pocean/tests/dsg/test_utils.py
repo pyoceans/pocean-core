@@ -86,7 +86,7 @@ class TestDsgUtils(unittest.TestCase):
                 'geospatial_lat_max': 4.0,
                 'geospatial_lon_min': -4.0,
                 'geospatial_lon_max': -1.0,
-                'geospatial_bbox': 'POLYGON ((-4 1, -1 1, -1 4, -4 4, -4 1))',
+                'geospatial_bbox': 'POLYGON ((-1 1, -1 4, -4 4, -4 1, -1 1))',
                 'geospatial_bounds': 'LINESTRING (-1 1, -4 4)',
                 'geospatial_bounds_crs': 'EPSG:4326',
             }
@@ -176,8 +176,78 @@ class TestDsgUtils(unittest.TestCase):
                     "geospatial_lat_max": 67.068,
                     "geospatial_lon_min": -179.966,
                     "geospatial_lon_max": 179.858,
-                    "geospatial_bbox": "POLYGON ((174.792 61.777, 198.669 61.777, 198.669 67.068, 174.792 67.068, 174.792 61.777))",
+                    "geospatial_bbox": "POLYGON ((198.669 61.777, 198.669 67.068, 174.792 67.068, 174.792 61.777, 198.669 61.777))",
                     "geospatial_bounds": "POLYGON ((174.792 61.777, 174.9259999999999 62.206, 178.812 64.098, 192.86 67.029, 196.86 67.068, 197.094 67.044, 198.669 66.861, 187.784 64.188, 179.1079999999999 62.266, 176.169 61.862, 174.792 61.777))",
                     "geospatial_bounds_crs": "EPSG:4326"
                 }
             }
+
+    def test_wrap_small_coords(self):
+
+        geo = pd.DataFrame({
+            'x': [-1, -2],
+            'y': [1, 2]
+        })
+
+        meta = utils.get_geographic_attributes(geo)
+
+        assert meta == {
+            'variables': {
+                'y': {
+                    'attributes': {
+                        'actual_min': 1,
+                        'actual_max': 2,
+                    }
+                },
+                'x': {
+                    'attributes': {
+                        'actual_min': -2,
+                        'actual_max': -1,
+                    }
+                },
+            },
+            'attributes': {
+                'geospatial_lat_min': 1,
+                'geospatial_lat_max': 2,
+                'geospatial_lon_min': -2,
+                'geospatial_lon_max': -1,
+                'geospatial_bbox': 'POLYGON ((-1 1, -1 2, -2 2, -2 1, -1 1))',
+                'geospatial_bounds': 'LINESTRING (-1 1, -2 2)',
+                'geospatial_bounds_crs': 'EPSG:4326',
+            }
+        }
+
+    def test_wrap_same_coords(self):
+
+        geo = pd.DataFrame({
+            'x': [-1, -1, -1],
+            'y': [1, 1, 1]
+        })
+
+        meta = utils.get_geographic_attributes(geo)
+
+        assert meta == {
+            'variables': {
+                'y': {
+                    'attributes': {
+                        'actual_min': 1,
+                        'actual_max': 1,
+                    }
+                },
+                'x': {
+                    'attributes': {
+                        'actual_min': -1,
+                        'actual_max': -1,
+                    }
+                },
+            },
+            'attributes': {
+                'geospatial_lat_min': 1,
+                'geospatial_lat_max': 1,
+                'geospatial_lon_min': -1,
+                'geospatial_lon_max': -1,
+                'geospatial_bbox': 'POLYGON ((-1 1, -1 1, -1 1, -1 1))',
+                'geospatial_bounds': 'POINT (-1 1)',
+                'geospatial_bounds_crs': 'EPSG:4326',
+            }
+        }
