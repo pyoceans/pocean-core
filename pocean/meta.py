@@ -80,10 +80,10 @@ def string_to_dtype(type_str):
     elif type_str in ['char', 'c', 'string', 'S1', 'str', 'unicode', 'string8']:
         return np.dtype('U')
 
-    elif type_str in ['short', 's', 'i2', 'h']:
+    elif type_str in ['short', 's', 'i2', 'h', 'int16']:
         return np.dtype('int16')
 
-    elif type_str in ['ushort', 'us', 'u2', 'ui2', 'uh']:
+    elif type_str in ['ushort', 'us', 'u2', 'ui2', 'uh', 'uint16']:
         return np.dtype('uint16')
 
     raise ValueError("Could not find dtype for {}".format(type_str))
@@ -117,7 +117,7 @@ def ncpyattributes(obj, verbose=True):
         if isinstance(v, np.ndarray):
             newv = v.tolist()
         elif hasattr(v, 'dtype'):
-            newv = np.asscalar(v)
+            newv = v.item()
         else:
             newv = v
 

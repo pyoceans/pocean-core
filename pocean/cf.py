@@ -1,12 +1,13 @@
 #!python
 # coding=utf-8
 import os
+import itertools
 from datetime import datetime
 
 import six
 from six import u as astr
 
-from .utils import all_subclasses
+from .utils import all_subclasses, is_url
 from .dataset import EnhancedDataset
 from . import logger
 
@@ -38,12 +39,14 @@ class CFDataset(EnhancedDataset):
 
         """
 
-        fpath = os.path.realpath(path)
+        if not is_url(path):
+            path = os.path.realpath(path)
+
         subs = list(all_subclasses(cls))
 
         dsg = None
         try:
-            dsg = cls(fpath)
+            dsg = cls(path)
             for klass in subs:
                 logger.debug('Trying {}...'.format(klass.__name__))
                 if hasattr(klass, 'is_mine'):
@@ -58,7 +61,7 @@ class CFDataset(EnhancedDataset):
         subnames = ', '.join([ s.__name__ for s in subs ])
         raise ValueError(
             'Could not open {} as any type of CF Dataset. Tried: {}.'.format(
-                fpath,
+                path,
                 subnames
             )
         )
@@ -67,14 +70,10 @@ class CFDataset(EnhancedDataset):
         return getattr(self, '{}_axes'.format(name.lower()))()
 
     def t_axes(self):
-        tvars = list(set(
-            self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 't'
-            ) +
-            self.filter_by_attrs(
-                standard_name=lambda x: x in ['time', 'forecast_reference_time']
-            )
-        ))
+        tvars = list(set(itertools.chain(
+            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 't'),
+            self.filter_by_attrs(standard_name=lambda x: x in ['time', 'forecast_reference_time'])
+        )))
         return tvars
 
     def x_axes(self):
@@ -94,17 +93,11 @@ class CFDataset(EnhancedDataset):
             'degreeE',
             'degreesE'
         ]
-        xvars = list(set(
-            self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'x'
-            ) +
-            self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in xnames
-            ) +
-            self.filter_by_attrs(
-                units=lambda x: x and x.lower() in xunits
-            )
-        ))
+        xvars = list(set(itertools.chain(
+            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'x'),
+            self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in xnames),
+            self.filter_by_attrs(units=lambda x: x and str(x).lower() in xunits)
+        )))
         return xvars
 
     def y_axes(self):
@@ -117,17 +110,11 @@ class CFDataset(EnhancedDataset):
             'degreeN',
             'degreesN'
         ]
-        yvars = list(set(
-            self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'y'
-            ) +
-            self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in ynames
-            ) +
-            self.filter_by_attrs(
-                units=lambda x: x and x.lower() in yunits
-            )
-        ))
+        yvars = list(set(itertools.chain(
+            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'y'),
+            self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in ynames),
+            self.filter_by_attrs(units=lambda x: x and str(x).lower() in yunits)
+        )))
         return yvars
 
     def z_axes(self):
@@ -144,21 +131,15 @@ class CFDataset(EnhancedDataset):
             'ocean_sigma_z_coordinate',
             'ocean_double_sigma_coordinate'
         ]
-        zvars = list(set(
-            self.filter_by_attrs(
-                axis=lambda x: x and x.lower() == 'z'
-            ) +
-            self.filter_by_attrs(
-                positive=lambda x: x and x.lower() in ['up', 'down']
-            ) +
-            self.filter_by_attrs(
-                standard_name=lambda x: x and x.lower() in znames
-            )
-        ))
+        zvars = list(set(itertools.chain(
+            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'z'),
+            self.filter_by_attrs(positive=lambda x: x and str(x).lower() in ['up', 'down']),
+            self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in znames)
+        )))
         return zvars
 
-    def is_valid(self):
-        return self.__class__.is_mine(self)
+    def is_valid(self, *args, **kwargs):
+        return self.__class__.is_mine(self, *args, **kwargs)
 
     def data_vars(self):
         return self.filter_by_attrs(

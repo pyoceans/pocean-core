@@ -26,7 +26,7 @@ from pocean import logger as L  # noqa
 class ContiguousRaggedTrajectoryProfile(CFDataset):
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             rvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(rvars) == 1
@@ -56,6 +56,8 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             assert 0 <= len(rvar.dimensions) <= 2
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True
@@ -133,7 +135,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                         if var_name not in nc.variables:
                             continue
                         v = nc.variables[var_name]
-                        vvalues = get_ncdata_from_series(df[c], v)[0]
+                        vvalues = get_ncdata_from_series(pfg[c], v)[0]
                         try:
                             v[j] = vvalues
                         except BaseException:
@@ -286,12 +288,10 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     ei = si + o_index_var[j]
                     vdata[si:ei] = dvar[j]
                     si = ei
-                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             # Sample dimensions
             elif dvar.dimensions == (o_dim.name,):
                 vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
-                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
 
             else:
                 vdata = generic_masked(dvar[:].flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
@@ -300,10 +300,17 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     if vdata[0] is np.ma.masked:
                         L.warning("Skipping variable {} that is completely masked".format(dnam))
                         continue
-                    vdata = vdata[0]
                 else:
                     L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
                     continue
+
+            # Mark rows with data so we don't remove them with clear_rows
+            if vdata.size == building_index_to_drop.size:
+                building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Handle scalars here at the end
+            if vdata.size == 1:
+                vdata = vdata[0]
 
             df_data[dnam] = vdata
 

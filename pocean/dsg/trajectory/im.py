@@ -6,7 +6,6 @@ from collections import OrderedDict
 import six
 import numpy as np
 import pandas as pd
-import netCDF4 as nc4
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -38,7 +37,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
     """
 
     @classmethod
-    def is_mine(cls, dsg):
+    def is_mine(cls, dsg, strict=False):
         try:
             tvars = dsg.filter_by_attrs(cf_role='trajectory_id')
             assert len(tvars) == 1
@@ -96,6 +95,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                     assert dv.size == t_dim.size * o_dim.size
 
         except BaseException:
+            if strict is True:
+                raise
             return False
 
         return True
@@ -143,17 +144,13 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             for i, (uid, gdf) in enumerate(trajectory_group):
                 trajectory[i] = uid
 
-                # tolist() converts to a python datetime object without timezone and has NaTs.
-                g = gdf[axes.t].tolist()
-                # date2num convers NaTs to np.nan
-                gg = nc4.date2num(g, units=cls.default_time_unit)
-                # masked_invalid moves np.nan to a masked value
-                time[ts(i, gg.size)] = np.ma.masked_invalid(gg)
+                times = get_ncdata_from_series(gdf[axes.t], time)
+                time[ts(i, times.size)] = times
 
-                lats = gdf[axes.y].fillna(get_fill_value(latitude)).values
+                lats = get_ncdata_from_series(gdf[axes.y], latitude)
                 latitude[ts(i, lats.size)] = lats
 
-                lons = gdf[axes.x].fillna(get_fill_value(longitude)).values
+                lons = get_ncdata_from_series(gdf[axes.x], longitude)
                 longitude[ts(i, lons.size)] = lons
 
                 zs = gdf[axes.z].fillna(get_fill_value(z)).values
@@ -248,13 +245,18 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 if vdata[0] is np.ma.masked:
                     L.warning("Skipping variable {} that is completely masked".format(dnam))
                     continue
-                vdata = vdata[0]
             else:
                 if dvar[:].flatten().size != t.size:
                     L.warning("Variable {} is not the correct size, skipping.".format(dnam))
                     continue
 
+            # Mark rows with data so we don't remove them with clear_rows
+            if vdata.size == building_index_to_drop.size:
                 building_index_to_drop = (building_index_to_drop == True) & (vdata.mask == True)  # noqa
+
+            # Handle scalars here at the end
+            if vdata.size == 1:
+                vdata = vdata[0]
 
             df_data[dnam] = vdata
 

@@ -1,6 +1,6 @@
 package:
   name: pocean-core
-  version: "1.4.3"
+  version: "1.7.0"
 
 source:
   path: ../
@@ -18,13 +18,14 @@ requirements:
     - python
     - netcdf4
     - numpy >=1.14
-    - pandas >=0.21.0
+    - pandas >=0.24,<0.25
     - pygc >=1.2.0
     - python-dateutil
     - pytz
     - shapely
     - simplejson
     - six
+    - cftime
 
 test:
   source_files:

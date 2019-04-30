@@ -10,6 +10,7 @@ from netCDF4 import Dataset
 from .utils import (
     JSONEncoder,
     generic_masked,
+    safe_attribute_typing
 )
 from .meta import (
     MetaInterface,
@@ -18,6 +19,21 @@ from .meta import (
     untype_attributes
 )
 from . import logger as L
+
+
+# Attribute that need to be of the same type as the variables
+_TYPE_SENSITIVE_ATTRIBUTES = [
+    '_FillValue',
+    'missing_value',
+    'valid_min',
+    'valid_max',
+    'valid_range',
+    'display_min',
+    'display_max',
+    'display_range',
+    'colorBarMinimum',
+    'colorBarMaximum',
+]
 
 
 class EnhancedDataset(Dataset):
@@ -192,6 +208,11 @@ class EnhancedDataset(Dataset):
             if 'missing_value' in vatts:
                 del vatts['missing_value']
 
+            # Convert any attribute that need to match the variables dtype to that dtype
+            for sattr in _TYPE_SENSITIVE_ATTRIBUTES:
+                if sattr in vatts:
+                    vatts[sattr] = safe_attribute_typing(newvar.dtype, vatts[sattr])
+
             newvar.setncatts(vatts)
 
     def to_json(self, *args, **kwargs):
@@ -241,6 +262,12 @@ class EnhancedDataset(Dataset):
         for k, v in attributes.items():
             if k in self.variables:
                 for n, z in v.items():
+
+                    # Don't re-assign fill value attributes
+                    if n in ['_FillValue', 'missing_value']:
+                        L.warning('Refusing to set {} on {}'.format(n, k))
+                        continue
+
                     try:
                         self.variables[k].setncattr(n, z)
                     except BaseException:

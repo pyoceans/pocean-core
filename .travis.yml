@@ -1,6 +1,7 @@
 language: python
 
 sudo: false
+dist: xenial
 
 env:
   global:
@@ -11,9 +12,9 @@ matrix:
   include:
     - python: 2.7
       env: TEST_TARGET=default
-    - python: 3.5
-      env: TEST_TARGET=default
     - python: 3.6
+      env: TEST_TARGET=default
+    - python: 3.7
       env: TEST_TARGET=default
     - python: 3.6
       env: TEST_TARGET=coding_standards
@@ -73,8 +74,7 @@ script:
     fi
 
   - if [[ $TEST_TARGET == "coding_standards" ]]; then
-      py.test --disable-warnings --pep8 -m pep8 ;
-      py.test --disable-warnings --flakes -m flakes ;
+      py.test --disable-warnings --flake8 -m flake8 ;
     fi
 
   - if [[ $TEST_TARGET == 'docs' ]]; then
