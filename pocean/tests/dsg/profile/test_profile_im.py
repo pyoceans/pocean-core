@@ -19,7 +19,8 @@ import pandas as pd
 class TestIMPStrings(unittest.TestCase):
 
     def setUp(self):
-        self.df = pd.read_csv('resources/basis_2011.csv', parse_dates=['time'])
+        self.df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'resources', 'basis_2011.csv'), parse_dates=['time'])
+        # self.df = pd.read_csv('resources/basis_2011.csv', parse_dates=['time'])
 
     def test_print_dtypes(self):
         print(self.df.dtypes)
