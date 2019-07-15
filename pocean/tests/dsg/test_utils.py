@@ -1,7 +1,6 @@
 #!python
 # coding=utf-8
 import os
-import json
 import unittest
 from datetime import datetime, timedelta
 from dateutil.parser import parse as dtparse

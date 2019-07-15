@@ -3,17 +3,17 @@ import os
 import tempfile
 import unittest
 
-from dateutil.parser import parse as dtparse
 import numpy as np
-from pocean.dsg import IncompleteMultidimensionalProfile
+import pandas as pd
+from dateutil.parser import parse as dtparse
+
 from pocean.tests.dsg.test_new import test_is_mine
+from pocean.dsg import IncompleteMultidimensionalProfile
 
 import logging
 from pocean import logger
 logger.level = logging.DEBUG
 logger.handlers = [logging.StreamHandler()]
-
-import pandas as pd
 
 
 class TestIMPStrings(unittest.TestCase):
