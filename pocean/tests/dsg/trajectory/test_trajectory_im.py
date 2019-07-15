@@ -141,6 +141,9 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
                 assert 'depth' in result_ncd.variables
             test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
 
+            os.close(fid)
+            os.remove(tmpfile)
+
     def test_imt_calculated_metadata_single(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'im-single.nc')
 

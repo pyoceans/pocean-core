@@ -26,7 +26,7 @@ class TestIMPStrings(unittest.TestCase):
         print(self.df.dtypes)
 
     def test_write_nc(self):
-        output_path = 'resources/2011_basis_ctd.nc'
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
 
         axes = {
             't': 'time',
@@ -37,10 +37,14 @@ class TestIMPStrings(unittest.TestCase):
         }
 
         with IncompleteMultidimensionalProfile.from_dataframe(self.df,
-                                                              output_path,
+                                                              single_tmp,
                                                               axes=axes,
                                                               mode='a') as ncd:
             ncd.renameDimension('stationid', 'profile')
+
+        test_is_mine(IncompleteMultidimensionalProfile, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
 
 
 class TestIncompleteMultidimensionalProfile(unittest.TestCase):
