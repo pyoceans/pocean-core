@@ -2,9 +2,9 @@ pocean.dsg.profile package
 ==========================
 
 .. automodule:: pocean.dsg.profile
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------
@@ -13,16 +13,15 @@ pocean.dsg.profile.im module
 ----------------------------
 
 .. automodule:: pocean.dsg.profile.im
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.dsg.profile.om module
 ----------------------------
 
 .. automodule:: pocean.dsg.profile.om
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 

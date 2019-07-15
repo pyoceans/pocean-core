@@ -2,17 +2,17 @@ pocean package
 ==============
 
 .. automodule:: pocean
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 -----------
 
 .. toctree::
 
-    pocean.dsg
-    pocean.grid
+   pocean.dsg
+   pocean.grid
 
 Submodules
 ----------
@@ -21,32 +21,31 @@ pocean.cf module
 ----------------
 
 .. automodule:: pocean.cf
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.dataset module
 ---------------------
 
 .. automodule:: pocean.dataset
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.meta module
 ------------------
 
 .. automodule:: pocean.meta
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.utils module
 -------------------
 
 .. automodule:: pocean.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 

@@ -2,20 +2,20 @@ pocean.dsg package
 ==================
 
 .. automodule:: pocean.dsg
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 -----------
 
 .. toctree::
 
-    pocean.dsg.profile
-    pocean.dsg.timeseries
-    pocean.dsg.timeseriesProfile
-    pocean.dsg.trajectory
-    pocean.dsg.trajectoryProfile
+   pocean.dsg.profile
+   pocean.dsg.timeseries
+   pocean.dsg.timeseriesProfile
+   pocean.dsg.trajectory
+   pocean.dsg.trajectoryProfile
 
 Submodules
 ----------
@@ -24,8 +24,7 @@ pocean.dsg.utils module
 -----------------------
 
 .. automodule:: pocean.dsg.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 

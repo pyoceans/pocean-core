@@ -2,9 +2,9 @@ pocean.dsg.timeseries package
 =============================
 
 .. automodule:: pocean.dsg.timeseries
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------
@@ -13,32 +13,31 @@ pocean.dsg.timeseries.cr module
 -------------------------------
 
 .. automodule:: pocean.dsg.timeseries.cr
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.dsg.timeseries.im module
 -------------------------------
 
 .. automodule:: pocean.dsg.timeseries.im
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.dsg.timeseries.ir module
 -------------------------------
 
 .. automodule:: pocean.dsg.timeseries.ir
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 pocean.dsg.timeseries.om module
 -------------------------------
 
 .. automodule:: pocean.dsg.timeseries.om
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
