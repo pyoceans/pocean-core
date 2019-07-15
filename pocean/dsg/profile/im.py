@@ -112,7 +112,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
             attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
-            # Create vars based on full profile_group
+            # Create vars based on full dataframe (to get all variables)
             for c in data_columns:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
@@ -143,7 +143,6 @@ class IncompleteMultidimensionalProfile(CFDataset):
                 z[i, sl] = zvalues
 
                 for c in data_columns:
-                    # @kyle: Might be a more elegant way to loop through the variables here
                     var_name = cf_safe_name(c)
                     v = nc.variables[var_name]
 

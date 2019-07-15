@@ -125,6 +125,22 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             time[:] = get_ncdata_from_series(t, time)
 
+            # Create vars based on full dataframe (to get all variables)
+            for c in data_columns:
+                var_name = cf_safe_name(c)
+                if var_name not in nc.variables:
+                    v = create_ncvar_from_series(
+                        nc,
+                        var_name,
+                        default_dimensions,
+                        df[c],
+                        zlib=True,
+                        complevel=1
+                    )
+                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
+                        'coordinates': coordinates
+                    })
+
             for i, (uid, sdf) in enumerate(station_group):
                 station[i] = uid
                 latitude[i] = sdf[axes.y].iloc[0]
@@ -137,20 +153,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 for c in data_columns:
                     # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
-                    if var_name not in nc.variables:
-                        v = create_ncvar_from_series(
-                            nc,
-                            var_name,
-                            default_dimensions,
-                            sdf[c],
-                            zlib=True,
-                            complevel=1
-                        )
-                        attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                            'coordinates' : coordinates
-                        })
-                    else:
-                        v = nc.variables[var_name]
+                    v = nc.variables[var_name]
 
                     vvalues = get_ncdata_from_series(sdf[c], v)
                     try:
