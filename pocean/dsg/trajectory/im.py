@@ -177,7 +177,8 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                         v = nc.variables[var_name]
 
                     vvalues = get_ncdata_from_series(gdf[c], v)
-                    v[ts(i, vvalues.size)] = vvalues
+                    slicer = ts(i, vvalues.size)
+                    v[slicer] = vvalues
 
             # Metadata variables
             if 'crs' not in nc.variables:
