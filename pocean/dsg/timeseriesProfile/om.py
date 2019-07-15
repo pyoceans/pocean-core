@@ -92,13 +92,9 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
             if reduce_dims is True and unique_s.size == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
-                def ts():
-                    return np.s_[:, :]
                 default_dimensions = (axes.t, axes.z)
                 station_dimensions = ()
             else:
-                def ts():
-                    return np.s_[:, :, :]
                 default_dimensions = (axes.t, axes.z, axes.station)
                 station_dimensions = (axes.station,)
                 nc.createDimension(axes.station, unique_s.size)
@@ -162,7 +158,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 # Now reshape to the array without Z
                 vvalues = vvalues.reshape(len(unique_t), unique_s.size)
                 try:
-                    v[ts()[2:]] = vvalues
+                    v[:] = vvalues.reshape(v.shape)
                 except BaseException:
                     L.exception('Failed to add {}'.format(c))
                     continue
@@ -189,7 +185,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                     v = nc.variables[var_name]
 
                 vvalues = get_ncdata_from_series(df[c], v)
-                v[ts()] = vvalues.reshape(len(unique_t), unique_z.size, unique_s.size)
+                v[:] = vvalues.reshape(v.shape)
 
             nc.update_attributes(attributes)
 

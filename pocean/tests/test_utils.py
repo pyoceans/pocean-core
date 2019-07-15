@@ -224,9 +224,9 @@ class TestNormalizeArray(unittest.TestCase):
             for k, v in ncd.variables.items():
                 if k.startswith('many_'):
                     if len(v.dimensions) > 1:
-                        v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize)
+                        v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize).reshape(v.shape)
                     else:
-                        v[:] = np.tile(thestr, dimsize)
+                        v[:] = np.tile(thestr, dimsize).reshape(v.shape)
 
         with nc4.Dataset(self.fp) as ncd:
             assert normalize_array(ncd.variables['single_str']) == thestr
@@ -259,7 +259,7 @@ class TestNormalizeArray(unittest.TestCase):
 
             for k, v in ncd.variables.items():
                 if k.startswith('many_'):
-                    v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize)
+                    v[:, :] = np.tile(nc4.stringtoarr(thestr, dimsize), dimsize).reshape(v.shape)
 
         with nc4.Dataset(self.fp) as ncd:
             assert normalize_array(ncd.variables['single_S']) == thestr

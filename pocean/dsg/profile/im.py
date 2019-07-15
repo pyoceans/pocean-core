@@ -112,6 +112,25 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
             attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
 
+            # Create vars based on full dataframe (to get all variables)
+            for c in data_columns:
+                var_name = cf_safe_name(c)
+                if var_name not in nc.variables:
+                    v = create_ncvar_from_series(
+                        nc,
+                        var_name,
+                        (axes.profile, axes.z),
+                        df[c],
+                        zlib=True,
+                        complevel=1
+                    )
+                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
+                        'coordinates': '{} {} {} {}'.format(
+                            axes.t, axes.z, axes.x, axes.y
+                        )
+                    })
+
+            # Write values for each profile within profile_group
             for i, (uid, pdf) in enumerate(profile_group):
                 profile[i] = uid
 
@@ -122,25 +141,10 @@ class IncompleteMultidimensionalProfile(CFDataset):
                 zvalues = pdf[axes.z].fillna(z._FillValue).values
                 sl = slice(0, zvalues.size)
                 z[i, sl] = zvalues
+
                 for c in data_columns:
-                    # Create variable if it doesn't exist
                     var_name = cf_safe_name(c)
-                    if var_name not in nc.variables:
-                        v = create_ncvar_from_series(
-                            nc,
-                            var_name,
-                            (axes.profile, axes.z),
-                            pdf[c],
-                            zlib=True,
-                            complevel=1
-                        )
-                        attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                            'coordinates' : '{} {} {} {}'.format(
-                                axes.t, axes.z, axes.x, axes.y
-                            )
-                        })
-                    else:
-                        v = nc.variables[var_name]
+                    v = nc.variables[var_name]
 
                     vvalues = get_ncdata_from_series(pdf[c], v)
 

@@ -161,7 +161,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     v = nc.variables[var_name]
                 vvalues = get_ncdata_from_series(df[c], v)
                 try:
-                    v[:] = vvalues
+                    v[:] = vvalues.reshape(v.shape)
                 except BaseException:
                     L.exception('Failed to add {}'.format(c))
                     continue
