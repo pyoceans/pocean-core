@@ -43,6 +43,20 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    def test_timeseries_omt_dataframe_unique_dims(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
+        with OrthogonalMultidimensionalTimeseries(self.single) as s:
+            df = s.to_dataframe()
+            with OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp, unique_dims=True) as result_ncd:
+                assert 'station_dim' in result_ncd.dimensions
+                assert np.ma.allclose(
+                    result_ncd.variables['pH'][:].flatten(),
+                    self.ph
+                )
+        test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
+
     def test_timeseries_omt_reduce_dims(self):
         fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalTimeseries(self.single) as s:

@@ -65,6 +65,16 @@ class TestIncompleteMultidimensionalProfile(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    def test_imp_dataframe_unique_dims(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
+        with IncompleteMultidimensionalProfile(self.multi) as ncd:
+            df = ncd.to_dataframe()
+            with IncompleteMultidimensionalProfile.from_dataframe(df, single_tmp, unique_dims=True) as result_ncd:
+                assert 'profile_dim' in result_ncd.dimensions
+        test_is_mine(IncompleteMultidimensionalProfile, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
+
     def test_imp_calculated_metadata(self):
         with IncompleteMultidimensionalProfile(self.multi) as ncd:
             m = ncd.calculated_metadata()

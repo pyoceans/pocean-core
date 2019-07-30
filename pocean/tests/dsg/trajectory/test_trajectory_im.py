@@ -39,6 +39,10 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
                 assert 'trajectory' in result_ncd.dimensions
             test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
 
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, unique_dims=True) as result_ncd:
+                assert 'trajectory_dim' in result_ncd.dimensions
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
             with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Could not reduce dims since there was more than one trajectory
                 assert 'trajectory' in result_ncd.dimensions
@@ -52,6 +56,12 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
                 # Could not reduce dims since there was more than one trajectory
                 assert 'trajectory' in result_ncd.dimensions
                 assert result_ncd.dimensions['obs'].isunlimited() is True
+            test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
+
+            with IncompleteMultidimensionalTrajectory.from_dataframe(df, tmpfile, unique_dims=True, reduce_dims=True, unlimited=True) as result_ncd:
+                # Could not reduce dims since there was more than one trajectory
+                assert 'trajectory_dim' in result_ncd.dimensions
+                assert result_ncd.dimensions['obs_dim'].isunlimited() is True
             test_is_mine(IncompleteMultidimensionalTrajectory, tmpfile)  # Try to load it again
 
             os.close(fid)

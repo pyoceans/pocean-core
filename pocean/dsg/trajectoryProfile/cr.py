@@ -65,9 +65,17 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
+        daxes = axes
 
         _ = kwargs.pop('reduce_dims', False)
         _ = kwargs.pop('unlimited', False)
+
+        unique_dims = kwargs.pop('unique_dims', False)
+        if unique_dims is True:
+            # Rename the dimension to avoid a dimension and coordinate having the same name
+            # which is not support in xarray
+            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
+            daxes = get_default_axes(changed_axes)
 
         with ContiguousRaggedTrajectoryProfile(output, 'w') as nc:
 
@@ -75,35 +83,35 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             unique_trajectories = list(trajectory_groups.groups.keys())
             num_trajectories = len(unique_trajectories)
 
-            nc.createDimension(axes.trajectory, num_trajectories)
-            trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
+            nc.createDimension(daxes.trajectory, num_trajectories)
+            trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (daxes.trajectory,))
             trajectory[:] = np.array(unique_trajectories)
 
             # Calculate the max number of profiles
             unique_profiles = df[axes.profile].unique()
             num_profiles = len(unique_profiles)
 
-            nc.createDimension(axes.profile, num_profiles)
-            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (axes.profile,))
+            nc.createDimension(daxes.profile, num_profiles)
+            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (daxes.profile,))
             profile[:] = np.array(unique_profiles)
 
             # Get unique obs by grouping on traj and profile and getting the max size
             num_obs = len(df)
-            nc.createDimension(axes.sample, num_obs)
+            nc.createDimension(daxes.sample, num_obs)
 
             # The trajectory this profile belongs to
-            t_ind = nc.createVariable('trajectoryIndex', 'i4', (axes.profile,))
+            t_ind = nc.createVariable('trajectoryIndex', 'i4', (daxes.profile,))
             # Number of observations in each profile
-            row_size = nc.createVariable('rowSize', 'i4', (axes.profile,))
+            row_size = nc.createVariable('rowSize', 'i4', (daxes.profile,))
 
             # Create all of the axis variables
-            time = nc.createVariable(axes.t, 'f8', (axes.profile,), fill_value=np.dtype('f8').type(cls.default_fill_value))
-            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.profile,), fill_value=df[axes.y].dtype.type(cls.default_fill_value))
-            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.profile,), fill_value=df[axes.x].dtype.type(cls.default_fill_value))
+            time = nc.createVariable(axes.t, 'f8', (daxes.profile,), fill_value=np.dtype('f8').type(cls.default_fill_value))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (daxes.profile,), fill_value=df[axes.y].dtype.type(cls.default_fill_value))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (daxes.profile,), fill_value=df[axes.x].dtype.type(cls.default_fill_value))
 
             # Axes variables are already processed so skip them
             data_columns = [ d for d in df.columns if d not in axes ]
-            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
             # Variables defined on only the profile axis
             profile_vars = kwargs.pop('profile_vars', [])
@@ -114,7 +122,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     create_ncvar_from_series(
                         nc,
                         var_name,
-                        (axes.profile,),
+                        (daxes.profile,),
                         df[c],
                         zlib=True,
                         complevel=1
@@ -152,7 +160,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                     v = create_ncvar_from_series(
                         nc,
                         var_name,
-                        (axes.sample,),
+                        (daxes.sample,),
                         df[c],
                         zlib=True,
                         complevel=1
@@ -326,7 +334,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
         return df
 
-    def nc_attributes(self, axes):
+    def nc_attributes(self, axes, daxes):
         atts = super(ContiguousRaggedTrajectoryProfile, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
@@ -358,9 +366,9 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                 'axis': 'T'
             },
             'trajectoryIndex': {
-                'instance_dimension': axes.trajectory
+                'instance_dimension': daxes.trajectory
             },
             'rowSize': {
-                'sample_dimension': axes.sample
+                'sample_dimension': daxes.sample
             }
         })
