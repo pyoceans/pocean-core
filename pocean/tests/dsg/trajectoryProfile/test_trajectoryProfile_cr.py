@@ -46,6 +46,23 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    def test_crtp_dataframe_single_unique_dims(self):
+        axes = {
+            't': 'time',
+            'x': 'longitude',
+            'y': 'latitude',
+            'z': 'depth',
+        }
+        fid, tmpnc = tempfile.mkstemp(suffix='.nc')
+        with ContiguousRaggedTrajectoryProfile(self.single) as ncd:
+            df = ncd.to_dataframe(axes=axes)
+            with ContiguousRaggedTrajectoryProfile.from_dataframe(df, tmpnc, axes=axes, unique_dims=True) as result_ncd:
+                assert 'profile_dim' in result_ncd.dimensions
+                assert 'trajectory_dim' in result_ncd.dimensions
+            test_is_mine(ContiguousRaggedTrajectoryProfile, tmpnc)  # Try to load it again
+        os.close(fid)
+        os.remove(tmpnc)
+
     def test_crtp_dataframe_multi(self):
         axes = {
             't': 'time',

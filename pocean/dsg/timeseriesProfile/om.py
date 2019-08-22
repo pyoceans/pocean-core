@@ -66,10 +66,18 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
+        daxes = axes
         data_columns = [ d for d in df.columns if d not in axes ]
 
         reduce_dims = kwargs.pop('reduce_dims', False)
         unlimited = kwargs.pop('unlimited', False)
+
+        unique_dims = kwargs.pop('unique_dims', False)
+        if unique_dims is True:
+            # Rename the dimension to avoid a dimension and coordinate having the same name
+            # which is not support in xarray
+            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
         df = downcast_dataframe(df)
@@ -92,12 +100,12 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
             if reduce_dims is True and unique_s.size == 1:
                 # If a singlular trajectory, we can reduce that dimension if it is of size 1
-                default_dimensions = (axes.t, axes.z)
+                default_dimensions = (daxes.t, daxes.z)
                 station_dimensions = ()
             else:
-                default_dimensions = (axes.t, axes.z, axes.station)
-                station_dimensions = (axes.station,)
-                nc.createDimension(axes.station, unique_s.size)
+                default_dimensions = (daxes.t, daxes.z, daxes.station)
+                station_dimensions = (daxes.station,)
+                nc.createDimension(daxes.station, unique_s.size)
 
             station = nc.createVariable(axes.station, get_dtype(unique_s), station_dimensions)
             latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), station_dimensions)
@@ -114,17 +122,17 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
             # Create all of the variables
             if unlimited is True:
-                nc.createDimension(axes.t, None)
+                nc.createDimension(daxes.t, None)
             else:
-                nc.createDimension(axes.t, len(unique_t))
-            time = nc.createVariable(axes.t, 'f8', (axes.t,))
+                nc.createDimension(daxes.t, len(unique_t))
+            time = nc.createVariable(axes.t, 'f8', (daxes.t,))
             time[:] = date2num(unique_t, units=cls.default_time_unit)
 
-            nc.createDimension(axes.z, unique_z.size)
-            z = nc.createVariable(axes.z, get_dtype(unique_z), (axes.z,))
+            nc.createDimension(daxes.z, unique_z.size)
+            z = nc.createVariable(axes.z, get_dtype(unique_z), (daxes.z,))
             z[:] = unique_z
 
-            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
             # Variables defined on only the time axis and not the depth axis
             detach_z_vars = kwargs.pop('detach_z', [])
@@ -289,7 +297,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         return df
 
-    def nc_attributes(self, axes):
+    def nc_attributes(self, axes, daxes):
         atts = super(OrthogonalMultidimensionalTimeseriesProfile, self).nc_attributes()
         return dict_update(atts, {
             'global' : {

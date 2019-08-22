@@ -28,6 +28,10 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
                 assert 'station' in result_ncd.dimensions
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, unique_dims=True) as result_ncd:
+                assert 'station_dim' in result_ncd.dimensions
+            test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
+
             with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, reduce_dims=True) as result_ncd:
                 # Even though we pass reduce_dims, there are two stations so it is not reduced
                 assert 'station' in result_ncd.dimensions
@@ -42,6 +46,12 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
                 # Even though we pass reduce_dims, there are two stations so it is not reduced
                 assert 'station' in result_ncd.dimensions
                 assert result_ncd.dimensions['t'].isunlimited() is True
+            test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
+
+            with OrthogonalMultidimensionalTimeseriesProfile.from_dataframe(df, tmpfile, unique_dims=True, reduce_dims=True, unlimited=True) as result_ncd:
+                # Even though we pass reduce_dims, there are two stations so it is not reduced
+                assert 'station_dim' in result_ncd.dimensions
+                assert result_ncd.dimensions['t_dim'].isunlimited() is True
             test_is_mine(OrthogonalMultidimensionalTimeseriesProfile, tmpfile)  # Try to load it again
 
             os.close(fid)

@@ -342,12 +342,6 @@ def get_mapped_axes_variables(ncd, axes=None, skip=None):
 
     ax = namedtuple('AxisVariables', 'trajectory station profile t x y z')
 
-    # Z
-    if axes.z in ncd.variables:
-        zvar = ncd.variables[axes.z]
-    else:
-        zvar = ncd.z_axes()[0]
-
     # T
     if axes.t in ncd.variables:
         tvar = ncd.variables[axes.t]
@@ -365,6 +359,15 @@ def get_mapped_axes_variables(ncd, axes=None, skip=None):
         yvar = ncd.variables[axes.y]
     else:
         yvar = ncd.y_axes()[0]
+
+    # Z
+    if axes.z in ncd.variables:
+        zvar = ncd.variables[axes.z]
+    else:
+        try:
+            zvar = ncd.z_axes()[0]
+        except IndexError:
+            zvar = None
 
     # Trajectory
     if axes.trajectory in skip:

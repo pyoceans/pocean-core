@@ -48,7 +48,7 @@ def test_is_mine(klass, fp):
     subs = [ s for s in allsubs if s != klass ]
     with CFDataset(fp) as dsg:
         logger.debug('\nTesting {}'.format(klass.__name__))
-        assert klass.is_mine(dsg) is True
+        assert klass.is_mine(dsg, strict=True) is True
         for s in subs:
             if hasattr(s, 'is_mine'):
                 logger.debug('  * Trying {}...'.format(s.__name__))

@@ -58,18 +58,26 @@ class ContiguousRaggedTrajectory(CFDataset):
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
+        daxes = axes
 
         # Should never be a CR file with one trajectory so we ignore the "reduce_dims" attribute
         _ = kwargs.pop('reduce_dims', False)  # noqa
         unlimited = kwargs.pop('unlimited', False)
+
+        unique_dims = kwargs.pop('unique_dims', False)
+        if unique_dims is True:
+            # Rename the dimension to avoid a dimension and coordinate having the same name
+            # which is not support in xarray
+            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            daxes = get_default_axes(changed_axes)
 
         with ContiguousRaggedTrajectory(output, 'w') as nc:
 
             trajectory_groups = df.groupby(axes.trajectory)
             unique_trajectories = list(trajectory_groups.groups.keys())
             num_trajectories = len(unique_trajectories)
-            nc.createDimension(axes.trajectory, num_trajectories)
-            trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (axes.trajectory,))
+            nc.createDimension(daxes.trajectory, num_trajectories)
+            trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (daxes.trajectory,))
 
             # Get unique obs by grouping on traj getting the max size
             num_obs = len(df)
@@ -77,12 +85,12 @@ class ContiguousRaggedTrajectory(CFDataset):
                 max_obs = None
             else:
                 max_obs = num_obs
-            nc.createDimension(axes.sample, max_obs)
+            nc.createDimension(daxes.sample, max_obs)
 
             # Number of observations in each trajectory
-            row_size = nc.createVariable('rowSize', 'i4', (axes.trajectory,))
+            row_size = nc.createVariable('rowSize', 'i4', (daxes.trajectory,))
 
-            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
             # Variables defined on only the trajectory axis
             traj_vars = kwargs.pop('traj_vars', [])
@@ -93,7 +101,7 @@ class ContiguousRaggedTrajectory(CFDataset):
                     create_ncvar_from_series(
                         nc,
                         var_name,
-                        (axes.trajectory,),
+                        (daxes.trajectory,),
                         df[c],
                         zlib=True,
                         complevel=1
@@ -128,7 +136,7 @@ class ContiguousRaggedTrajectory(CFDataset):
                     v = create_ncvar_from_series(
                         nc,
                         var_name,
-                        (axes.sample,),
+                        (daxes.sample,),
                         df[c],
                         zlib=True,
                         complevel=1
@@ -236,7 +244,7 @@ class ContiguousRaggedTrajectory(CFDataset):
 
         return df
 
-    def nc_attributes(self, axes):
+    def nc_attributes(self, axes, daxes):
         atts = super(ContiguousRaggedTrajectory, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
@@ -263,6 +271,6 @@ class ContiguousRaggedTrajectory(CFDataset):
                 'axis': 'T'
             },
             'rowSize': {
-                'sample_dimension': axes.sample
+                'sample_dimension': daxes.sample
             }
         })

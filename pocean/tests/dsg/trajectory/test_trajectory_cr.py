@@ -49,6 +49,22 @@ class TestContiguousRaggedTrajectory(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    def test_crt_dataframe_multiple_unique_dims(self):
+        axes = {
+            't': 'time',
+            'x': 'lon',
+            'y': 'lat',
+            'z': 'z',
+        }
+        fid, tmpnc = tempfile.mkstemp(suffix='.nc')
+        with ContiguousRaggedTrajectory(self.multi) as ncd:
+            df = ncd.to_dataframe(axes=axes)
+            with ContiguousRaggedTrajectory.from_dataframe(df, tmpnc, axes=axes, unique_dims=True) as result_ncd:
+                assert 'trajectory_dim' in result_ncd.dimensions
+            test_is_mine(ContiguousRaggedTrajectory, tmpnc)  # Try to load it again
+        os.close(fid)
+        os.remove(tmpnc)
+
     def test_crt_dataframe_oot_A(self):
         axes = {
             't':      'time',

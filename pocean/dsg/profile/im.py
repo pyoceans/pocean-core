@@ -82,9 +82,17 @@ class IncompleteMultidimensionalProfile(CFDataset):
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
         axes = get_default_axes(kwargs.pop('axes', {}))
+        daxes = axes
         data_columns = [ d for d in df.columns if d not in axes ]
 
         unlimited = kwargs.pop('unlimited', False)
+
+        unique_dims = kwargs.pop('unique_dims', False)
+        if unique_dims is True:
+            # Rename the dimension to avoid a dimension and coordinate having the same name
+            # which is not support in xarray
+            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            daxes = get_default_axes(changed_axes)
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:
 
@@ -94,23 +102,23 @@ class IncompleteMultidimensionalProfile(CFDataset):
                 max_profiles = None
             else:
                 max_profiles = df[axes.profile].unique().size
-            nc.createDimension(axes.profile, max_profiles)
+            nc.createDimension(daxes.profile, max_profiles)
 
             max_zs = profile_group.size().max()
-            nc.createDimension(axes.z, max_zs)
+            nc.createDimension(daxes.z, max_zs)
 
             # Metadata variables
             nc.createVariable('crs', 'i4')
 
-            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (axes.profile,))
+            profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (daxes.profile,))
 
             # Create all of the variables
-            time = nc.createVariable(axes.t, 'f8', (axes.profile,))
-            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (axes.profile,))
-            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (axes.profile,))
-            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (axes.profile, axes.z), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
+            time = nc.createVariable(axes.t, 'f8', (daxes.profile,))
+            latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (daxes.profile,))
+            longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (daxes.profile,))
+            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (daxes.profile, daxes.z), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
 
-            attributes = dict_update(nc.nc_attributes(axes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
             # Create vars based on full dataframe (to get all variables)
             for c in data_columns:
@@ -119,7 +127,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
                     v = create_ncvar_from_series(
                         nc,
                         var_name,
-                        (axes.profile, axes.z),
+                        (daxes.profile, daxes.z),
                         df[c],
                         zlib=True,
                         complevel=1
@@ -252,7 +260,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         return df
 
-    def nc_attributes(self, axes):
+    def nc_attributes(self, axes, daxes):
         atts = super(IncompleteMultidimensionalProfile, self).nc_attributes()
         return dict_update(atts, {
             'global' : {
