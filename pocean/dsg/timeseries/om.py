@@ -85,7 +85,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not support in xarray
-            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
+            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
 
         with OrthogonalMultidimensionalTimeseries(output, 'w') as nc:
