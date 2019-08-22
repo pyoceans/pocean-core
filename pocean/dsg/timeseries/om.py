@@ -195,16 +195,19 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         y = generic_masked(axv.y[:].repeat(t.size), attrs=self.vatts(axv.y.name))
 
         # Z
-        z = generic_masked(axv.z[:].repeat(t.size), attrs=self.vatts(axv.z.name))
+        if axv.z is not None:
+            z = generic_masked(axv.z[:].repeat(t.size), attrs=self.vatts(axv.z.name))
+        else:
+            z = None
 
         svar = axv.station
         s = normalize_countable_array(svar)
         s = np.repeat(s, t.size)
 
         # now repeat t per station
-        # figure out if this is a single-station file
-        # do this by checking the dimensions of the Z var
-        if axv.z.ndim == 1:
+        # figure out if this is a single-station file by checking
+        # the dimension size of the x dimension
+        if axv.x.ndim == 1:
             t = np.repeat(t, len(svar))
 
         df_data = OrderedDict([

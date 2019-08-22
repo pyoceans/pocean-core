@@ -19,6 +19,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
 
     def setUp(self):
         self.single = os.path.join(os.path.dirname(__file__), 'resources', 'tt.nc')
+        self.multi = os.path.join(os.path.dirname(__file__), 'resources', 'om-multiple.nc')
         self.ph = np.ma.array([
             8.1080176, 8.11740265, 8.11924184, 8.11615471, 8.11445695, 8.11600021,
             8.11903291, 8.1187229, 8.105218, 8.10998784, 8.10715445, 8.10530323,
@@ -28,8 +29,9 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
 
     def test_omp_load(self):
         OrthogonalMultidimensionalTimeseries(self.single).close()
+        OrthogonalMultidimensionalTimeseries(self.multi).close()
 
-    def test_timeseries_omt_dataframe(self):
+    def test_timeseries_omt_dataframe_single(self):
         fid, single_tmp = tempfile.mkstemp(suffix='.nc')
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
@@ -38,6 +40,20 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
                 assert np.ma.allclose(
                     result_ncd.variables['pH'][:].flatten(),
                     self.ph
+                )
+        test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
+        os.close(fid)
+        os.remove(single_tmp)
+
+    def test_timeseries_omt_dataframe_multi(self):
+        fid, single_tmp = tempfile.mkstemp(suffix='.nc')
+        with OrthogonalMultidimensionalTimeseries(self.multi) as s:
+            df = s.to_dataframe()
+            with OrthogonalMultidimensionalTimeseries.from_dataframe(df, single_tmp) as result_ncd:
+                assert 'station' in result_ncd.dimensions
+                assert np.ma.allclose(
+                    result_ncd.variables['temperature'][0, 0:7].flatten(),
+                    [18.61804, 13.2165, 39.30018, 17.00865, 24.95154, 35.99525, 24.33436],
                 )
         test_is_mine(OrthogonalMultidimensionalTimeseries, single_tmp)  # Try to load it again
         os.close(fid)
