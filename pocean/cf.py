@@ -70,8 +70,14 @@ class CFDataset(EnhancedDataset):
         return getattr(self, '{}_axes'.format(name.lower()))()
 
     def t_axes(self):
+
+        # If there is only one variable with the axis parameter, return it
+        hasaxis = self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 't')
+        if len(hasaxis) == 1:
+            return hasaxis
+
         tvars = list(set(itertools.chain(
-            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 't'),
+            hasaxis,
             self.filter_by_attrs(standard_name=lambda x: x in ['time', 'forecast_reference_time'])
         )))
         return tvars
@@ -93,8 +99,14 @@ class CFDataset(EnhancedDataset):
             'degreeE',
             'degreesE'
         ]
+
+        # If there is only one variable with the axis parameter, return it
+        hasaxis = self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'x')
+        if len(hasaxis) == 1:
+            return hasaxis
+
         xvars = list(set(itertools.chain(
-            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'x'),
+            hasaxis,
             self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in xnames),
             self.filter_by_attrs(units=lambda x: x and str(x).lower() in xunits)
         )))
@@ -110,8 +122,14 @@ class CFDataset(EnhancedDataset):
             'degreeN',
             'degreesN'
         ]
+
+        # If there is only one variable with the axis parameter, return it
+        hasaxis = self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'y')
+        if len(hasaxis) == 1:
+            return hasaxis
+
         yvars = list(set(itertools.chain(
-            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'y'),
+            hasaxis,
             self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in ynames),
             self.filter_by_attrs(units=lambda x: x and str(x).lower() in yunits)
         )))
@@ -131,8 +149,14 @@ class CFDataset(EnhancedDataset):
             'ocean_sigma_z_coordinate',
             'ocean_double_sigma_coordinate'
         ]
+
+        # If there is only one variable with the axis parameter, return it
+        hasaxis = self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'z')
+        if len(hasaxis) == 1:
+            return hasaxis
+
         zvars = list(set(itertools.chain(
-            self.filter_by_attrs(axis=lambda x: x and str(x).lower() == 'z'),
+            hasaxis,
             self.filter_by_attrs(positive=lambda x: x and str(x).lower() in ['up', 'down']),
             self.filter_by_attrs(standard_name=lambda x: x and str(x).lower() in znames)
         )))
