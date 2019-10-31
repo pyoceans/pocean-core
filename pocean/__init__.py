@@ -6,4 +6,4 @@ import logging
 logger = logging.getLogger("pocean")
 logger.addHandler(logging.NullHandler())
 
-__version__ = "1.9.0"
+__version__ = "1.9.1"
