@@ -18,7 +18,7 @@ requirements:
     - python
     - netcdf4
     - numpy >=1.14
-    - pandas >=0.24,<0.25
+    - pandas >=0.24
     - pygc >=1.2.0
     - python-dateutil
     - pytz
