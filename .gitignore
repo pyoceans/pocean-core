@@ -11,3 +11,4 @@ docs/_site
 .pytest_cache/
 .envrc
 .idea
+.vscode
