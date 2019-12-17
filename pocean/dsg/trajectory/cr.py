@@ -80,12 +80,10 @@ class ContiguousRaggedTrajectory(CFDataset):
             trajectory = nc.createVariable(axes.trajectory, get_dtype(df[axes.trajectory]), (daxes.trajectory,))
 
             # Get unique obs by grouping on traj getting the max size
-            num_obs = len(df)
             if unlimited is True:
-                max_obs = None
+                nc.createDimension(daxes.sample, None)
             else:
-                max_obs = num_obs
-            nc.createDimension(daxes.sample, max_obs)
+                nc.createDimension(daxes.sample, len(df))
 
             # Number of observations in each trajectory
             row_size = nc.createVariable('rowSize', 'i4', (daxes.trajectory,))
@@ -145,7 +143,10 @@ class ContiguousRaggedTrajectory(CFDataset):
                     v = nc.variables[var_name]
                 vvalues = get_ncdata_from_series(df[c], v)
                 try:
-                    v[:] = vvalues.reshape(v.shape)
+                    if unlimited is True:
+                        v[:] = vvalues
+                    else:
+                        v[:] = vvalues.reshape(v.shape)
                 except BaseException:
                     L.exception('Failed to add {}'.format(c))
                     continue
@@ -197,11 +198,11 @@ class ContiguousRaggedTrajectory(CFDataset):
         building_index_to_drop = np.ones(o_dim.size, dtype=bool)
 
         extract_vars = copy(self.variables)
-        for i, (dnam, dvar) in enumerate(extract_vars.items()):
+        # Skip the time and row index variables
+        del extract_vars[o_index_var.name]
+        del extract_vars[axes.t]
 
-            # Skip the rowSize variable
-            if dnam == o_index_var.name or dnam == axes.t:
-                continue
+        for i, (dnam, dvar) in enumerate(extract_vars.items()):
 
             # Trajectory dimensions
             if dvar.dimensions == t_dim:
