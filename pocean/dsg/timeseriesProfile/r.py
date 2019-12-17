@@ -3,9 +3,9 @@
 from copy import copy
 from collections import OrderedDict
 
+import six
 import numpy as np
 import pandas as pd
-from cftime import date2num
 
 from pocean.utils import (
     create_ncvar_from_series,
@@ -42,7 +42,7 @@ class RaggedTimeseriesProfile(CFDataset):
             assert len(o_index_vars) == 1
             assert o_index_vars[0].sample_dimension in dsg.dimensions  # Sample dimension
 
-            pvar = dsg.filter_by_attrs(
+            _ = dsg.filter_by_attrs(
                 cf_role='profile_id'
             )[0]
 
@@ -50,7 +50,7 @@ class RaggedTimeseriesProfile(CFDataset):
                 cf_role='timeseries_id'
             )[0]
             sdata = normalize_array(svar)
-            if not isinstance(sdata, str) and len(sdata.shape) > 0:
+            if not isinstance(sdata, six.string_types) and len(sdata.shape) > 0:
                 r_index_vars = dsg.filter_by_attrs(
                     instance_dimension=lambda x: x is not None
                 )
