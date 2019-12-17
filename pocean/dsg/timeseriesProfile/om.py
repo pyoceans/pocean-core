@@ -75,7 +75,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         unique_dims = kwargs.pop('unique_dims', False)
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
-            # which is not support in xarray
+            # which is not supported in xarray
             changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
 
