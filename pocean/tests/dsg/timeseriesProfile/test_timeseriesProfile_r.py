@@ -71,6 +71,75 @@ class TestRaggedTimeseriesProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpfile)
 
+    def test_csv_to_nc_multi(self):
+        filepath = os.path.join(os.path.dirname(__file__), 'resources', 'r-multi.csv')
+
+        df = pd.read_csv(filepath)
+        fid, tmpfile = tempfile.mkstemp(suffix='.nc')
+
+        axes = {
+            't': 'time',
+            'x': 'lon',
+            'y': 'lat',
+            'z': 'z'
+        }
+
+        df.time = pd.to_datetime(df.time)
+
+        with RaggedTimeseriesProfile.from_dataframe(df, tmpfile, axes=axes) as result_ncd:
+            assert 'station' in result_ncd.dimensions
+            assert result_ncd.dimensions['station'].size == 2
+            assert 'profile' in result_ncd.dimensions
+            assert result_ncd.dimensions['profile'].size == 5
+
+            check_vars = ['z', 'salinity', 'sigma0']
+            for v in check_vars:
+                npeq(
+                    result_ncd.variables[v][:],
+                    df[v].values
+                )
+
+            npeq(
+                result_ncd.variables['station'][:],
+                ['CN1', 'CN2']
+            )
+            npeq(
+                result_ncd.variables['profile'][:],
+                [
+                    '030312B',
+                    '030617B',
+                    '030702B',
+                    '030814B',
+                    '031216C'
+                ]
+            )
+            assert result_ncd.variables['profile'][0] == df.profile.iloc[0] == '030312B'
+            assert result_ncd.variables['lat'].size == 2
+            assert result_ncd.variables['lat'].ndim == 1  # Not reduced
+            assert result_ncd.variables['lat'][0] == df.lat.iloc[0] == 33.5
+            assert result_ncd.variables['lon'].size == 2
+            assert result_ncd.variables['lon'].ndim == 1  # Not reduced
+            assert result_ncd.variables['lon'][0] == df.lon.iloc[0] == -118.4
+
+            npeq(
+                result_ncd.variables['stationIndex'][:],
+                [0, 0, 1, 0, 1]
+            )
+
+            npeq(
+                result_ncd.variables['rowSize'][:],
+                [844, 892, 893, 893, 891]
+            )
+
+            assert result_ncd.variables['time'][0] == nc4.date2num(
+                datetime(2013, 3, 12, 10, 19, 6),
+                units=result_ncd.variables['time'].units
+            )
+            assert RaggedTimeseriesProfile.is_mine(result_ncd, strict=True)
+
+        os.close(fid)
+        os.remove(tmpfile)
+
     def test_csv_to_nc_single_timezones(self):
         filepath = os.path.join(os.path.dirname(__file__), 'resources', 'r-single.csv')
 
@@ -137,7 +206,7 @@ class TestRaggedTimeseriesProfile(unittest.TestCase):
         with RaggedTimeseriesProfile.from_dataframe(df, tmpfile, axes=axes, reduce_dims=True) as result_ncd:
             assert 'station' not in result_ncd.dimensions
             assert 'profile' in result_ncd.dimensions
-            assert result_ncd.dimensions['profile'].size == 1            
+            assert result_ncd.dimensions['profile'].size == 1
 
             check_vars = ['z', 't090C', 'SP', 'SA', 'SR', 'CT', 'sigma0_CT']
             for v in check_vars:

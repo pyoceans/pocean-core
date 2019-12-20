@@ -91,7 +91,8 @@ class RaggedTimeseriesProfile(CFDataset):
             num_stations = len(unique_stations)
 
             # Calculate the max number of profiles
-            unique_profiles = df[axes.profile].unique()
+            profile_groups = df.groupby(axes.profile)
+            unique_profiles = list(profile_groups.groups.keys())
             num_profiles = len(unique_profiles)
             nc.createDimension(daxes.profile, num_profiles)
 
@@ -125,16 +126,15 @@ class RaggedTimeseriesProfile(CFDataset):
             attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
             for i, (sname, srg) in enumerate(station_groups):
-
                 station[i] = sname
                 latitude[i] = df[axes.y][df[axes.station] == sname].dropna().iloc[0]
                 longitude[i] = df[axes.x][df[axes.station] == sname].dropna().iloc[0]
 
-                for j, (pname, pfg) in enumerate(srg.groupby(axes.profile)):
-                    profile[j] = pname
-                    row_size[j] = len(pfg)
-                    if s_ind is not None:
-                        s_ind[j] = i
+            for j, (pname, pfg) in enumerate(profile_groups):
+                profile[j] = pname
+                row_size[j] = len(pfg)
+                if s_ind is not None:
+                    s_ind[j] = np.asscalar(np.argwhere(station[:] == pfg[axes.station].dropna().iloc[0]))
 
             # Add back in the z axes that was removed when calculating data_columns
             # and ignore variables that were stored in the profile index
