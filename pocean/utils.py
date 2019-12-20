@@ -24,10 +24,20 @@ from . import logger
 L = logger
 
 
+def safe_issubdtype(source, goal):
+    try:
+        return np.issubdtype(source, goal)
+    except TypeError as te:
+        L.error("Error testing issubdtype - {}: {}".format(te, source))
+        return False
+
+
 def downcast_dataframe(df):
     for column in df:
-        if np.issubdtype(df[column].dtype, np.int64):
+        if safe_issubdtype(df[column].dtype, np.int64):
             df[column] = df[column].astype(np.int32)
+
+    return df
     return df
 
 
@@ -175,9 +185,9 @@ def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     """
 
     # Get the min/max of values that the hardware supports
-    if np.issubdtype(arr.dtype, np.integer):
+    if safe_issubdtype(arr.dtype, np.integer):
         ifunc = np.iinfo
-    elif np.issubdtype(arr.dtype, np.floating):
+    elif safe_issubdtype(arr.dtype, np.floating):
         ifunc = np.finfo
     else:
         if arr.dtype.kind in ['U', 'S']:
@@ -243,7 +253,7 @@ def get_fill_value(var):
 def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     from pocean.cf import CFDataset
 
-    if np.issubdtype(series.dtype, np.datetime64):
+    if safe_issubdtype(series.dtype, np.datetime64):
         # Datetimes always saved as float64
         fv = np.dtype('f8').type(CFDataset.default_fill_value)
         v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv, **kwargs)
@@ -258,7 +268,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
         try:
             filled_down = pd.to_numeric(series.fillna(0), downcast='integer')
             # Catch boolean values... to_numeric() results in boolean for True / False
-            if np.issubdtype(filled_down.dtype, np.bool_):
+            if safe_issubdtype(filled_down.dtype, np.bool_):
                 raise ValueError('datatype error: boolean needs to be converted to string')
         except BaseException:
             # Fall back to a string type
@@ -286,7 +296,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
 def get_ncdata_from_series(series, ncvar, fillna=True):
     from pocean.cf import CFDataset
 
-    if np.issubdtype(series.dtype, np.datetime64):
+    if safe_issubdtype(series.dtype, np.datetime64):
         units = getattr(ncvar, 'units', CFDataset.default_time_unit)
         calendar = getattr(ncvar, 'calendar', 'standard')
         nums = date2num(series.tolist(), units=units, calendar=calendar)

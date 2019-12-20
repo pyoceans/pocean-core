@@ -8,9 +8,10 @@ import simplejson as json
 from netCDF4 import Dataset
 
 from .utils import (
-    JSONEncoder,
     generic_masked,
-    safe_attribute_typing
+    JSONEncoder,
+    safe_attribute_typing,
+    safe_issubdtype
 )
 from .meta import (
     MetaInterface,
@@ -174,7 +175,7 @@ class EnhancedDataset(Dataset):
                 shape = vvalue.get('shape', [])  # Dimension names
                 vardtype = string_to_dtype(vvalue.get('type'))
 
-                if np.issubdtype(vardtype, np.floating):
+                if safe_issubdtype(vardtype, np.floating):
                     defaultfill = vardtype.type(np.nan)  # We can use `nan` for floats
                 elif vardtype.kind in ['U', 'S']:
                     defaultfill = None  # No fillvalue on VLENs
