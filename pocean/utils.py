@@ -38,6 +38,17 @@ def downcast_dataframe(df):
             df[column] = df[column].astype(np.int32)
 
     return df
+
+
+def nativize_times(df):
+    for column in df:
+        try:
+            # datetime64 columns will not raise here
+            if df[column].dt.tz is not None:
+                df[column] = df[column].dt.tz_convert('UTC').dt.tz_convert(None)
+        except AttributeError:
+            pass
+
     return df
 
 

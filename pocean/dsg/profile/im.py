@@ -10,12 +10,14 @@ from cftime import date2num
 from pocean.utils import (
     create_ncvar_from_series,
     dict_update,
+    downcast_dataframe,
     generic_masked,
     get_default_axes,
     get_dtype,
     get_mapped_axes_variables,
     get_masked_datetime_array,
     get_ncdata_from_series,
+    nativize_times,
     normalize_countable_array,
 )
 from pocean.cf import CFDataset, cf_safe_name
@@ -93,6 +95,10 @@ class IncompleteMultidimensionalProfile(CFDataset):
             # which is not support in xarray
             changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
+
+        # Downcast anything from int64 to int32
+        # Convert any timezone aware datetimes to native UTC times
+        df = downcast_dataframe(nativize_times(df))
 
         with IncompleteMultidimensionalProfile(output, 'w') as nc:
 

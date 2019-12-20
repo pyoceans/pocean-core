@@ -17,6 +17,7 @@ from pocean.utils import (
     get_mapped_axes_variables,
     get_masked_datetime_array,
     get_ncdata_from_series,
+    nativize_times,
     normalize_countable_array,
 )
 
@@ -80,7 +81,8 @@ class RaggedTimeseriesProfile(CFDataset):
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
-        df = downcast_dataframe(df)
+        # Convert any timezone aware datetimes to native UTC times
+        df = downcast_dataframe(nativize_times(df))
 
         with RaggedTimeseriesProfile(output, 'w') as nc:
 
