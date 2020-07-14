@@ -4,6 +4,7 @@ from __future__ import division
 from datetime import datetime
 
 import pandas as pd
+from shapely.validation import explain_validity
 from shapely.geometry import Point, Polygon, LineString, box
 
 from pocean.utils import (
@@ -34,6 +35,19 @@ def get_calculated_attributes(df, axes=None, history=None):
     return attrs
 
 
+def fix_geom(geom):
+    if not geom.is_valid and hasattr(geom, 'buffer'):
+        # Attempt to "fix" invalid geometries.
+        L.info(explain_validity(geom))
+        # Shapely >= 1.8 includes a make_valid method
+        # which should be used after it is released. For
+        # now use the buffer(0) "hack" that resolves
+        # self-intersections pretty well.
+        # from shapely.validation import make_valid
+        # p = make_valid(p)
+        return geom.buffer(0)
+
+
 def get_geographic_attributes(df, axes=None):
     """ Use values in a dataframe to set geographic attributes for the eventual netCDF file
     Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
@@ -53,7 +67,9 @@ def get_geographic_attributes(df, axes=None):
     carry_minx = round(float(df[axes.x].min()), 6)
     carry_maxx = round(float(df[axes.x].max()), 6)
 
-    coords = list(zip(df[axes.x], df[axes.y]))
+    notnull = df[axes.x].notnull() & df[axes.y].notnull()
+    coords = list(zip(df.loc[notnull, axes.x], df.loc[notnull, axes.y]))
+
     if len(set(coords)) == 1:
         geoclass = Point
     elif len(coords) > 2:
@@ -65,8 +81,9 @@ def get_geographic_attributes(df, axes=None):
     dateline = LineString([(180, 90), (-180, -90)])
     # If we cross the dateline normalize the coordinates before polygon
     if dateline.crosses(p):
-        newx = (df[axes.x] + 360) % 360
-        p = geoclass(zip(newx, df[axes.y]))
+        newx = (df.loc[notnull, axes.x] + 360) % 360
+        p = geoclass(zip(newx, df.loc[notnull, axes.y]))
+        p = fix_geom(p)
 
     geometry_bbox = box(*p.bounds).wkt
     geometry_wkt = p.convex_hull.wkt
