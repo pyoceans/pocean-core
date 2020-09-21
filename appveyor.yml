@@ -2,16 +2,17 @@ environment:
   # The CONDA_PY is just to ensure we will test with vc 9, vc 10, and vc 14.
   matrix:
     - TARGET_ARCH: x64
-      CONDA_PY: 27
-      CONDA_INSTALL_LOCN: C:\\Miniconda-x64
-
-    - TARGET_ARCH: x64
       CONDA_PY: 36
       CONDA_INSTALL_LOCN: C:\\Miniconda36-x64
 
     - TARGET_ARCH: x64
       CONDA_PY: 37
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+
+    - TARGET_ARCH: x64
+      CONDA_PY: 38
+      CONDA_INSTALL_LOCN: C:\\Miniconda38-x64
+
 
 platform:
     - x64
