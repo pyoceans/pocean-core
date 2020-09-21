@@ -34,7 +34,8 @@ install:
   - conda config --set channel_priority strict
   - set PYTHONUNBUFFERED=1
 
-  - conda create --name TEST python=%PY%
+  - conda update -n base conda
+  - conda create --name TEST python=%PY% conda-build
 
   - conda activate TEST
   - conda info --all
