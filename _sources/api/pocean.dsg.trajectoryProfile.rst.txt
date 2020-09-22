@@ -16,4 +16,3 @@ pocean.dsg.trajectoryProfile.cr module
    :members:
    :undoc-members:
    :show-inheritance:
-

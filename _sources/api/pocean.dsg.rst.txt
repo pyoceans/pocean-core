@@ -10,6 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    pocean.dsg.profile
    pocean.dsg.timeseries
@@ -27,4 +28,3 @@ pocean.dsg.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-

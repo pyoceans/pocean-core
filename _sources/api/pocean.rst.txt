@@ -10,6 +10,7 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    pocean.dsg
    pocean.grid
@@ -48,4 +49,3 @@ pocean.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-

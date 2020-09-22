@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>pocean package &#8212; pocean-core 1.9.3 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
@@ -86,43 +87,43 @@
 </div>
 <div class="section" id="module-pocean.cf">
 <span id="pocean-cf-module"></span><h2>pocean.cf module<a class="headerlink" href="#module-pocean.cf" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.cf.CFDataset">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.cf.</code><code class="sig-name descname">CFDataset</code><a class="headerlink" href="#pocean.cf.CFDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pocean.dataset.EnhancedDataset" title="pocean.dataset.EnhancedDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.dataset.EnhancedDataset</span></code></a></p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.ancillary_vars">
 <code class="sig-name descname">ancillary_vars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.ancillary_vars" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.axes">
-<code class="sig-name descname">axes</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.axes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">axes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.axes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.data_vars">
 <code class="sig-name descname">data_vars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.data_vars" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="pocean.cf.CFDataset.default_fill_value">
 <code class="sig-name descname">default_fill_value</code><em class="property"> = -9999.9</em><a class="headerlink" href="#pocean.cf.CFDataset.default_fill_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="pocean.cf.CFDataset.default_time_unit">
 <code class="sig-name descname">default_time_unit</code><em class="property"> = 'seconds since 1990-01-01 00:00:00Z'</em><a class="headerlink" href="#pocean.cf.CFDataset.default_time_unit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.is_valid">
-<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.is_valid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.is_valid" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.load">
-<em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.load" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to load a netCDF file as a CF compatible dataset</p>
 <p>Extended description of function.</p>
 <dl class="field-list simple">
@@ -141,17 +142,17 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.nc_attributes">
 <code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.t_axes">
 <code class="sig-name descname">t_axes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.t_axes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.x_axes">
 <code class="sig-name descname">x_axes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.x_axes" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
@@ -165,86 +166,86 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.y_axes">
 <code class="sig-name descname">y_axes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.y_axes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.cf.CFDataset.z_axes">
 <code class="sig-name descname">z_axes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.CFDataset.z_axes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.cf.cf_safe_name">
-<code class="sig-prename descclassname">pocean.cf.</code><code class="sig-name descname">cf_safe_name</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.cf_safe_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.cf.</code><code class="sig-name descname">cf_safe_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.cf.cf_safe_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-pocean.dataset">
 <span id="pocean-dataset-module"></span><h2>pocean.dataset module<a class="headerlink" href="#module-pocean.dataset" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.dataset.EnhancedDataset">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.dataset.</code><code class="sig-name descname">EnhancedDataset</code><a class="headerlink" href="#pocean.dataset.EnhancedDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">netCDF4._netCDF4.Dataset</span></code></p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.apply_json">
-<code class="sig-name descname">apply_json</code><span class="sig-paren">(</span><em class="sig-param">meta</em>, <em class="sig-param">create_vars=True</em>, <em class="sig-param">create_dims=True</em>, <em class="sig-param">create_data=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">meta</span></em>, <em class="sig-param"><span class="n">create_vars</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_dims</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">create_data</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a meta interface object to a netCDF4 compatible object</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.apply_meta">
-<code class="sig-name descname">apply_meta</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_meta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply_meta</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.apply_meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut to the JSON object without writing any data</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.close">
 <code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.close" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>`close(self)`</strong></p>
 <p>Close the Dataset.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.filter_by_attrs">
-<code class="sig-name descname">filter_by_attrs</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.filter_by_attrs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter_by_attrs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.filter_by_attrs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.json">
-<code class="sig-name descname">json</code><span class="sig-paren">(</span><em class="sig-param">return_data=True</em>, <em class="sig-param">fill_data=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">return_data</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fill_data</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.json" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.json_attributes">
-<code class="sig-name descname">json_attributes</code><span class="sig-paren">(</span><em class="sig-param">vfuncs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.json_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">json_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vfuncs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.json_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>vfuncs can be any callable that accepts a single argument, the
 Variable object, and returns a dictionary of new attributes to
 set. These will overwrite existing attributes</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.meta">
-<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.meta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut to the JSON object without any data</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.to_json">
-<code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.to_json" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.to_json" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.update_attributes">
-<code class="sig-name descname">update_attributes</code><span class="sig-paren">(</span><em class="sig-param">attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.update_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attributes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.update_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dataset.EnhancedDataset.vatts">
-<code class="sig-name descname">vatts</code><span class="sig-paren">(</span><em class="sig-param">vname</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.vatts" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">vatts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dataset.EnhancedDataset.vatts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -252,169 +253,169 @@ set. These will overwrite existing attributes</p>
 </div>
 <div class="section" id="module-pocean.meta">
 <span id="pocean-meta-module"></span><h2>pocean.meta module<a class="headerlink" href="#module-pocean.meta" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.meta.MetaInterface">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">MetaInterface</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">MetaInterface</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code></p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="pocean.meta.MetaInterface.VALID_KEYS">
 <code class="sig-name descname">VALID_KEYS</code><em class="property"> = ['dimensions', 'variables', 'attributes']</em><a class="headerlink" href="#pocean.meta.MetaInterface.VALID_KEYS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.meta.MetaInterface.from_jsonfile">
-<em class="property">classmethod </em><code class="sig-name descname">from_jsonfile</code><span class="sig-paren">(</span><em class="sig-param">jsf</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonfile" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_jsonfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">jsf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.meta.MetaInterface.from_jsonstr">
-<em class="property">classmethod </em><code class="sig-name descname">from_jsonstr</code><span class="sig-paren">(</span><em class="sig-param">js</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonstr" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_jsonstr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">js</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.MetaInterface.from_jsonstr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.meta.ncpyattributes">
-<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">ncpyattributes</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.ncpyattributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">ncpyattributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.ncpyattributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts any attributes that are not native python types to those types</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.meta.safe_attribute_typing">
-<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">safe_attribute_typing</code><span class="sig-paren">(</span><em class="sig-param">zdtype</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.safe_attribute_typing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">safe_attribute_typing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zdtype</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.safe_attribute_typing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.meta.string_to_dtype">
-<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">string_to_dtype</code><span class="sig-paren">(</span><em class="sig-param">type_str</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.string_to_dtype" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">string_to_dtype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">type_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.string_to_dtype" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.meta.untype_attributes">
-<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">untype_attributes</code><span class="sig-paren">(</span><em class="sig-param">vd</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.untype_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.meta.</code><code class="sig-name descname">untype_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.meta.untype_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-pocean.utils">
 <span id="pocean-utils-module"></span><h2>pocean.utils module<a class="headerlink" href="#module-pocean.utils" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.utils.JSONEncoder">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">JSONEncoder</code><span class="sig-paren">(</span><em class="sig-param">skipkeys=False</em>, <em class="sig-param">ensure_ascii=True</em>, <em class="sig-param">check_circular=True</em>, <em class="sig-param">allow_nan=True</em>, <em class="sig-param">sort_keys=False</em>, <em class="sig-param">indent=None</em>, <em class="sig-param">separators=None</em>, <em class="sig-param">encoding='utf-8'</em>, <em class="sig-param">default=None</em>, <em class="sig-param">use_decimal=True</em>, <em class="sig-param">namedtuple_as_object=True</em>, <em class="sig-param">tuple_as_array=True</em>, <em class="sig-param">bigint_as_string=False</em>, <em class="sig-param">item_sort_key=None</em>, <em class="sig-param">for_json=False</em>, <em class="sig-param">ignore_nan=False</em>, <em class="sig-param">int_as_string_bitcount=None</em>, <em class="sig-param">iterable_as_array=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.JSONEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">JSONEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">skipkeys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ensure_ascii</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">check_circular</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">allow_nan</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">separators</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">'utf-8'</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_decimal</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">namedtuple_as_object</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">tuple_as_array</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bigint_as_string</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">item_sort_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">for_json</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ignore_nan</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">int_as_string_bitcount</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">iterable_as_array</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.JSONEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">simplejson.encoder.JSONEncoder</span></code></p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.utils.JSONEncoder.default">
-<code class="sig-name descname">default</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.JSONEncoder.default" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.JSONEncoder.default" title="Permalink to this definition">¶</a></dt>
 <dd><p>If input object is an ndarray it will be converted into a list</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.all_subclasses">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">all_subclasses</code><span class="sig-paren">(</span><em class="sig-param">cls</em>, <em class="sig-param">skips=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.all_subclasses" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">all_subclasses</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span></em>, <em class="sig-param"><span class="n">skips</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.all_subclasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively generate of all the subclasses of class cls.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.create_ncvar_from_series">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">create_ncvar_from_series</code><span class="sig-paren">(</span><em class="sig-param">ncd</em>, <em class="sig-param">var_name</em>, <em class="sig-param">dimensions</em>, <em class="sig-param">series</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.create_ncvar_from_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">create_ncvar_from_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ncd</span></em>, <em class="sig-param"><span class="n">var_name</span></em>, <em class="sig-param"><span class="n">dimensions</span></em>, <em class="sig-param"><span class="n">series</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.create_ncvar_from_series" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.dict_update">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">dict_update</code><span class="sig-paren">(</span><em class="sig-param">d</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.dict_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">dict_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">u</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.dict_update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.downcast_dataframe">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">downcast_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.downcast_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">downcast_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.downcast_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.generic_masked">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">generic_masked</code><span class="sig-paren">(</span><em class="sig-param">arr</em>, <em class="sig-param">attrs=None</em>, <em class="sig-param">minv=None</em>, <em class="sig-param">maxv=None</em>, <em class="sig-param">mask_nan=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.generic_masked" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">generic_masked</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maxv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mask_nan</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.generic_masked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a masked array with anything outside of values masked.
 The minv and maxv parameters take precendence over any dict values.
 The valid_range attribute takes precendence over the valid_min and
 valid_max attributes.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_default_axes">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_default_axes</code><span class="sig-paren">(</span><em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_default_axes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_default_axes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_default_axes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_dtype">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_dtype</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_dtype" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_dtype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_dtype" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_fill_value">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_fill_value</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_fill_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_fill_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">var</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_fill_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_mapped_axes_variables">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_mapped_axes_variables</code><span class="sig-paren">(</span><em class="sig-param">ncd</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">skip=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_mapped_axes_variables" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_mapped_axes_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ncd</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_mapped_axes_variables" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_masked_datetime_array">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_masked_datetime_array</code><span class="sig-paren">(</span><em class="sig-param">t</em>, <em class="sig-param">tvar</em>, <em class="sig-param">mask_nan=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_masked_datetime_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_masked_datetime_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">tvar</span></em>, <em class="sig-param"><span class="n">mask_nan</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_masked_datetime_array" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.get_ncdata_from_series">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_ncdata_from_series</code><span class="sig-paren">(</span><em class="sig-param">series</em>, <em class="sig-param">ncvar</em>, <em class="sig-param">fillna=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_ncdata_from_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">get_ncdata_from_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">series</span></em>, <em class="sig-param"><span class="n">ncvar</span></em>, <em class="sig-param"><span class="n">fillna</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.get_ncdata_from_series" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.is_url">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">is_url</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.is_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">is_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.is_url" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.namedtuple_with_defaults">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">namedtuple_with_defaults</code><span class="sig-paren">(</span><em class="sig-param">typename</em>, <em class="sig-param">field_names</em>, <em class="sig-param">default_values=()</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.namedtuple_with_defaults" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">namedtuple_with_defaults</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">typename</span></em>, <em class="sig-param"><span class="n">field_names</span></em>, <em class="sig-param"><span class="n">default_values</span><span class="o">=</span><span class="default_value">()</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.namedtuple_with_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.nativize_times">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">nativize_times</code><span class="sig-paren">(</span><em class="sig-param">df</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.nativize_times" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">nativize_times</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.nativize_times" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.normalize_array">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">normalize_array</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.normalize_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">normalize_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">var</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.normalize_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a normalized data array from a NetCDF4 variable. This is mostly
 used to normalize string types between py2 and py3 as well as netcdf3 and
 netcdf4. It has no effect on types other than chars/strings</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.normalize_countable_array">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">normalize_countable_array</code><span class="sig-paren">(</span><em class="sig-param">cvar</em>, <em class="sig-param">count_if_none=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.normalize_countable_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">normalize_countable_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cvar</span></em>, <em class="sig-param"><span class="n">count_if_none</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.normalize_countable_array" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.pyscalar">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">pyscalar</code><span class="sig-paren">(</span><em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.pyscalar" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">pyscalar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.pyscalar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.safe_attribute_typing">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">safe_attribute_typing</code><span class="sig-paren">(</span><em class="sig-param">zdtype</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.safe_attribute_typing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">safe_attribute_typing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">zdtype</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.safe_attribute_typing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.safe_issubdtype">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">safe_issubdtype</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">goal</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.safe_issubdtype" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">safe_issubdtype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">goal</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.safe_issubdtype" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.utils.unique_justseen">
-<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">unique_justseen</code><span class="sig-paren">(</span><em class="sig-param">iterable</em>, <em class="sig-param">key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.unique_justseen" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.utils.</code><code class="sig-name descname">unique_justseen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.utils.unique_justseen" title="Permalink to this definition">¶</a></dt>
 <dd><p>List unique elements, preserving order. Remember only the element just seen.</p>
 </dd></dl>
 
@@ -464,7 +465,7 @@ netcdf4. It has no effect on types other than chars/strings</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -481,7 +482,7 @@ netcdf4. It has no effect on types other than chars/strings</p>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

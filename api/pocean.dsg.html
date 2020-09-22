@@ -1,17 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>pocean.dsg package &#8212; pocean-core 1.9.3 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
    
@@ -32,7 +33,95 @@
             
   <div class="section" id="module-pocean.dsg">
 <span id="pocean-dsg-package"></span><h1>pocean.dsg package<a class="headerlink" href="#module-pocean.dsg" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
+<dt id="pocean.dsg.ContiguousRaggedTimeseries">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTimeseries.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTimeseries.from_dataframe">
+<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTimeseries.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTimeseries.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTrajectory</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.from_dataframe">
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.nc_attributes">
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectory.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTrajectoryProfile</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.from_dataframe">
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.nc_attributes">
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalProfile</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
@@ -46,34 +135,170 @@ alt(profile,z).  This representation also allows one to have a variable
 number of elements in different profiles, at the cost of some wasted space.
 In that case, any unused elements of the data and auxiliary coordinate
 variables must contain missing data values (section 9.6).</p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.IncompleteMultidimensionalProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTimeseries</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.from_dataframe">
+<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTimeseriesProfile</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.from_dataframe">
+<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTrajectory</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<p>When storing multiple trajectories in the same file, and the number of
+elements in each trajectory is the same, one can use the multidimensional
+array representation. This representation also allows one to have a
+variable number of elements in different trajectories, at the cost of some
+wasted space. In that case, any unused elements of the data and auxiliary
+coordinate variables must contain missing data values (section 9.6).</p>
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.from_dataframe">
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.nc_attributes">
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.IndexedRaggedTimeseries">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IndexedRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTimeseries.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTimeseries.from_dataframe">
+<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTimeseries.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTimeseries.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pocean.dsg.IndexedRaggedTrajectory">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IndexedRaggedTrajectory</code><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTrajectory.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTrajectory.from_dataframe">
+<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.IndexedRaggedTrajectory.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">OrthogonalMultidimensionalProfile</code><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
@@ -85,227 +310,29 @@ values are ordered monotonically, or a one-dimensional auxiliary coordinate
 variable, alt(o), where o is the element dimension. In the former case,
 listing the vertical coordinate variable in the coordinates attributes of
 the data variables is optional.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTrajectory</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.nc_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectory.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.IndexedRaggedTrajectory">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IndexedRaggedTrajectory</code><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTrajectory.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTrajectory.from_dataframe">
-<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTrajectory.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTrajectory</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<p>When storing multiple trajectories in the same file, and the number of
-elements in each trajectory is the same, one can use the multidimensional
-array representation. This representation also allows one to have a
-variable number of elements in different trajectories, at the cost of some
-wasted space. In that case, any unused elements of the data and auxiliary
-coordinate variables must contain missing data values (section 9.6).</p>
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.nc_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTrajectory.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTrajectory.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTrajectoryProfile</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTrajectoryProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTrajectoryProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.ContiguousRaggedTimeseries">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">ContiguousRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTimeseries.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTimeseries.from_dataframe">
-<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTimeseries.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.ContiguousRaggedTimeseries.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.ContiguousRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.IndexedRaggedTimeseries">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IndexedRaggedTimeseries</code><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTimeseries.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTimeseries.from_dataframe">
-<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTimeseries.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IndexedRaggedTimeseries.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IndexedRaggedTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTimeseries</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.from_dataframe">
-<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseries.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">OrthogonalMultidimensionalTimeseries</code><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
@@ -316,124 +343,131 @@ either a one-dimensional coordinate variable, time(time), provided the time valu
 monotonically, or a one-dimensional auxiliary coordinate variable, time(o), where o is the
 element dimension. In the former case, listing the time variable in the coordinates attributes
 of the data variables is optional.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.from_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseries.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=False</em>, <em class="sig-param">clean_rows=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseries.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="pocean.dsg.RaggedTimeseriesProfile">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">RaggedTimeseriesProfile</code><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.RaggedTimeseriesProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.RaggedTimeseriesProfile.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.RaggedTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.RaggedTimeseriesProfile.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.RaggedTimeseriesProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile">
-<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">IncompleteMultidimensionalTimeseriesProfile</code><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.from_dataframe">
-<code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.IncompleteMultidimensionalTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
+<dl class="py class">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile">
 <em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">OrthogonalMultidimensionalTimeseriesProfile</code><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.calculated_metadata">
-<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param">df=None</em>, <em class="sig-param">geometries=True</em>, <em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.from_dataframe">
-<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">output</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine">
-<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param">dsg</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.nc_attributes">
-<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">daxes</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.to_dataframe">
-<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param">clean_cols=True</em>, <em class="sig-param">clean_rows=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.OrthogonalMultidimensionalTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py class">
+<dt id="pocean.dsg.RaggedTimeseriesProfile">
+<em class="property">class </em><code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">RaggedTimeseriesProfile</code><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pocean.html#pocean.cf.CFDataset" title="pocean.cf.CFDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">pocean.cf.CFDataset</span></code></a></p>
+<dl class="py method">
+<dt id="pocean.dsg.RaggedTimeseriesProfile.calculated_metadata">
+<code class="sig-name descname">calculated_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">geometries</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.calculated_metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.RaggedTimeseriesProfile.from_dataframe">
+<em class="property">classmethod </em><code class="sig-name descname">from_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.from_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.RaggedTimeseriesProfile.is_mine">
+<em class="property">classmethod </em><code class="sig-name descname">is_mine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dsg</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.is_mine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.RaggedTimeseriesProfile.nc_attributes">
+<code class="sig-name descname">nc_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">daxes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.nc_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pocean.dsg.RaggedTimeseriesProfile.to_dataframe">
+<code class="sig-name descname">to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clean_cols</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean_rows</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.RaggedTimeseriesProfile.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="pocean.dsg.get_calculated_attributes">
+<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_calculated_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">history</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functions to automate netCDF attribute generation from the data itself
+This is a wrapper for the other four functions, which could be called separately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
+<li><p><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pocean.dsg.get_creation_attributes">
+<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_creation_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">history</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query system for netCDF file creation times</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of global attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pocean.dsg.get_geographic_attributes">
-<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_geographic_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_geographic_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_geographic_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_geographic_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set geographic attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a>
 The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84 and is used with
@@ -453,9 +487,27 @@ Longitude values are limited to [-180, 180).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
+<dt id="pocean.dsg.get_temporal_attributes">
+<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_temporal_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use values in a dataframe to set temporal attributes for the eventual netCDF file
+Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
+<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pocean.dsg.get_vertical_attributes">
-<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_vertical_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_vertical_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_vertical_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_vertical_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set vertical attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a>
 The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of</p>
@@ -478,57 +530,6 @@ Note: values are cast from numpy.int to float</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>nested dictionary of variable and global attributes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="pocean.dsg.get_temporal_attributes">
-<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_temporal_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use values in a dataframe to set temporal attributes for the eventual netCDF file
-Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
-<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>nested dictionary of variable and global attributes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="pocean.dsg.get_creation_attributes">
-<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_creation_attributes</code><span class="sig-paren">(</span><em class="sig-param">history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Query system for netCDF file creation times</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>history</strong> – text initializing audit trail for modifications to the original data (optional, string)</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dictionary of global attributes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="pocean.dsg.get_calculated_attributes">
-<code class="sig-prename descclassname">pocean.dsg.</code><code class="sig-name descname">get_calculated_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Functions to automate netCDF attribute generation from the data itself
-This is a wrapper for the other four functions, which could be called separately.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – data (Pandas DataFrame)</p></li>
-<li><p><strong>axes</strong> – keys (x,y,z,t) are associated with actual column names (dictionary)</p></li>
-<li><p><strong>history</strong> – history: text initializing audit trail for modifications to the original data (optional, string)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dictionary of global attributes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -578,9 +579,14 @@ This is a wrapper for the other four functions, which could be called separately
 </div>
 <div class="section" id="module-pocean.dsg.utils">
 <span id="pocean-dsg-utils-module"></span><h2>pocean.dsg.utils module<a class="headerlink" href="#module-pocean.dsg.utils" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
+<dt id="pocean.dsg.utils.fix_geom">
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">fix_geom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">geom</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.fix_geom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="pocean.dsg.utils.get_calculated_attributes">
-<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_calculated_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_calculated_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">history</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_calculated_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Functions to automate netCDF attribute generation from the data itself
 This is a wrapper for the other four functions, which could be called separately.</p>
 <dl class="field-list simple">
@@ -597,9 +603,9 @@ This is a wrapper for the other four functions, which could be called separately
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.dsg.utils.get_creation_attributes">
-<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_creation_attributes</code><span class="sig-paren">(</span><em class="sig-param">history=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_creation_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">history</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_creation_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query system for netCDF file creation times</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -611,9 +617,9 @@ This is a wrapper for the other four functions, which could be called separately
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.dsg.utils.get_geographic_attributes">
-<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_geographic_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_geographic_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_geographic_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_geographic_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set geographic attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a>
 The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84 and is used with
@@ -633,9 +639,9 @@ Longitude values are limited to [-180, 180).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.dsg.utils.get_temporal_attributes">
-<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_temporal_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_temporal_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_temporal_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set temporal attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a></p>
 <dl class="field-list simple">
@@ -651,9 +657,9 @@ Attribute names come from <a class="reference external" href="https://www.nodc.n
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pocean.dsg.utils.get_vertical_attributes">
-<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_vertical_attributes</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">axes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_vertical_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pocean.dsg.utils.</code><code class="sig-name descname">get_vertical_attributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pocean.dsg.utils.get_vertical_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use values in a dataframe to set vertical attributes for the eventual netCDF file
 Attribute names come from <a class="reference external" href="https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/">https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/</a>
 The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of</p>
@@ -726,7 +732,7 @@ Note: values are cast from numpy.int to float</p>
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -743,7 +749,7 @@ Note: values are cast from numpy.int to float</p>
       &copy;2017, Kyle Wilcox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

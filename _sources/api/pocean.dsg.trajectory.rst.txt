@@ -32,4 +32,3 @@ pocean.dsg.trajectory.ir module
    :members:
    :undoc-members:
    :show-inheritance:
-

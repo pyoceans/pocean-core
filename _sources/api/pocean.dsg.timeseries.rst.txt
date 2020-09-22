@@ -40,4 +40,3 @@ pocean.dsg.timeseries.om module
    :members:
    :undoc-members:
    :show-inheritance:
-
