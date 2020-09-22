@@ -12,20 +12,20 @@ build:
 
 requirements:
   build:
-    - python
+    - python >=3.6
     - pip
   run:
     - python
     - netcdf4
-    - numpy >=1.14
-    - pandas >=0.24
+    - numpy >=1.15
+    - pandas >=0.24,<1.0
     - pygc >=1.2.0
     - python-dateutil
     - pytz
     - shapely
     - simplejson
     - six
-    - cftime
+    - cftime >=1.2.1
 
 test:
   source_files:

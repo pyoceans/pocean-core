@@ -18,7 +18,8 @@ except ImportError:
 import pandas as pd
 import numpy as np
 import netCDF4 as nc4
-from cftime import num2date, date2num
+from cftime import num2date, date2num, num2pydate
+from cftime import datetime as cfdt
 
 from . import logger
 L = logger
@@ -339,22 +340,12 @@ def get_masked_datetime_array(t, tvar, mask_nan=True):
     # There is no max date for nc4.
     min_nums = date2num([datetime.min, datetime.max], tvar.units, t_cal)
     t = np.ma.masked_outside(t, *min_nums)
-    # Avoid deprecation warnings between numpy 1.11 and 1.14
-    # After 1.14 this is the default behavior
-    t._sharedmask = False
-    # Temporarily set to 1 so num2date works
-    t_mask = np.copy(np.ma.getmaskarray(t))
-    t[t_mask] = 1
 
-    dts = num2date(t, tvar.units, t_cal)
-    if isinstance(dts, datetime):
+    dts = num2pydate(t, tvar.units, t_cal)
+    if isinstance(dts, (datetime, cfdt)):
         dts = np.array([dts.isoformat()], dtype='datetime64')
 
-    # Patch the time variable back to its original mask, since num2date
-    # breaks any missing/fill values
-    nt = np.ma.MaskedArray(dts)
-    nt[t_mask] = np.ma.masked
-    return nt
+    return dts
 
 
 def get_mapped_axes_variables(ncd, axes=None, skip=None):
