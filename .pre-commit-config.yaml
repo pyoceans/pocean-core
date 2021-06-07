@@ -1,0 +1,26 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+    - id: trailing-whitespace
+    - id: check-ast
+    - id: debug-statements
+    - id: end-of-file-fixer
+    - id: check-added-large-files
+      exclude_types: [yaml]
+    - id: requirements-txt-fixer
+    - id: file-contents-sorter
+      files: requirements-dev.txt
+
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.0.0
+  hooks:
+    - id: codespell
+      args:
+        - --ignore-words-list=te
+      exclude: >
+          (?x)^(
+              .*\.yaml
+          )$
+      args:
+        - --quiet-level=2
