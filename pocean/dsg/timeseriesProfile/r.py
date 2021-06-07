@@ -97,7 +97,7 @@ class RaggedTimeseriesProfile(CFDataset):
             nc.createDimension(daxes.profile, num_profiles)
 
             if reduce_dims is True and num_stations == 1:
-                # If a singlular station, remove the dimension
+                # If a singular station, remove the dimension
                 station_dimensions = ()
                 s_ind = None
             else:

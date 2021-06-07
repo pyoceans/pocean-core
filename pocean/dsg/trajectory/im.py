@@ -135,7 +135,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
 
             num_trajectories = len(trajectory_group)
             if reduce_dims is True and num_trajectories == 1:
-                # If a singlular trajectory, we can reduce that dimension if it is of size 1
+                # If a singular trajectory, we can reduce that dimension if it is of size 1
                 def ts(t_index, size):
                     return np.s_[0:size]
                 default_dimensions = (daxes.sample,)
