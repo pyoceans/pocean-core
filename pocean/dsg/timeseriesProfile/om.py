@@ -101,7 +101,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         with OrthogonalMultidimensionalTimeseriesProfile(output, 'w') as nc:
 
             if reduce_dims is True and unique_s.size == 1:
-                # If a singlular trajectory, we can reduce that dimension if it is of size 1
+                # If a singular trajectory, we can reduce that dimension if it is of size 1
                 default_dimensions = (daxes.t, daxes.z)
                 station_dimensions = ()
             else:

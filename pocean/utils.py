@@ -191,8 +191,8 @@ def safe_attribute_typing(zdtype, value):
 def generic_masked(arr, attrs=None, minv=None, maxv=None, mask_nan=True):
     """
     Returns a masked array with anything outside of values masked.
-    The minv and maxv parameters take precendence over any dict values.
-    The valid_range attribute takes precendence over the valid_min and
+    The minv and maxv parameters take precedence over any dict values.
+    The valid_range attribute takes precedence over the valid_min and
     valid_max attributes.
     """
 

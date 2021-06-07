@@ -249,7 +249,7 @@ class EnhancedDataset(Dataset):
                 try:
                     js[varname].update(vfuncs(var))
                 except BaseException:
-                    L.exception("Could not apply custom variable attribue function")
+                    L.exception("Could not apply custom variable attribute function")
 
         return json.loads(json.dumps(js, cls=JSONEncoder))
 

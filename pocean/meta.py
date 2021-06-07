@@ -129,7 +129,7 @@ def ncpyattributes(obj, verbose=True):
                 v = v[0]
             else:
                 # This is likely an empty value
-                # so just default to an emptry string
+                # so just default to an empty string
                 v = ''
             newt = type(v).__name__
 
