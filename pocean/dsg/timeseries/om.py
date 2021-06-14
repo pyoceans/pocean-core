@@ -137,7 +137,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
             attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
 
-            time[:] = get_ncdata_from_series(t, time)
+            time[:] = get_ncdata_from_series(t, time).astype('f8')
 
             # Create vars based on full dataframe (to get all variables)
             for c in data_columns:

@@ -316,7 +316,7 @@ def get_ncdata_from_series(series, ncvar, fillna=True):
         units = getattr(ncvar, 'units', CFDataset.default_time_unit)
         calendar = getattr(ncvar, 'calendar', 'standard')
         nums = np.array([_safe_date2num(dtime, units=units, calendar=calendar) for dtime in series])
-        return np.ma.masked_invalid(nums.astype(float))
+        return np.ma.masked_invalid(nums)
     else:
         if fillna is True:
             fv = get_fill_value(ncvar) or np.nan

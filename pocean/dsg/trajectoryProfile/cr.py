@@ -136,7 +136,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
 
             for i, (_, trg) in enumerate(trajectory_groups):
                 for j, (_, pfg) in enumerate(trg.groupby(axes.profile)):
-                    time[j] = get_ncdata_from_series(pfg[axes.t], time)[0]
+                    time[j] = get_ncdata_from_series(pfg[axes.t], time).astype('f8')[0]
                     latitude[j] = get_ncdata_from_series(pfg[axes.y], latitude)[0]
                     longitude[j] = get_ncdata_from_series(pfg[axes.x], longitude)[0]
                     row_size[j] = len(pfg)

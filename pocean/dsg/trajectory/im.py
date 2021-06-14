@@ -176,7 +176,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             for i, (uid, gdf) in enumerate(trajectory_group):
                 trajectory[i] = uid
 
-                times = get_ncdata_from_series(gdf[axes.t], time)
+                times = get_ncdata_from_series(gdf[axes.t], time).astype('f8')
                 time[ts(i, times.size)] = times
 
                 lats = get_ncdata_from_series(gdf[axes.y], latitude)
