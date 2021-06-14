@@ -128,7 +128,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             else:
                 nc.createDimension(daxes.t, len(unique_t))
             time = nc.createVariable(axes.t, 'f8', (daxes.t,))
-            time[:] = date2num(unique_t, units=cls.default_time_unit)
+            time[:] = date2num(unique_t, units=cls.default_time_unit).astype('f8')
 
             nc.createDimension(daxes.z, unique_z.size)
             z = nc.createVariable(axes.z, get_dtype(unique_z), (daxes.z,))

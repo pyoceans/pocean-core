@@ -305,13 +305,17 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     return v
 
 
+def _safe_date2num(dtime, units, calendar):
+    return np.nan if pd.isnull(dtime) else date2num(dtime, units, calendar)
+
+
 def get_ncdata_from_series(series, ncvar, fillna=True):
     from pocean.cf import CFDataset
 
     if safe_issubdtype(series.dtype, np.datetime64):
         units = getattr(ncvar, 'units', CFDataset.default_time_unit)
         calendar = getattr(ncvar, 'calendar', 'standard')
-        nums = date2num(series.tolist(), units=units, calendar=calendar)
+        nums = np.array([_safe_date2num(dtime, units=units, calendar=calendar) for dtime in series])
         return np.ma.masked_invalid(nums)
     else:
         if fillna is True:
