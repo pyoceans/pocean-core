@@ -7,7 +7,8 @@ import operator
 import itertools
 import simplejson as json
 from datetime import datetime, date, time
-from collections import namedtuple, Mapping, Counter
+from collections import namedtuple, Counter
+from collections.abc import Mapping
 
 try:
     # PY2 support
@@ -442,10 +443,9 @@ def get_dtype(obj):
 
 def dict_update(d, u):
     # http://stackoverflow.com/a/3233356
-    import collections
     for k, v in u.items():
-        if isinstance(d, collections.Mapping):
-            if isinstance(v, collections.Mapping):
+        if isinstance(d, Mapping):
+            if isinstance(v, Mapping):
                 r = dict_update(d.get(k, {}), v)
                 d[k] = r
             else:
