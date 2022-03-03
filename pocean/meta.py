@@ -1,7 +1,6 @@
 #!python
 # coding=utf-8
 import os
-import collections
 from copy import deepcopy
 from collections import OrderedDict
 from collections.abc import Mapping, Iterable

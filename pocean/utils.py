@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import six
 import uuid
 import decimal
 import operator
@@ -139,7 +138,7 @@ def normalize_array(var):
     netcdf4. It has no effect on types other than chars/strings
     """
     # This is for single-value variables. netCDF4 converts them to a single string
-    if var.dtype in six.string_types:
+    if var.dtype in [str]:
         # Python 2 on netCDF4 'string' variables needs this.
         # Python 3 returns false for np.issubdtype(var.dtype, 'S1')
         return var[:]
@@ -167,7 +166,7 @@ def normalize_array(var):
 def normalize_countable_array(cvar, count_if_none=None):
     try:
         p = normalize_array(cvar)
-        if isinstance(p, six.string_types):
+        if isinstance(p, str):
             p = np.asarray([p], dtype=str)
         elif hasattr(p, 'mask') and np.all(p.mask == True):  # noqa
             raise ValueError('All countable values were masked!')
@@ -272,7 +271,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
         v = ncd.createVariable(var_name, 'f8', dimensions, fill_value=fv, **kwargs)
         v.units = CFDataset.default_time_unit
         v.calendar = 'standard'
-    elif series.dtype.kind in ['U', 'S'] or series.dtype in six.string_types:
+    elif series.dtype.kind in ['U', 'S'] or series.dtype in [str]:
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
         v = ncd.createVariable(var_name, get_dtype(series), dimensions, **kwargs)
     elif series.dtype == np.object:

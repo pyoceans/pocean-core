@@ -1,3 +1,0 @@
-py
-pytest
-pytest-flake8
