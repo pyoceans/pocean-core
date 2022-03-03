@@ -37,7 +37,7 @@ jobs:
 
     - name: Test wheels
       run: |
-        cd dist && python -m pip install pocean-core*.whl
+        cd dist && python -m pip install pocean_core*.whl
         python -m twine check *
       shell: bash
 
