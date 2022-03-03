@@ -1,3 +1,3 @@
-pytest
-pre-commit
 flake8
+pre-commit
+pytest
