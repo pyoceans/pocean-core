@@ -3,7 +3,6 @@
 from copy import copy
 from collections import OrderedDict
 
-import six
 import numpy as np
 import pandas as pd
 
@@ -51,7 +50,7 @@ class RaggedTimeseriesProfile(CFDataset):
                 cf_role='timeseries_id'
             )[0]
             sdata = normalize_array(svar)
-            if not isinstance(sdata, six.string_types) and len(sdata.shape) > 0:
+            if not isinstance(sdata, str) and len(sdata.shape) > 0:
                 r_index_vars = dsg.filter_by_attrs(
                     instance_dimension=lambda x: x is not None
                 )

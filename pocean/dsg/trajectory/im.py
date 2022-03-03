@@ -3,7 +3,6 @@
 from copy import copy
 from collections import OrderedDict
 
-import six
 import numpy as np
 import pandas as pd
 
@@ -63,7 +62,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                 is_single = True
             elif tvar.ndim == 2:
                 is_single = False
-            elif isinstance(ts, six.string_types):
+            elif isinstance(ts, str):
                 # Non-dimensioned string variable
                 is_single = True
             elif tvar.ndim == 1 and hasattr(ts, 'dtype') and ts.dtype.kind in ['U', 'S']:

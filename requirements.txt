@@ -2,9 +2,7 @@ cftime>=1.2.1
 netcdf4
 numpy>=1.15
 pandas>=1.0.5
-pygc>=1.2.0
 python-dateutil
 pytz
 shapely
 simplejson
-six

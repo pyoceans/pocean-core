@@ -1,6 +1,5 @@
 #!python
 # coding=utf-8
-import six
 from copy import copy
 from collections import OrderedDict
 
@@ -65,7 +64,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                 is_single = True
             elif pvar.ndim == 2:
                 is_single = False
-            elif isinstance(ps, six.string_types):
+            elif isinstance(ps, str):
                 # Non-dimensioned string variable
                 is_single = True
             elif pvar.ndim == 1 and hasattr(ps, 'dtype') and ps.dtype.kind in ['U', 'S']:

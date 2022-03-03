@@ -1,11 +1,9 @@
 #!python
 # coding=utf-8
 import os
+import re
 import itertools
 from datetime import datetime
-
-import six
-from six import u as astr
 
 from .utils import all_subclasses, is_url
 from .dataset import EnhancedDataset
@@ -196,11 +194,10 @@ class CFDataset(EnhancedDataset):
 
 
 def cf_safe_name(name):
-    import re
-    if isinstance(name, six.string_types):
-        if re.match(astr('^[0-9_]'), name):
+    if isinstance(name, str):
+        if re.match('^[0-9_]', name):
             # Add a letter to the front
-            name = astr("v_{}".format(name))
-        return re.sub(r'[^_a-zA-Z0-9]', astr("_"), name)
+            name = "v_{}".format(name)
+        return re.sub(r'[^_a-zA-Z0-9]', "_", name)
 
-    raise ValueError(astr('Could not convert "{}" to a safe name'.format(name)))
+    raise ValueError('Could not convert "{}" to a safe name'.format(name))
