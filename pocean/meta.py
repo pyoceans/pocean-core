@@ -3,7 +3,8 @@
 import os
 import collections
 from copy import deepcopy
-from collections import OrderedDict, Mapping
+from collections import OrderedDict
+from collections.abc import Mapping, Iterable
 
 import numpy as np
 import simplejson as json
@@ -124,7 +125,7 @@ def ncpyattributes(obj, verbose=True):
         if hasattr(v, 'dtype'):
             newt = v.dtype.name
         else:
-            if isinstance(v, collections.Iterable) and v:
+            if isinstance(v, Iterable) and v:
                 # Use the type of the first one
                 v = v[0]
             else:
