@@ -2,24 +2,22 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.0.1
   hooks:
-    - id: trailing-whitespace
-    - id: check-ast
-    - id: debug-statements
     - id: end-of-file-fixer
-      exclude: github_deploy_key.enc
+      files: .*\.*.py
+    - id: trailing-whitespace
+      files: .*\.*.py
+    - id: debug-statements
+    - id: check-ast
     - id: check-added-large-files
-      exclude_types: [yaml]
+    - id: check-json
+    - id: check-merge-conflict
+    - id: check-yaml
     - id: requirements-txt-fixer
-    - id: file-contents-sorter
-      files: requirements-dev.txt
+      filenames:
+        - requirements.txt
+        - requirements-dev.txt
 
-- repo: https://github.com/codespell-project/codespell
-  rev: v2.0.0
+- repo: https://github.com/pycqa/flake8
+  rev: 4.0.1
   hooks:
-    - id: codespell
-      args:
-        - --ignore-words-list=te
-      exclude: >
-          (?x)^(
-              .*\.yaml
-          )$
+    - id: flake8

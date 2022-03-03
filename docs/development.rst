@@ -5,9 +5,9 @@ Create a conda environment
 
 ...code bash
 
-    $ conda create -n pocean37 python=3.7
-    $ source activate pocean37
-    $ conda install --file requirements.txt --file requirements-test.txt
+    $ conda create -n pocean310 python=3.10
+    $ source activate pocean310
+    $ conda install --file requirements.txt --file requirements-dev.txt
 
 
 Running tests
