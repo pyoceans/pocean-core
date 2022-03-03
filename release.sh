@@ -7,14 +7,12 @@ fi
 
 # Set version to release
 sed -i "s/^__version__ = .*/__version__ = \"$1\"/" pocean/__init__.py
-sed -i "s/version: .*/version: \"$1\"/" conda-recipe/meta.yaml
 sed -i "s/version = .*/version = \"$1\"/" docs/conf.py
 sed -i "s/release = .*/release = \"$1\"/" docs/conf.py
 echo $1 > VERSION
 
 # Commit release
 git add pocean/__init__.py
-git add conda-recipe/meta.yaml
 git add VERSION
 git add docs/conf.py
 git commit -m "Release $1"
@@ -23,4 +21,4 @@ git commit -m "Release $1"
 git tag $1
 
 # Push to Git
-git push --tags origin master
+echo "git push --tags origin main"
