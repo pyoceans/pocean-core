@@ -1,21 +1,23 @@
 🌐 pocean-core
-=============
+==============
 
 🐍 + 🌊
 
 A python framework for working with met-ocean data
 
-Resources
----------
 
--  **Documentation:** https://pyoceans.github.io/pocean-core/docs/
--  **API:** https://pyoceans.github.io/pocean-core/docs/api/pocean.html
--  **Source Code:** https://github.com/pyoceans/pocean-core/
--  **Git clone URL:** https://github.com/pyoceans/pocean-core.git
+Documentation
+=============
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
 
-Developer Documentation
-=======================
+   api/modules
+   development
+
+Indices and tables
+==================
 
 * :ref:`genindex`
 * :ref:`modindex`
