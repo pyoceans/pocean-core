@@ -3,16 +3,14 @@ Development
 
 Create a conda environment
 
-...code bash
+.. code-block:: bash
 
-    $ conda create -n pocean310 python=3.10
-    $ source activate pocean310
-    $ conda install --file requirements.txt --file requirements-dev.txt
-
+    conda create --name pocean310 python=3.10 --file requirements.txt --file requirements-dev.txt
+    conda activate pocean310
 
 Running tests
 -------------
 
-...code bash
+.. code-block:: bash
 
-    $ pytest
+    pytest
