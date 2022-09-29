@@ -109,9 +109,9 @@ def get_vertical_attributes(df, axes=None):
     """ Use values in a dataframe to set vertical attributes for the eventual netCDF file
     Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
     The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of
-      * 'EPSG:5829' (instantaneous height above sea level),
-      * 'EPSG:5831' (instantaneous depth below sea level), or
-      * 'EPSG:5703' (NAVD88 height).
+    * 'EPSG:5829' (instantaneous height above sea level),
+    * 'EPSG:5831' (instantaneous depth below sea level), or
+    * 'EPSG:5703' (NAVD88 height).
     Likewise, geospatial_vertical_positive cannot be assumed to be either 'up' or 'down'.
     Set these attributes separately according to the dataset.
     Note: values are cast from numpy.int to float
