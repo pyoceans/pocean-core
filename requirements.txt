@@ -4,5 +4,5 @@ numpy>=1.20
 pandas>=1.0.5
 python-dateutil
 pytz
-shapely
+shapely<2
 simplejson
