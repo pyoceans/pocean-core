@@ -274,7 +274,7 @@ def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     elif series.dtype.kind in ['U', 'S'] or series.dtype in [str]:
         # AttributeError: cannot set _FillValue attribute for VLEN or compound variable
         v = ncd.createVariable(var_name, get_dtype(series), dimensions, **kwargs)
-    elif series.dtype == np.object:
+    elif series.dtype == object:
         # Try to downcast to an int and then just take the type of the result
         # If we can't convert to a numeric use a string
         try:
