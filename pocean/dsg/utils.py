@@ -72,6 +72,9 @@ def get_geographic_attributes(df, axes=None):
 
     if len(set(coords)) == 1:
         geoclass = Point
+        # The set is to workaround the fact tht pocean
+        # relied in a shapely<2 bug to pass a vector here instead of a point.
+        coords = set(coords)
     elif len(coords) > 2:
         geoclass = Polygon
     else:

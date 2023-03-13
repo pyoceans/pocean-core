@@ -133,7 +133,7 @@ class RaggedTimeseriesProfile(CFDataset):
                 profile[j] = pname
                 row_size[j] = len(pfg)
                 if s_ind is not None:
-                    s_ind[j] = np.asscalar(np.argwhere(station[:] == pfg[axes.station].dropna().iloc[0]))
+                    s_ind[j] = np.argwhere(station[:] == pfg[axes.station].dropna().iloc[0]).item()
 
             # Add back in the z axes that was removed when calculating data_columns
             # and ignore variables that were stored in the profile index
