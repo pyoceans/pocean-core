@@ -163,8 +163,6 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
                         var_name,
                         default_dimensions,
                         df[c],
-                        # zlib=True,
-                        # complevel=1
                     )
                     attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                         'coordinates': '{} {} {} {}'.format(
