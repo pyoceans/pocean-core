@@ -1,6 +1,13 @@
 name: Build and Deploy docs
 
-on: ["push", "pull_request"]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
 
 jobs:
   build-docs:
@@ -39,7 +46,7 @@ jobs:
         popd
 
     - name: Deploy
-      if: ${{ github.event_name == 'release' }}
+      if: success() && github.event_name == 'release'
       uses: peaceiris/actions-gh-pages@v3.6.1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
