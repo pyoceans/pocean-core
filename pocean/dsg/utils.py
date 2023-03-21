@@ -37,7 +37,7 @@ def get_calculated_attributes(df, axes=None, history=None):
 
 def get_geographic_attributes(df, axes=None):
     """ Use values in a dataframe to set geographic attributes for the eventual netCDF file
-    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+    Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
     The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84 and is used with
     GPS satellite navigation (http://spatialreference.org/ref/epsg/wgs-84/).  This is NCEI's default.
     Coordinate values are latitude (decimal degrees_north) and longitude (decimal degrees_east).
@@ -107,7 +107,7 @@ def get_geographic_attributes(df, axes=None):
 
 def get_vertical_attributes(df, axes=None):
     """ Use values in a dataframe to set vertical attributes for the eventual netCDF file
-    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+    Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
     The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of
     * 'EPSG:5829' (instantaneous height above sea level),
     * 'EPSG:5831' (instantaneous depth below sea level), or
@@ -143,7 +143,7 @@ def get_vertical_attributes(df, axes=None):
 
 def get_temporal_attributes(df, axes=None):
     """ Use values in a dataframe to set temporal attributes for the eventual netCDF file
-    Attribute names come from https://www.nodc.noaa.gov/data/formats/netcdf/v2.0/
+    Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
 
     :param df: data (Pandas DataFrame)
     :param axes: keys (x,y,z,t) are associated with actual column names (dictionary). z in meters.
