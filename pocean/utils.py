@@ -265,7 +265,7 @@ def get_fill_value(var):
 def create_ncvar_from_series(ncd, var_name, dimensions, series, **kwargs):
     from pocean.cf import CFDataset
     kwargs["zlib"] = kwargs.get("zlib", True)
-    kwargs["complevel"] = kwargs.get("complevel", True)
+    kwargs["complevel"] = kwargs.get("complevel", 1)
 
     if safe_issubdtype(series.dtype, np.datetime64):
         # Datetimes always saved as float64
