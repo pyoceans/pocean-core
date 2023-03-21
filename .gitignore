@@ -12,3 +12,4 @@ docs/_site
 .envrc
 .idea
 .vscode
+pocean/_version.py
