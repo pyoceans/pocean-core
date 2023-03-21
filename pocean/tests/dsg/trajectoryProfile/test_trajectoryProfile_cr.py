@@ -1,17 +1,17 @@
-import os
+import logging
 import math
+import os
 import tempfile
 import unittest
 
 import numpy as np
-from shapely.wkt import loads as wktloads
 from dateutil.parser import parse as dtparse
+from shapely.wkt import loads as wktloads
 
-from pocean.tests.dsg.test_new import test_is_mine
-from pocean.dsg import ContiguousRaggedTrajectoryProfile
-
-import logging
 from pocean import logger as L
+from pocean.dsg import ContiguousRaggedTrajectoryProfile
+from pocean.tests.dsg.test_new import test_is_mine
+
 L.level = logging.INFO
 L.handlers = [logging.StreamHandler()]
 

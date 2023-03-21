@@ -1,11 +1,13 @@
 #!python
 # coding=utf-8
-from copy import copy
 from collections import OrderedDict
+from copy import copy
 
 import numpy as np
 import pandas as pd
 
+from pocean import logger as L  # noqa
+from pocean.cf import cf_safe_name, CFDataset
 from pocean.utils import (
     create_ncvar_from_series,
     dict_update,
@@ -19,10 +21,6 @@ from pocean.utils import (
     nativize_times,
     normalize_countable_array,
 )
-from pocean.cf import CFDataset
-from pocean.cf import cf_safe_name
-
-from pocean import logger as L  # noqa
 
 
 class OrthogonalMultidimensionalTimeseries(CFDataset):

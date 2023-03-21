@@ -1,13 +1,13 @@
 #!python
 # coding=utf-8
+import logging
 import os
 import unittest
 
+from pocean import logger as L
 from pocean.cf import CFDataset
 from pocean.dsg import OrthogonalMultidimensionalTimeseries as omt
 
-import logging
-from pocean import logger as L
 L.level = logging.INFO
 L.handlers = [logging.StreamHandler()]
 

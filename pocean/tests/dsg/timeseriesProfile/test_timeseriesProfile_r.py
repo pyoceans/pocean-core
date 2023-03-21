@@ -1,20 +1,20 @@
 #!python
 # coding=utf-8
+import logging
 import os
 import tempfile
 import unittest
 from datetime import datetime
 
-import pandas as pd
 import netCDF4 as nc4
+import pandas as pd
 from numpy.testing import assert_array_equal as npeq
 
+from pocean import logger
 from pocean.cf import CFDataset
 from pocean.dsg import RaggedTimeseriesProfile
 from pocean.tests.dsg.test_new import test_is_mine
 
-import logging
-from pocean import logger
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 

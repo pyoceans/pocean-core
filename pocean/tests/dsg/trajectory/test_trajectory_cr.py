@@ -1,17 +1,18 @@
 #!python
 # coding=utf-8
+import logging
 import os
-import unittest
 import tempfile
-from os.path import join as jn
+import unittest
 from os.path import dirname as dn
+from os.path import join as jn
 
 import pytest
+
+from pocean import logger
 from pocean.dsg import ContiguousRaggedTrajectory, get_calculated_attributes
 from pocean.tests.dsg.test_new import test_is_mine
 
-import logging
-from pocean import logger
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 

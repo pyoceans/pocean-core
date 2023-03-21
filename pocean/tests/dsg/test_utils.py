@@ -3,14 +3,14 @@
 import os
 import unittest
 from datetime import datetime, timedelta
+
+import pandas as pd
+import pytz
 from dateutil.parser import parse as dtparse
 
-import pytz
-import pandas as pd
-
-from pocean.dsg import utils
-from pocean.cf import CFDataset
 from pocean import logger as L  # noqa
+from pocean.cf import CFDataset
+from pocean.dsg import utils
 
 
 class TestDsgUtils(unittest.TestCase):

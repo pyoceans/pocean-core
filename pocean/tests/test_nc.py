@@ -1,17 +1,17 @@
 #!python
 # coding=utf-8
+import logging
 import os
-import unittest
 import tempfile
+import unittest
 
 from numpy import testing as npt
 
+from pocean import logger as L
 from pocean.cf import CFDataset
 from pocean.dataset import EnhancedDataset
 from pocean.meta import MetaInterface, ncpyattributes
 
-import logging
-from pocean import logger as L
 L.level = logging.INFO
 L.handlers = [logging.StreamHandler()]
 

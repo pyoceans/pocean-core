@@ -1,11 +1,12 @@
 #!python
 # coding=utf-8
-from copy import copy
 from collections import OrderedDict
+from copy import copy
 
 import numpy as np
 import pandas as pd
 
+from pocean.cf import cf_safe_name, CFDataset
 from pocean.utils import (
     create_ncvar_from_series,
     dict_update,
@@ -17,11 +18,9 @@ from pocean.utils import (
     get_masked_datetime_array,
     get_ncdata_from_series,
     nativize_times,
+    normalize_array,
     normalize_countable_array,
 )
-
-from pocean.cf import CFDataset, cf_safe_name
-from pocean.utils import normalize_array
 from pocean.utils import logger as L  # noqa
 
 

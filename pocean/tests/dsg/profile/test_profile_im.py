@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import os
 import tempfile
 import unittest
@@ -7,11 +8,10 @@ import numpy as np
 import pandas as pd
 from dateutil.parser import parse as dtparse
 
-from pocean.tests.dsg.test_new import test_is_mine
-from pocean.dsg import IncompleteMultidimensionalProfile
-
-import logging
 from pocean import logger
+from pocean.dsg import IncompleteMultidimensionalProfile
+from pocean.tests.dsg.test_new import test_is_mine
+
 logger.level = logging.DEBUG
 logger.handlers = [logging.StreamHandler()]
 

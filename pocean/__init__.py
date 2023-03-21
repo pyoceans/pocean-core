@@ -3,6 +3,7 @@
 
 # Package level logger
 import logging
+
 logger = logging.getLogger("pocean")
 logger.addHandler(logging.NullHandler())
 

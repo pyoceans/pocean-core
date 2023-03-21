@@ -2,13 +2,12 @@
 # coding=utf-8
 from collections import namedtuple
 
-from shapely.geometry import Point, LineString
+from shapely.geometry import LineString, Point
 
+from pocean.utils import logger as L  # noqa
 from pocean.utils import (
     unique_justseen,
 )
-
-from pocean.utils import logger as L  # noqa
 
 profile_meta = namedtuple('Profile', [
     'min_z',

@@ -1,9 +1,9 @@
 #!python
 # coding=utf-8
 import os
-from copy import deepcopy
 from collections import OrderedDict
-from collections.abc import Mapping, Iterable
+from collections.abc import Iterable, Mapping
+from copy import deepcopy
 
 import numpy as np
 import simplejson as json
