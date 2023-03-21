@@ -65,7 +65,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pocean-core'
-copyright = '2022, Kyle Wilcox'
+copyright = '2023, Kyle Wilcox'
 author = 'Kyle Wilcox'
 
 # The version info for the project you're documenting, acts as replacement for
