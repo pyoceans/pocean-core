@@ -107,8 +107,6 @@ class ContiguousRaggedTrajectory(CFDataset):
                         var_name,
                         (daxes.trajectory,),
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
 
             for i, (trajid, trg) in enumerate(trajectory_groups):
@@ -142,8 +140,6 @@ class ContiguousRaggedTrajectory(CFDataset):
                         var_name,
                         (daxes.sample,),
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
                 else:
                     v = nc.variables[var_name]

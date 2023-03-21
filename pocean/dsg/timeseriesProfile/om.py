@@ -147,8 +147,6 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                         var_name,
                         default_dimensions[0::2],  # this removes the second dimension (z)
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
                     attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                         'coordinates' : '{} {} {}'.format(
@@ -183,8 +181,6 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                         var_name,
                         default_dimensions,
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
                     attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                         'coordinates' : '{} {} {} {}'.format(

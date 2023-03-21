@@ -130,8 +130,6 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                         var_name,
                         (daxes.profile,),
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
 
             for i, (_, trg) in enumerate(trajectory_groups):
@@ -168,8 +166,6 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
                         var_name,
                         (daxes.sample,),
                         df[c],
-                        zlib=True,
-                        complevel=1
                     )
                 else:
                     v = nc.variables[var_name]
