@@ -135,8 +135,8 @@ class IncompleteMultidimensionalProfile(CFDataset):
                         var_name,
                         (daxes.profile, daxes.z),
                         df[c],
-                        zlib=True,
-                        complevel=1
+                        # zlib=True,
+                        # complevel=1
                     )
                     attributes[var_name] = dict_update(attributes.get(var_name, {}), {
                         'coordinates': '{} {} {} {}'.format(

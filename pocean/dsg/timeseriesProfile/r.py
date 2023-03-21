@@ -146,8 +146,8 @@ class RaggedTimeseriesProfile(CFDataset):
                         var_name,
                         (daxes.sample,),
                         df[c],
-                        zlib=True,
-                        complevel=1
+                        # zlib=True,
+                        # complevel=1
                     )
                 else:
                     v = nc.variables[var_name]
