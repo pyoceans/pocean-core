@@ -8,8 +8,18 @@ import simplejson as json
 from netCDF4 import Dataset
 
 from . import logger as L
-from .meta import MetaInterface, ncpyattributes, string_to_dtype, untype_attributes
-from .utils import generic_masked, JSONEncoder, safe_attribute_typing, safe_issubdtype
+from .meta import (
+    MetaInterface,
+    ncpyattributes,
+    string_to_dtype,
+    untype_attributes,
+)
+from .utils import (
+    generic_masked,
+    JSONEncoder,
+    safe_attribute_typing,
+    safe_issubdtype,
+)
 
 # Attribute that need to be of the same type as the variables
 _TYPE_SENSITIVE_ATTRIBUTES = [

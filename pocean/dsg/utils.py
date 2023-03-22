@@ -5,7 +5,12 @@ from __future__ import division
 from datetime import datetime
 
 import pandas as pd
-from shapely.geometry import box, LineString, Point, Polygon
+from shapely.geometry import (
+    box,
+    LineString,
+    Point,
+    Polygon,
+)
 from shapely.validation import make_valid
 
 from pocean import logger as L  # noqa
