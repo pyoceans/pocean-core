@@ -6,7 +6,7 @@ graft pocean
 
 prune docs
 prune pocean/tests
-prine .github
+prune .github
 prune *.egg-info
 
 exclude .gitignore
