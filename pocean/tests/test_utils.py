@@ -1,18 +1,18 @@
 #!python
 # coding=utf-8
+import logging
 import os
 import shutil
-import unittest
 import tempfile
+import unittest
 
-import numpy as np
 import netCDF4 as nc4
+import numpy as np
 
+from pocean import logger
 from pocean.dataset import EnhancedDataset
 from pocean.utils import generic_masked, get_default_axes, normalize_array
 
-import logging
-from pocean import logger
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 

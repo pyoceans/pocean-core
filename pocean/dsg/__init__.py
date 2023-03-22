@@ -5,31 +5,33 @@
 from .profile.im import IncompleteMultidimensionalProfile
 from .profile.om import OrthogonalMultidimensionalProfile
 
+# Timeseries
+from .timeseries.cr import ContiguousRaggedTimeseries
+from .timeseries.im import IncompleteMultidimensionalTimeseries
+from .timeseries.ir import IndexedRaggedTimeseries
+from .timeseries.om import OrthogonalMultidimensionalTimeseries
+from .timeseriesProfile.im import IncompleteMultidimensionalTimeseriesProfile
+from .timeseriesProfile.om import OrthogonalMultidimensionalTimeseriesProfile
+
+# TimeseriesProfile
+from .timeseriesProfile.r import RaggedTimeseriesProfile
+
 # Trajectory
 from .trajectory.cr import ContiguousRaggedTrajectory
-from .trajectory.ir import IndexedRaggedTrajectory
 from .trajectory.im import IncompleteMultidimensionalTrajectory
+from .trajectory.ir import IndexedRaggedTrajectory
 
 # TrajectoryProfile
 from .trajectoryProfile.cr import ContiguousRaggedTrajectoryProfile
 
-# Timeseries
-from .timeseries.cr import ContiguousRaggedTimeseries
-from .timeseries.ir import IndexedRaggedTimeseries
-from .timeseries.im import IncompleteMultidimensionalTimeseries
-from .timeseries.om import OrthogonalMultidimensionalTimeseries
-
-# TimeseriesProfile
-from .timeseriesProfile.r import RaggedTimeseriesProfile
-from .timeseriesProfile.im import IncompleteMultidimensionalTimeseriesProfile
-from .timeseriesProfile.om import OrthogonalMultidimensionalTimeseriesProfile
-
 # Attribute Utilities
-from .utils import get_geographic_attributes
-from .utils import get_vertical_attributes
-from .utils import get_temporal_attributes
-from .utils import get_creation_attributes
-from .utils import get_calculated_attributes
+from .utils import (
+    get_calculated_attributes,
+    get_creation_attributes,
+    get_geographic_attributes,
+    get_temporal_attributes,
+    get_vertical_attributes,
+)
 
 __all__ = [
     'IncompleteMultidimensionalProfile',

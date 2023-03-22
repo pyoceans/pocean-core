@@ -1,8 +1,7 @@
 #!python
 # coding=utf-8
-from pocean.cf import CFDataset
-
 from pocean import logger  # noqa
+from pocean.cf import CFDataset
 
 
 class ContiguousRaggedTimeseries(CFDataset):

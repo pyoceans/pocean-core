@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from os.path import join as jn
+import logging
 from os.path import dirname as dn
+from os.path import join as jn
 
 import pytest
 
-from pocean.cf import CFDataset
-from pocean.utils import all_subclasses
-from pocean.dsg import *
-
-import logging
 from pocean import logger
+from pocean.cf import CFDataset
+from pocean.dsg import *
+from pocean.utils import all_subclasses
+
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 

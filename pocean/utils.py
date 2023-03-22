@@ -1,13 +1,14 @@
 #!python
 # coding=utf-8
-import uuid
 import decimal
-import operator
 import itertools
-import simplejson as json
-from datetime import datetime, date, time
-from collections import namedtuple, Counter
+import operator
+import uuid
+from collections import Counter, namedtuple
 from collections.abc import Mapping
+from datetime import date, datetime, time
+
+import simplejson as json
 
 try:
     # PY2 support
@@ -15,13 +16,14 @@ try:
 except ImportError:
     from urllib.parse import urlparse as uparse
 
-import pandas as pd
-import numpy as np
 import netCDF4 as nc4
-from cftime import num2date, date2num, num2pydate
+import numpy as np
+import pandas as pd
+from cftime import date2num, num2date, num2pydate
 from cftime import datetime as cfdt
 
 from . import logger
+
 L = logger
 
 

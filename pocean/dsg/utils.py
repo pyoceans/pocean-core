@@ -1,19 +1,20 @@
 #!python
 # coding=utf-8
 from __future__ import division
+
 from datetime import datetime
 
 import pandas as pd
-from shapely.validation import make_valid
-from shapely.geometry import Point, Polygon, LineString, box
-
-from pocean.utils import (
-    get_default_axes,
-    unique_justseen,
-    dict_update
+from shapely.geometry import (
+    box,
+    LineString,
+    Point,
+    Polygon,
 )
+from shapely.validation import make_valid
 
 from pocean import logger as L  # noqa
+from pocean.utils import dict_update, get_default_axes, unique_justseen
 
 
 def get_calculated_attributes(df, axes=None, history=None):

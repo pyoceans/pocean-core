@@ -1,0 +1,93 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=42",
+  "setuptools_scm[toml]>=3.4",
+  "wheel",
+]
+
+[project]
+name = "pocean-core"
+description = "A python framework for working with met-ocean data"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+authors = [
+    {name = "Kyle Wilcox", email = "kyle@axds.co"},
+]
+requires-python = ">=3.7"
+dynamic = [
+  "version",
+]
+dependencies = [
+  "cftime>=1.2.1",
+  "netcdf4",
+  "numpy>=1.20",
+  "pandas>=1.0.5",
+  "python-dateutil",
+  "pytz",
+  "shapely>=1.8",
+  "simplejson",
+]
+[project.urls]
+documentation = "https://pyoceans.github.io/pocean-core"
+homepage = "https://pypi.org/project/pocean-core/"
+repository = "https://github.com/pyoceans/pocean-core"
+
+[tool.setuptools]
+packages = ["pocean"]
+
+[tool.setuptools_scm]
+write_to = "pocean/_version.py"
+write_to_template = "__version__ = '{version}'"
+
+[tool.pytest.ini_options]
+addopts = "-s -rxs -v"
+
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore::UserWarning",
+]
+
+[tool.ruff]
+
+select = [
+  "E", # pycodecstyle
+  "W", # pydocstyle
+  "F", # flakes
+  "I", # import sorting
+]
+
+exclude = [
+  ".git",
+  "docs/",
+  ".git/",
+  "__pycache__",
+  "dist",
+]
+
+line-length = 100
+
+
+ignore = [
+  #"E265",
+  #"E221",
+  #"E203",
+  #"E201",
+  #"E124",
+  #"E202",
+  #"E241",
+  #"E251",
+  #"W504",
+  "E501",
+  "W293",
+  "W291",
+]
+
+[tool.ruff.per-file-ignores]
+"pocean/tests/*.py" = [
+  "F403",
+  "F405",
+]
+
+[tool.ruff.isort]
+order-by-type = false

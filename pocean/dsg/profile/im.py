@@ -1,12 +1,15 @@
 #!python
 # coding=utf-8
-from copy import copy
 from collections import OrderedDict
+from copy import copy
 
 import numpy as np
 import pandas as pd
 from cftime import date2num
 
+from pocean import logger as L  # noqa
+from pocean.cf import cf_safe_name, CFDataset
+from pocean.dsg.profile import profile_calculated_metadata
 from pocean.utils import (
     create_ncvar_from_series,
     dict_update,
@@ -20,10 +23,6 @@ from pocean.utils import (
     nativize_times,
     normalize_countable_array,
 )
-from pocean.cf import CFDataset, cf_safe_name
-from pocean.dsg.profile import profile_calculated_metadata
-
-from pocean import logger as L  # noqa
 
 
 class IncompleteMultidimensionalProfile(CFDataset):

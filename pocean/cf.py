@@ -1,13 +1,13 @@
 #!python
 # coding=utf-8
+import itertools
 import os
 import re
-import itertools
 from datetime import datetime
 
-from .utils import all_subclasses, is_url
-from .dataset import EnhancedDataset
 from . import logger
+from .dataset import EnhancedDataset
+from .utils import all_subclasses, is_url
 
 
 class CFDataset(EnhancedDataset):

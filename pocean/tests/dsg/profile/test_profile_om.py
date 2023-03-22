@@ -1,18 +1,18 @@
 #!python
 # coding=utf-8
+import logging
 import os
 import tempfile
 import unittest
 
-from dateutil.parser import parse as dtparse
 import numpy as np
+from dateutil.parser import parse as dtparse
 
+from pocean import logger
 from pocean.cf import CFDataset
 from pocean.dsg import OrthogonalMultidimensionalProfile
 from pocean.tests.dsg.test_new import test_is_mine
 
-import logging
-from pocean import logger
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 

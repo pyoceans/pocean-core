@@ -1,3 +1,15 @@
 include *.txt
 include README.md
-include VERSION
+include pyproject.toml
+
+graft pocean
+
+prune docs
+prune pocean/tests
+prune .github
+prune *.egg-info
+
+exclude .gitignore
+exclude .pre-commit-config.yaml
+
+global-exclude *.nc
