@@ -7,4 +7,7 @@ import logging
 logger = logging.getLogger("pocean")
 logger.addHandler(logging.NullHandler())
 
-__version__ = "2.0.0"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "unknown"
