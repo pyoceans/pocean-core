@@ -18,11 +18,11 @@ repos:
         - requirements-dev.txt
 
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.257
+  rev: v0.0.274
   hooks:
     - id: ruff
 
 - repo: https://github.com/tox-dev/pyproject-fmt
-  rev: "0.9.2"
+  rev: "0.12.1"
   hooks:
     - id: pyproject-fmt
