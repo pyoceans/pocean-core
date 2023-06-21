@@ -15,6 +15,14 @@ authors = [
     {name = "Kyle Wilcox", email = "kyle@axds.co"},
 ]
 requires-python = ">=3.7"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
 dynamic = [
   "version",
 ]
@@ -39,14 +47,6 @@ packages = ["pocean"]
 [tool.setuptools_scm]
 write_to = "pocean/_version.py"
 write_to_template = "__version__ = '{version}'"
-
-[tool.pytest.ini_options]
-addopts = "-s -rxs -v"
-
-filterwarnings = [
-  "ignore::DeprecationWarning",
-  "ignore::UserWarning",
-]
 
 [tool.ruff]
 
@@ -91,3 +91,11 @@ ignore = [
 
 [tool.ruff.isort]
 order-by-type = false
+
+[tool.pytest.ini_options]
+addopts = "-s -rxs -v"
+
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore::UserWarning",
+]
