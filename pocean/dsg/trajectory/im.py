@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from collections import OrderedDict
 from copy import copy
 
@@ -114,7 +113,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not support in xarray
-            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
@@ -257,11 +256,11 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
             # Carry through size 1 variables
             if vdata.size == 1:
                 if vdata[0] is np.ma.masked:
-                    L.warning("Skipping variable {} that is completely masked".format(dnam))
+                    L.warning(f"Skipping variable {dnam} that is completely masked")
                     continue
             else:
                 if dvar[:].flatten().size != t.size:
-                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    L.warning(f"Variable {dnam} is not the correct size, skipping.")
                     continue
 
             # Mark rows with data so we don't remove them with clear_rows
@@ -287,7 +286,7 @@ class IncompleteMultidimensionalTrajectory(CFDataset):
         return df
 
     def nc_attributes(self, axes, daxes):
-        atts = super(IncompleteMultidimensionalTrajectory, self).nc_attributes()
+        atts = super().nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'trajectory',

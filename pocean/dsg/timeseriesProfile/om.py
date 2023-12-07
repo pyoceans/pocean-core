@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from collections import OrderedDict
 from copy import copy
 
@@ -76,7 +75,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not supported in xarray
-            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
@@ -167,7 +166,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 try:
                     v[:] = vvalues.reshape(v.shape)
                 except BaseException:
-                    L.exception('Failed to add {}'.format(c))
+                    L.exception(f'Failed to add {c}')
                     continue
 
             full_columns = [ f for f in data_columns if f not in detach_z_columnms ]
@@ -253,7 +252,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             # Carry through size 1 variables
             if vdata.size == 1:
                 if vdata[0] is np.ma.masked:
-                    L.warning("Skipping variable {} that is completely masked".format(dnam))
+                    L.warning(f"Skipping variable {dnam} that is completely masked")
                     continue
 
             # Carry through profile only variables
@@ -264,12 +263,12 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 vdata[:, 1:] = np.ma.masked
                 vdata = vdata.flatten()
                 if vdata.size != t.size:
-                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    L.warning(f"Variable {dnam} is not the correct size, skipping.")
                     continue
 
             else:
                 if vdata.size != t.size:
-                    L.warning("Variable {} is not the correct size, skipping.".format(dnam))
+                    L.warning(f"Variable {dnam} is not the correct size, skipping.")
                     continue
 
             # Mark rows with data so we don't remove them with clear_rows
@@ -295,7 +294,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         return df
 
     def nc_attributes(self, axes, daxes):
-        atts = super(OrthogonalMultidimensionalTimeseriesProfile, self).nc_attributes()
+        atts = super().nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'timeSeriesProfile',

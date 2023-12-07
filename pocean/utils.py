@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 import decimal
 import itertools
 import operator
@@ -31,7 +30,7 @@ def safe_issubdtype(source, goal):
     try:
         return np.issubdtype(source, goal)
     except TypeError as te:
-        L.error("Error testing issubdtype - {}: {}".format(te, source))
+        L.error(f"Error testing issubdtype - {te}: {source}")
         return False
 
 
@@ -87,7 +86,7 @@ def get_default_axes(axes=None):
     counts = Counter(axes.values())
     for v, c in counts.items():
         if c > 1:
-            raise ValueError("Axis value '{}' appears twice.".format(v))
+            raise ValueError(f"Axis value '{v}' appears twice.")
 
     default_axes = {
         'trajectory': 'trajectory',
@@ -186,7 +185,7 @@ def safe_attribute_typing(zdtype, value):
     try:
         return zdtype.type(value)
     except ValueError:
-        L.warning("Could not convert {} to type {}".format(value, zdtype))
+        L.warning(f"Could not convert {value} to type {zdtype}")
         return None
 
 

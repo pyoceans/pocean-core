@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 import warnings
 from collections import OrderedDict
 
@@ -48,7 +47,7 @@ class EnhancedDataset(Dataset):
         if not self.isopen():
             return
 
-        super(EnhancedDataset, self).close()
+        super().close()
 
     def vatts(self, vname):
         d = {}
@@ -169,7 +168,7 @@ class EnhancedDataset(Dataset):
                     continue
 
                 if 'shape' not in vvalue and 'type' not in vvalue:
-                    L.debug("Skipping {} creation, no shape or no type defined".format(vname))
+                    L.debug(f"Skipping {vname} creation, no shape or no type defined")
                     continue
                 shape = vvalue.get('shape', [])  # Dimension names
                 vardtype = string_to_dtype(vvalue.get('type'))
@@ -257,7 +256,7 @@ class EnhancedDataset(Dataset):
             try:
                 self.setncattr(k, v)
             except BaseException:
-                L.warning('Could not set global attribute {}: {}'.format(k, v))
+                L.warning(f'Could not set global attribute {k}: {v}')
 
         for k, v in attributes.items():
             if k in self.variables:
@@ -265,11 +264,11 @@ class EnhancedDataset(Dataset):
 
                     # Don't re-assign fill value attributes
                     if n in ['_FillValue', 'missing_value']:
-                        L.warning('Refusing to set {} on {}'.format(n, k))
+                        L.warning(f'Refusing to set {n} on {k}')
                         continue
 
                     try:
                         self.variables[k].setncattr(n, z)
                     except BaseException:
-                        L.warning('Could not set attribute {} on {}'.format(n, k))
+                        L.warning(f'Could not set attribute {n} on {k}')
         self.sync()
