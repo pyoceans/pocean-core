@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from collections import OrderedDict
 from copy import copy
 
@@ -69,7 +68,7 @@ class ContiguousRaggedTrajectory(CFDataset):
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not support in xarray
-            changed_axes = { k: '{}_dim'.format(v) for k, v in axes._asdict().items() }
+            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
@@ -123,7 +122,7 @@ class ContiguousRaggedTrajectory(CFDataset):
                     try:
                         v[i] = vvalues
                     except BaseException:
-                        L.exception('Failed to add {}'.format(c))
+                        L.exception(f'Failed to add {c}')
                         continue
 
             # Add all of the columns based on the sample dimension. Take all columns and remove the
@@ -149,7 +148,7 @@ class ContiguousRaggedTrajectory(CFDataset):
                     else:
                         v[:] = vvalues.reshape(v.shape)
                 except BaseException:
-                    L.exception('Failed to add {}'.format(c))
+                    L.exception(f'Failed to add {c}')
                     continue
 
             # Metadata variables
@@ -218,10 +217,10 @@ class ContiguousRaggedTrajectory(CFDataset):
                 # Carry through size 1 variables
                 if vdata.size == 1:
                     if vdata[0] is np.ma.masked:
-                        L.warning("Skipping variable {} that is completely masked".format(dnam))
+                        L.warning(f"Skipping variable {dnam} that is completely masked")
                         continue
                 else:
-                    L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
+                    L.warning(f"Skipping variable {dnam} since it didn't match any dimension sizes")
                     continue
 
             # Mark rows with data so we don't remove them with clear_rows
@@ -247,7 +246,7 @@ class ContiguousRaggedTrajectory(CFDataset):
         return df
 
     def nc_attributes(self, axes, daxes):
-        atts = super(ContiguousRaggedTrajectory, self).nc_attributes()
+        atts = super().nc_attributes()
         return dict_update(atts, {
             'global' : {
                 'featureType': 'trajectory',

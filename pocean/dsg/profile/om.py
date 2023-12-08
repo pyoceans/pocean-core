@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from collections import OrderedDict
 from copy import copy
 
@@ -173,10 +172,10 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                 # Carry through size 1 variables
                 if vdata.size == 1:
                     if vdata[0] is np.ma.masked:
-                        L.warning("Skipping variable {} that is completely masked".format(dnam))
+                        L.warning(f"Skipping variable {dnam} that is completely masked")
                         continue
                 else:
-                    L.warning("Skipping variable {} since it didn't match any dimension sizes".format(dnam))
+                    L.warning(f"Skipping variable {dnam} since it didn't match any dimension sizes")
                     continue
 
             # Mark rows with data so we don't remove them with clear_rows

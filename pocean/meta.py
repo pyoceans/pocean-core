@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 import os
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping
@@ -18,9 +17,9 @@ class MetaInterface(Mapping):
     @classmethod
     def from_jsonfile(cls, jsf):
         if not os.path.isfile(jsf):
-            raise ValueError('{} is not a file'.format(jsf))
+            raise ValueError(f'{jsf} is not a file')
 
-        with open(jsf, 'rt') as jf:
+        with open(jsf) as jf:
             return cls.from_jsonstr(jf.read())
 
     @classmethod
@@ -28,7 +27,7 @@ class MetaInterface(Mapping):
         try:
             d = json.loads(js, object_pairs_hook=OrderedDict)
         except BaseException as e:
-            raise ValueError('Could not parse JSON string: {}'.format(e))
+            raise ValueError(f'Could not parse JSON string: {e}')
 
         return cls(d)
 
@@ -52,7 +51,7 @@ def safe_attribute_typing(zdtype, value):
     try:
         return zdtype.type(value)
     except ValueError:
-        logger.warning("Could not convert {} to type {}".format(value, zdtype))
+        logger.warning(f"Could not convert {value} to type {zdtype}")
         return None
 
 
@@ -86,7 +85,7 @@ def string_to_dtype(type_str):
     elif type_str in ['ushort', 'us', 'u2', 'ui2', 'uh', 'uint16']:
         return np.dtype('uint16')
 
-    raise ValueError("Could not find dtype for {}".format(type_str))
+    raise ValueError(f"Could not find dtype for {type_str}")
 
 
 def untype_attributes(vd):

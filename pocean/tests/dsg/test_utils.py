@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 import os
 import unittest
 from datetime import datetime, timedelta

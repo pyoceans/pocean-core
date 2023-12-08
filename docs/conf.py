@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # pocean-core documentation build configuration file, created by
 # sphinx-quickstart on Fri Feb 10 16:09:19 2017.

@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from pocean.dsg.profile import profile_calculated_metadata
 from pocean.dsg.trajectory import trajectories_meta
 
