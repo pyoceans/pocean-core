@@ -1,6 +1,8 @@
-import pooch
 import zipfile
 from pathlib import Path
+
+import pooch
+
 
 def download_test_data():
     url = "https://github.com/pyoceans/pocean-core/releases/download"
