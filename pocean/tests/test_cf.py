@@ -15,7 +15,8 @@ L.handlers = [logging.StreamHandler()]
 class TestCFDatasetLoad(unittest.TestCase):
 
     def test_load_url(self):
-        ncd = CFDataset.load('https://geoport.whoi.edu/thredds/dodsC/usgs/data2/emontgomery/stellwagen/CF-1.6/ARGO_MERCHANT/1211-AA.cdf')
+        # File downloaded from https://geoport.usgs.esipfed.org/thredds/catalog/silt/usgs/Projects/stellwagen/CF-1.6/ARGO_MERCHANT/catalog.html?dataset=silt/usgs/Projects/stellwagen/CF-1.6/ARGO_MERCHANT/1211-AA.cdf
+        ncd = CFDataset.load('https://github.com/pyoceans/pocean-core/releases/download/3.1.0/1211-AA.cdf')
         assert omt.is_mine(ncd) is True
         ncd.close()
 
