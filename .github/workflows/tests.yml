@@ -34,5 +34,6 @@ jobs:
 
     - name: Tests
       shell: bash -l {0}
-      run: |
-        python -m pytest --disable-warnings
+      run: >
+        python pocean/tests/download_test_data.py
+        && python -m pytest --disable-warnings
