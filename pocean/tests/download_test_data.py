@@ -4,7 +4,7 @@ from pathlib import Path
 
 def download_test_data():
     url = "https://github.com/pyoceans/pocean-core/releases/download"
-    version = "d1.0.0"
+    version = "2024.04"
 
     fname = pooch.retrieve(
         url=f"{url}/{version}/test_data.zip",
