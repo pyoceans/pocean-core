@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from os.path import dirname as dn
 from os.path import join as jn
@@ -47,9 +46,9 @@ def test_is_mine(klass, fp):
     allsubs = list(all_subclasses(CFDataset))
     subs = [ s for s in allsubs if s != klass ]
     with CFDataset(fp) as dsg:
-        logger.debug('\nTesting {}'.format(klass.__name__))
+        logger.debug(f'\nTesting {klass.__name__}')
         assert klass.is_mine(dsg, strict=True) is True
         for s in subs:
             if hasattr(s, 'is_mine'):
-                logger.debug('  * Trying {}...'.format(s.__name__))
+                logger.debug(f'  * Trying {s.__name__}...')
                 assert s.is_mine(dsg) is False

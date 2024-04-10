@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from pocean import logger  # noqa
 from pocean.cf import CFDataset
 

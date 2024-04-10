@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 
 # Profile
 from .profile.im import IncompleteMultidimensionalProfile

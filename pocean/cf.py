@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 import itertools
 import os
 import re
@@ -46,7 +45,7 @@ class CFDataset(EnhancedDataset):
         try:
             dsg = cls(path)
             for klass in subs:
-                logger.debug('Trying {}...'.format(klass.__name__))
+                logger.debug(f'Trying {klass.__name__}...')
                 if hasattr(klass, 'is_mine'):
                     if klass.is_mine(dsg):
                         return klass(path)
@@ -65,7 +64,7 @@ class CFDataset(EnhancedDataset):
         )
 
     def axes(self, name):
-        return getattr(self, '{}_axes'.format(name.lower()))()
+        return getattr(self, f'{name.lower()}_axes')()
 
     def t_axes(self):
 
@@ -197,7 +196,7 @@ def cf_safe_name(name):
     if isinstance(name, str):
         if re.match('^[0-9_]', name):
             # Add a letter to the front
-            name = "v_{}".format(name)
+            name = f"v_{name}"
         return re.sub(r'[^_a-zA-Z0-9]', "_", name)
 
-    raise ValueError('Could not convert "{}" to a safe name'.format(name))
+    raise ValueError(f'Could not convert "{name}" to a safe name')

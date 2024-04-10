@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 from collections import namedtuple
 
 from shapely.geometry import LineString, Point

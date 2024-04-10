@@ -1,5 +1,4 @@
 #!python
-# coding=utf-8
 
 # Package level logger
 import logging
