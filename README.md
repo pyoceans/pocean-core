@@ -1,3 +1,4 @@
+```shell
 82b94af1f282e9bb7b5b436291ef4e8a  test_data/dsg/timeseries/resources/om-multiple.nc
 50e22c7094be25356e945bd6a5f84996  test_data/dsg/timeseries/resources/om-single.nc
 40329322ef3b32e59fb606fc188dad53  test_data/dsg/timeseries/resources/tt.nc
@@ -45,3 +46,4 @@ d4a77f40a2322fac43f265ee86d54bc6  test_data/resources/sensor_with_depths_2.nc
 6eb870902082358afc0dc7b44007e265  test_data/resources/sensor_with_depths_1.nc
 4b2b450bbb98a6f0fe0dc6afa0df1600  test_data/resources/coamps.nc
 426d7b0f64c3d422b4c319175964e6db  test_data/resources/sensor_with_depths_3.nc
+```
