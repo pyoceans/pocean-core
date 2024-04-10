@@ -3,8 +3,8 @@ import zipfile
 from pathlib import Path
 
 def download_test_data():
-    url = "https://github.com/ocefpaf/pocean-core/releases/download"
-    version = "v1.0.0"
+    url = "https://github.com/pyoceans/pocean-core/releases/download"
+    version = "d1.0.0"
 
     fname = pooch.retrieve(
         url=f"{url}/{version}/test_data.zip",
