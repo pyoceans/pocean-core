@@ -4,6 +4,7 @@ output/*
 *.swp
 build/*
 dist/*
+resources/
 *.egg-info*
 .cache
 docs/api

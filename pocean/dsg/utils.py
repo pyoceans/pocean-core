@@ -175,8 +175,8 @@ def get_temporal_attributes(df, axes=None):
         'attributes': {
             'time_coverage_start': mint.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'time_coverage_end': maxt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'time_coverage_duration': (maxt - mint).round('1S').isoformat(),
-            'time_coverage_resolution': mode_value.round('1S').isoformat()
+            'time_coverage_duration': (maxt - mint).round('1s').isoformat(),
+            'time_coverage_resolution': mode_value.round('1s').isoformat()
         }
     }
 
