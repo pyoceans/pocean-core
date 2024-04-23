@@ -158,13 +158,13 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
 
         with IncompleteMultidimensionalTrajectory(filepath) as ncd:
             s = ncd.calculated_metadata()
-            assert s.min_t.round('S') == dtparse('1990-01-01 00:00:00')
-            assert s.max_t.round('S') == dtparse('1990-01-05 03:00:00')
+            assert s.min_t.round('s') == dtparse('1990-01-01 00:00:00')
+            assert s.max_t.round('s') == dtparse('1990-01-05 03:00:00')
             traj1 = s.trajectories["Trajectory1"]
             assert traj1.min_z == 0
             assert traj1.max_z == 99
-            assert traj1.min_t.round('S') == dtparse('1990-01-01 00:00:00')
-            assert traj1.max_t.round('S') == dtparse('1990-01-05 03:00:00')
+            assert traj1.min_t.round('s') == dtparse('1990-01-01 00:00:00')
+            assert traj1.max_t.round('s') == dtparse('1990-01-05 03:00:00')
             first_loc = traj1.geometry.coords[0]
             assert np.isclose(first_loc[0], -7.9336)
             assert np.isclose(first_loc[1], 42.00339)
@@ -180,8 +180,8 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             traj0 = m.trajectories["Trajectory0"]
             assert traj0.min_z == 0
             assert traj0.max_z == 35
-            assert traj0.min_t.round('S') == dtparse('1990-01-01 00:00:00')
-            assert traj0.max_t.round('S') == dtparse('1990-01-02 11:00:00')
+            assert traj0.min_t.round('s') == dtparse('1990-01-01 00:00:00')
+            assert traj0.max_t.round('s') == dtparse('1990-01-02 11:00:00')
             first_loc = traj0.geometry.coords[0]
             assert np.isclose(first_loc[0], -35.07884)
             assert np.isclose(first_loc[1], 2.15286)
@@ -189,8 +189,8 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             traj3 = m.trajectories["Trajectory3"]
             assert traj3.min_z == 0
             assert traj3.max_z == 36
-            assert traj3.min_t.round('S') == dtparse('1990-01-01 00:00:00')
-            assert traj3.max_t.round('S') == dtparse('1990-01-02 12:00:00')
+            assert traj3.min_t.round('s') == dtparse('1990-01-01 00:00:00')
+            assert traj3.max_t.round('s') == dtparse('1990-01-02 12:00:00')
             first_loc = traj3.geometry.coords[0]
             assert np.isclose(first_loc[0], -73.3026)
             assert np.isclose(first_loc[1], 1.95761)
