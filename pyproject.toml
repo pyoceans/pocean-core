@@ -2,7 +2,7 @@
 build-backend = "setuptools.build_meta"
 requires = [
   "setuptools>=42",
-  "setuptools_scm[toml]>=3.4",
+  "setuptools-scm[toml]>=3.4",
   "wheel",
 ]
 
@@ -10,9 +10,9 @@ requires = [
 name = "pocean-core"
 description = "A python framework for working with met-ocean data"
 readme = "README.md"
-license = {file = "LICENSE.txt"}
+license = { file = "LICENSE.txt" }
 authors = [
-    {name = "Kyle Wilcox", email = "kyle@axds.co"},
+  { name = "Kyle Wilcox", email = "kyle@axds.co" },
 ]
 requires-python = ">=3.8"
 classifiers = [
@@ -36,13 +36,13 @@ dependencies = [
   "shapely>=1.8",
   "simplejson",
 ]
-[project.urls]
-documentation = "https://pyoceans.github.io/pocean-core"
-homepage = "https://pypi.org/project/pocean-core/"
-repository = "https://github.com/pyoceans/pocean-core"
-
+urls.documentation = "https://pyoceans.github.io/pocean-core"
+urls.homepage = "https://pypi.org/project/pocean-core/"
+urls.repository = "https://github.com/pyoceans/pocean-core"
 [tool.setuptools]
-packages = ["pocean"]
+packages = [
+  "pocean",
+]
 
 [tool.setuptools_scm]
 write_to = "pocean/_version.py"
@@ -66,7 +66,6 @@ exclude = [
 ]
 
 line-length = 100
-
 
 lint.ignore = [
   #"E265",
