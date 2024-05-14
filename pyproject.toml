@@ -39,6 +39,7 @@ dependencies = [
 urls.documentation = "https://pyoceans.github.io/pocean-core"
 urls.homepage = "https://pypi.org/project/pocean-core/"
 urls.repository = "https://github.com/pyoceans/pocean-core"
+
 [tool.setuptools]
 packages = [
   "pocean",
