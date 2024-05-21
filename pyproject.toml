@@ -51,23 +51,28 @@ write_to_template = "__version__ = '{version}'"
 
 [tool.ruff]
 
-lint.select = [
-  "E", # pycodecstyle
-  "W", # pydocstyle
-  "F", # flakes
-  "I", # import sorting
-]
+line-length = 100
 
 exclude = [
   ".git",
-  "docs/",
   ".git/",
   "__pycache__",
   "dist",
+  "docs/",
 ]
 
-line-length = 100
+lint.select = [
+  "E", # pycodecstyle
+  "F", # flakes
+  "I", # import sorting
+  "W", # pydocstyle
+]
 
+lint.per-file-ignores."pocean/tests/*.py" = [
+  "F403",
+  "F405",
+]
+lint.isort.order-by-type = false
 lint.ignore = [
   #"E265",
   #"E221",
@@ -79,18 +84,9 @@ lint.ignore = [
   #"E251",
   #"W504",
   "E501",
-  "W293",
   "W291",
+  "W293",
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"pocean/tests/*.py" = [
-  "F403",
-  "F405",
-]
-
-[tool.ruff.lint.isort]
-order-by-type = false
 
 [tool.pytest.ini_options]
 addopts = "-s -rxs -v"
