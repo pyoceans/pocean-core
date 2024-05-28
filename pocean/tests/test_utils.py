@@ -203,7 +203,7 @@ class TestNormalizeArray(unittest.TestCase):
 
             # Single str (no dimension)
             ncd.createVariable('single_str', str)
-            ncd.createVariable('single_unicode_', np.unicode_)
+            ncd.createVariable('single_unicode_', np.str_)
             ncd.createVariable('single_U', '<U1')
             ncd.createVariable('single_S', 'S1', ('n',))
 
@@ -216,7 +216,7 @@ class TestNormalizeArray(unittest.TestCase):
 
             # Array of str
             ncd.createVariable('many_str', str, ('n',))
-            ncd.createVariable('many_unicode_', np.unicode_, ('n',))
+            ncd.createVariable('many_unicode_', np.str_, ('n',))
             ncd.createVariable('many_U', '<U1', ('n',))
             ncd.createVariable('many_S', 'S1', ('n', 'n',))
 
