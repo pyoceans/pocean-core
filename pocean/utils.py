@@ -458,6 +458,13 @@ def dict_update(d, u):
     return d
 
 
+def upscale_int8(df):
+    """Numpy 2.0 no linger upcast dtypes.
+    In order to preserve the data's original dtype we upcast it here after reading it.
+
+    """
+    return df.astype({col: "int16" for col in df.columns[df.dtypes == "int8"]})
+
 class JSONEncoder(json.JSONEncoder):
 
     def default(self, obj):

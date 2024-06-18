@@ -20,6 +20,7 @@ from pocean.utils import (
     get_ncdata_from_series,
     nativize_times,
     normalize_countable_array,
+    upscale_int8,
 )
 
 
@@ -323,6 +324,7 @@ class ContiguousRaggedTrajectoryProfile(CFDataset):
             df_data[dnam] = vdata
 
         df = pd.DataFrame(df_data)
+        df = upscale_int8(df)
 
         # Drop all data columns with no data
         if clean_cols:
