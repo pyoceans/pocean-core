@@ -11,7 +11,7 @@ from .utils import all_subclasses, is_url
 
 class CFDataset(EnhancedDataset):
 
-    default_fill_value = -9999.9
+    default_fill_value = False
     default_time_unit = 'seconds since 1990-01-01 00:00:00Z'
 
     @classmethod
