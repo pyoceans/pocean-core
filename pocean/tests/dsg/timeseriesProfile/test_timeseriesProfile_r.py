@@ -1,4 +1,3 @@
-#!python
 import logging
 import os
 import tempfile
@@ -7,6 +6,7 @@ from datetime import datetime
 
 import netCDF4 as nc4
 import pandas as pd
+import pytest
 from numpy.testing import assert_array_equal as npeq
 
 from pocean import logger
@@ -16,6 +16,9 @@ from pocean.tests.dsg.test_new import test_is_mine
 
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
+
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
 
 
 class TestRaggedTimeseriesProfile(unittest.TestCase):
@@ -179,6 +182,7 @@ class TestRaggedTimeseriesProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpfile)
 
+    @ignore_invalid_value_cast
     def test_rtp_single(self):
         filepath = os.path.join(os.path.dirname(__file__), "resources", "r-ctd-single.nc")
 

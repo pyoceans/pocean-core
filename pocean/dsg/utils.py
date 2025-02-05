@@ -1,6 +1,4 @@
-#!python
-
-from datetime import datetime
+import datetime
 
 import pandas as pd
 from shapely.geometry import (
@@ -13,6 +11,8 @@ from shapely.validation import make_valid
 
 from pocean import logger as L  # noqa
 from pocean.utils import dict_update, get_default_axes, unique_justseen
+
+datetime.UTC = datetime.timezone.utc
 
 
 def get_calculated_attributes(df, axes=None, history=None):
@@ -187,7 +187,7 @@ def get_creation_attributes(history=None):
     :param history: text initializing audit trail for modifications to the original data (optional, string)
     :return: dictionary of global attributes
     """
-    nc_create_ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    nc_create_ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     attrs = {
         "attributes": {

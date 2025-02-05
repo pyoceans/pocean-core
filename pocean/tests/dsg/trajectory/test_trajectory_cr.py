@@ -15,6 +15,9 @@ from pocean.tests.dsg.test_new import test_is_mine
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
+
 
 @pytest.mark.parametrize(
     "fp",
@@ -89,6 +92,7 @@ class TestContiguousRaggedTrajectory(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    @ignore_invalid_value_cast
     def test_crt_dataframe_oot_A(self):
         axes = {"t": "time", "x": "lon", "y": "lat", "z": "depth", "sample": "sample"}
         fid, tmpnc = tempfile.mkstemp(suffix=".nc")
@@ -113,6 +117,7 @@ class TestContiguousRaggedTrajectory(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    @ignore_invalid_value_cast
     def test_crt_dataframe_oot_B(self):
         axes = {
             "t": "time",

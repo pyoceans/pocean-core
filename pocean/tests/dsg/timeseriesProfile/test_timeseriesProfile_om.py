@@ -6,6 +6,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from pocean import logger
 from pocean.dsg import OrthogonalMultidimensionalTimeseriesProfile
@@ -13,6 +14,9 @@ from pocean.tests.dsg.test_new import test_is_mine
 
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
+
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
 
 
 class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
@@ -237,6 +241,7 @@ class TestOrthogonalMultidimensionalTimeseriesProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpfile)
 
+    @ignore_invalid_value_cast
     def test_detach_z_no_station(self):
         df = pd.DataFrame(
             {
