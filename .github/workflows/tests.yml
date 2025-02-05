@@ -40,4 +40,4 @@ jobs:
     - name: Tests
       run: >
         python pocean/tests/download_test_data.py
-        && python -m pytest --disable-warnings
+        && python -m pytest -W error
