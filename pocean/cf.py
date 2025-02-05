@@ -1,12 +1,14 @@
 #!python
+import datetime
 import itertools
 import os
 import re
-from datetime import datetime
 
 from . import logger
 from .dataset import EnhancedDataset
 from .utils import all_subclasses, is_url
+
+datetime.UTC = datetime.timezone.utc
 
 
 class CFDataset(EnhancedDataset):
@@ -182,7 +184,7 @@ class CFDataset(EnhancedDataset):
         return {
             "global": {
                 "Conventions": "CF-1.6",
-                "date_created": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:00Z"),
+                "date_created": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:00Z"),
             }
         }
 
