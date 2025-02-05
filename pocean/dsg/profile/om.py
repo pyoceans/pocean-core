@@ -1,4 +1,3 @@
-#!python
 from collections import OrderedDict
 from copy import copy
 

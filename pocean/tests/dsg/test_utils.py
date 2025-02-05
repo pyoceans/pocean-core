@@ -1,15 +1,21 @@
 #!python
+import datetime
 import os
 import unittest
-from datetime import datetime, timedelta
 
 import pandas as pd
+import pytest
 import pytz
 from dateutil.parser import parse as dtparse
 
 from pocean import logger as L  # noqa
 from pocean.cf import CFDataset
 from pocean.dsg import utils
+
+datetime.UTC = datetime.timezone.utc
+
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
 
 
 class TestDsgUtils(unittest.TestCase):
@@ -139,13 +145,14 @@ class TestDsgUtils(unittest.TestCase):
     def test_get_creation(self):
         meta = utils.get_creation_attributes(history="DID THINGS")
 
-        now = datetime.utcnow().replace(tzinfo=pytz.utc)
+        now = datetime.datetime.now(datetime.UTC).replace(tzinfo=pytz.utc)
 
-        assert (now - dtparse(meta["attributes"]["date_created"])) < timedelta(minutes=1)
-        assert (now - dtparse(meta["attributes"]["date_issued"])) < timedelta(minutes=1)
-        assert (now - dtparse(meta["attributes"]["date_modified"])) < timedelta(minutes=1)
+        assert (now - dtparse(meta["attributes"]["date_created"])) < datetime.timedelta(minutes=1)
+        assert (now - dtparse(meta["attributes"]["date_issued"])) < datetime.timedelta(minutes=1)
+        assert (now - dtparse(meta["attributes"]["date_modified"])) < datetime.timedelta(minutes=1)
         assert "DID THINGS" in meta["attributes"]["history"]
 
+    @ignore_invalid_value_cast
     def test_wrap_dateline(self):
         ncfile = os.path.join(
             os.path.dirname(os.path.dirname(__file__)), "resources/wrapping_dateline.nc"

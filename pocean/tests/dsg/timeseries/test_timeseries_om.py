@@ -5,10 +5,14 @@ import tempfile
 import unittest
 
 import numpy as np
+import pytest
 
 from pocean import logger
 from pocean.dsg import OrthogonalMultidimensionalTimeseries
 from pocean.tests.dsg.test_new import test_is_mine
+
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
 
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
@@ -51,6 +55,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         OrthogonalMultidimensionalTimeseries(self.single).close()
         OrthogonalMultidimensionalTimeseries(self.multi).close()
 
+    @ignore_invalid_value_cast
     def test_timeseries_omt_dataframe_single(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
@@ -76,6 +81,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    @ignore_invalid_value_cast
     def test_timeseries_omt_dataframe_unique_dims(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
@@ -89,6 +95,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    @ignore_invalid_value_cast
     def test_timeseries_omt_reduce_dims(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
@@ -102,6 +109,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    @ignore_invalid_value_cast
     def test_timeseries_omt_no_z(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
@@ -120,6 +128,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    @ignore_invalid_value_cast
     def test_timeseries_omt_no_z_no_station(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
@@ -136,6 +145,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         os.close(fid)
         os.remove(single_tmp)
 
+    @ignore_invalid_value_cast
     def test_supplying_attributes(self):
         fid, single_tmp = tempfile.mkstemp(suffix=".nc")
 

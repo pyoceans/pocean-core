@@ -173,9 +173,9 @@ def normalize_countable_array(cvar, count_if_none=None):
     except BaseException:
         L.warning("Could not pull a countable array... using a calculated index")
         if cvar is None and count_if_none is not None:
-            p = np.asarray(list(range(int(count_if_none))), dtype=np.integer)
+            p = np.asarray(list(range(int(count_if_none))), dtype=np.int64)
         else:
-            p = np.asarray(list(range(len(cvar))), dtype=np.integer)
+            p = np.asarray(list(range(len(cvar))), dtype=np.int64)
 
     return p
 

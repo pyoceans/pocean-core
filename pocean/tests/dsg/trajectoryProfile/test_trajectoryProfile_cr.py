@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 import numpy as np
+import pytest
 from dateutil.parser import parse as dtparse
 from shapely.wkt import loads as wktloads
 
@@ -14,6 +15,9 @@ from pocean.tests.dsg.test_new import test_is_mine
 
 L.level = logging.INFO
 L.handlers = [logging.StreamHandler()]
+
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
 
 
 class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
@@ -32,6 +36,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         ContiguousRaggedTrajectoryProfile(self.multi).close()
         ContiguousRaggedTrajectoryProfile(self.missing_time).close()
 
+    @ignore_invalid_value_cast
     def test_crtp_dataframe_single(self):
         axes = {
             "t": "time",
@@ -51,6 +56,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    @ignore_invalid_value_cast
     def test_crtp_dataframe_single_unique_dims(self):
         axes = {
             "t": "time",
@@ -89,6 +95,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    @ignore_invalid_value_cast
     def test_crtp_dataframe_missing_time(self):
         axes = {
             "t": "precise_time",
@@ -108,6 +115,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
         os.close(fid)
         os.remove(tmpnc)
 
+    @ignore_invalid_value_cast
     def test_crtp_calculated_metadata_single(self):
         axes = {
             "t": "time",
@@ -173,6 +181,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert traj4.profiles[19].x == -44
             assert traj4.profiles[19].y == 47
 
+    @ignore_invalid_value_cast
     def test_crtp_calculated_metadata_missing_time(self):
         axes = {
             "t": "time",
@@ -199,6 +208,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(first_loc[1], 43.5022166666667)
             assert len(traj.profiles) == 13
 
+    @ignore_invalid_value_cast
     def test_crtp_just_missing_time(self):
         axes = {
             "t": "time",
@@ -224,6 +234,7 @@ class TestContinousRaggedTrajectoryProfile(unittest.TestCase):
             assert np.isclose(first_loc[1], 43.5022166666667)
             assert len(traj.profiles) == 13
 
+    @ignore_invalid_value_cast
     def test_crtp_just_missing_locations(self):
         axes = {
             "t": "time",

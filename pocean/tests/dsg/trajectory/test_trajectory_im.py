@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 import numpy as np
+import pytest
 from dateutil.parser import parse as dtparse
 
 from pocean import logger
@@ -15,8 +16,12 @@ from pocean.tests.dsg.test_new import test_is_mine
 logger.level = logging.INFO
 logger.handlers = [logging.StreamHandler()]
 
+# RuntimeWarning: invalid value encountered in cast is fine here.
+ignore_invalid_value_cast = pytest.mark.filterwarnings("ignore::RuntimeWarning")
+
 
 class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
+    @ignore_invalid_value_cast
     def test_im_single_row(self):
         filepath = os.path.join(os.path.dirname(__file__), "resources", "im-singlerow.nc")
 
@@ -75,6 +80,7 @@ class TestIncompleteMultidimensionalTrajectory(unittest.TestCase):
             os.close(fid)
             os.remove(tmpfile)
 
+    @ignore_invalid_value_cast
     def test_imt_multi_not_string(self):
         filepath = os.path.join(os.path.dirname(__file__), "resources", "im-multiple-nonstring.nc")
 

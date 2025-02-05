@@ -6,11 +6,11 @@ import pooch
 
 def download_test_data():
     url = "https://github.com/pyoceans/pocean-core/releases/download"
-    version = "2024.04"
+    version = "2025.01"
 
     fname = pooch.retrieve(
         url=f"{url}/{version}/test_data.zip",
-        known_hash="sha256:28be36e8e0ec90a8faf5ee3f4d52638bdeb2cbcbeac8c823de680cf84aa34940",
+        known_hash="sha256:41180c6bc6017de935250c9e8c1bbb407507049baebd767692c4f74fb8d662a8",
     )
 
     here = Path(__file__).resolve().parent

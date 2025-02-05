@@ -7,6 +7,7 @@ import unittest
 
 import netCDF4 as nc4
 import numpy as np
+import pytest
 
 from pocean import logger
 from pocean.dataset import EnhancedDataset
@@ -110,14 +111,15 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(len(grid_spacing_vars), 1)
         assert y in grid_spacing_vars
 
+    @pytest.mark.filterwarnings("ignore::UserWarning")
     def test_generic_masked_bad_min_max_value(self):
         fid, tpath = tempfile.mkstemp(suffix=".nc", prefix="pocean-test")
         shutil.copy2(self.input_file, tpath)
 
         with EnhancedDataset(tpath, "a") as ncd:
             v = ncd.variables["v_component_wind_true_direction_all_geometries"]
-            v.valid_min = 0.1
-            v.valid_max = 0.1
+            v.valid_min = np.float32(0.1)
+            v.valid_max = np.float32(0.1)
             r = generic_masked(v[:], attrs=ncd.vatts(v.name))
             rflat = r.flatten()
             assert rflat[~rflat.mask].size == 0
