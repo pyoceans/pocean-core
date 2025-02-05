@@ -29,7 +29,7 @@ def load_dataset():
 @pytest.fixture
 def copy_dataset():
     fid, tpath = tempfile.mkstemp(suffix=".nc", prefix="pocean-test")
-    shutil.copy2(input_file, tpath)
+    shutil.copy(input_file, tpath)
     ncd =  EnhancedDataset(tpath, "a")
     yield ncd
     ncd.close()
