@@ -116,8 +116,8 @@ class TestUtils(unittest.TestCase):
 
         with EnhancedDataset(tpath, "a") as ncd:
             v = ncd.variables["v_component_wind_true_direction_all_geometries"]
-            v.valid_min = 0.1
-            v.valid_max = 0.1
+            v.valid_min = np.float32(0.1)
+            v.valid_max = np.float32(0.1)
             r = generic_masked(v[:], attrs=ncd.vatts(v.name))
             rflat = r.flatten()
             assert rflat[~rflat.mask].size == 0
