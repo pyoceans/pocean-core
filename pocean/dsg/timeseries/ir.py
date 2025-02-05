@@ -4,20 +4,17 @@ from pocean.cf import CFDataset
 
 
 class IndexedRaggedTimeseries(CFDataset):
-
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            rvars = dsg.filter_by_attrs(cf_role='timeseries_id')
+            rvars = dsg.filter_by_attrs(cf_role="timeseries_id")
             assert len(rvars) == 1
-            assert dsg.featureType.lower() == 'timeseries'
+            assert dsg.featureType.lower() == "timeseries"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
 
-            r_index_vars = dsg.filter_by_attrs(
-                instance_dimension=lambda x: x is not None
-            )
+            r_index_vars = dsg.filter_by_attrs(instance_dimension=lambda x: x is not None)
             assert len(r_index_vars) == 1
             assert r_index_vars[0].instance_dimension in dsg.dimensions  # Station dimension
 

@@ -37,22 +37,18 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            rvars = dsg.filter_by_attrs(cf_role='timeseries_id')
+            rvars = dsg.filter_by_attrs(cf_role="timeseries_id")
             assert len(rvars) == 1
-            assert dsg.featureType.lower() == 'timeseries'
+            assert dsg.featureType.lower() == "timeseries"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
 
             # Not a CR
-            assert not dsg.filter_by_attrs(
-                sample_dimension=lambda x: x is not None
-            )
+            assert not dsg.filter_by_attrs(sample_dimension=lambda x: x is not None)
 
             # Not an IR
-            assert not dsg.filter_by_attrs(
-                instance_dimension=lambda x: x is not None
-            )
+            assert not dsg.filter_by_attrs(instance_dimension=lambda x: x is not None)
 
             # OM files will always have a time variable with one dimension.
             assert len(dsg.t_axes()[0].dimensions) == 1
@@ -73,26 +69,25 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
         daxes = axes
-        data_columns = [ d for d in df.columns if d not in axes ]
+        data_columns = [d for d in df.columns if d not in axes]
 
-        reduce_dims = kwargs.pop('reduce_dims', False)
-        _ = kwargs.pop('unlimited', False)
+        reduce_dims = kwargs.pop("reduce_dims", False)
+        _ = kwargs.pop("unlimited", False)
 
-        unique_dims = kwargs.pop('unique_dims', False)
+        unique_dims = kwargs.pop("unique_dims", False)
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not support in xarray
-            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
+            changed_axes = {k: f"{v}_dim" for k, v in axes._asdict().items()}
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
         # Convert any timezone aware datetimes to native UTC times
         df = downcast_dataframe(nativize_times(df))
 
-        with OrthogonalMultidimensionalTimeseries(output, 'w') as nc:
-
+        with OrthogonalMultidimensionalTimeseries(output, "w") as nc:
             station_group = df.groupby(axes.station)
             num_stations = len(station_group)
             has_z = axes.z is not None
@@ -101,11 +96,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                 # If a station, we can reduce that dimension if it is of size 1
                 def ts(i):
                     return np.s_[:]
+
                 default_dimensions = (daxes.t,)
                 station_dimensions = ()
             else:
+
                 def ts(i):
                     return np.s_[i, :]
+
                 default_dimensions = (daxes.station, daxes.t)
                 station_dimensions = (daxes.station,)
                 nc.createDimension(daxes.station, num_stations)
@@ -114,27 +112,34 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
             coordinates = [axes.t, axes.x, axes.y]
             if has_z is True:
                 coordinates.insert(1, axes.z)
-            coordinates = ' '.join(coordinates)
+            coordinates = " ".join(coordinates)
 
             # assume all groups are the same size and have identical times
             _, sdf = list(station_group)[0]
             t = sdf[axes.t]
 
             # Metadata variables
-            nc.createVariable('crs', 'i4')
+            nc.createVariable("crs", "i4")
 
             # Create all of the variables
             nc.createDimension(daxes.t, t.size)
-            time = nc.createVariable(axes.t, 'f8', (daxes.t,))
-            station = nc.createVariable(axes.station, get_dtype(df[axes.station]), station_dimensions)
+            time = nc.createVariable(axes.t, "f8", (daxes.t,))
+            station = nc.createVariable(
+                axes.station, get_dtype(df[axes.station]), station_dimensions
+            )
             latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), station_dimensions)
             longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), station_dimensions)
             if has_z is True:
-                z = nc.createVariable(axes.z, get_dtype(df[axes.z]), station_dimensions, fill_value=df[axes.z].dtype.type(cls.default_fill_value))
+                z = nc.createVariable(
+                    axes.z,
+                    get_dtype(df[axes.z]),
+                    station_dimensions,
+                    fill_value=df[axes.z].dtype.type(cls.default_fill_value),
+                )
 
-            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop("attributes", {}))
 
-            time[:] = get_ncdata_from_series(t, time).astype('f8')
+            time[:] = get_ncdata_from_series(t, time).astype("f8")
 
             # Create vars based on full dataframe (to get all variables)
             for c in data_columns:
@@ -146,9 +151,9 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                         default_dimensions,
                         df[c],
                     )
-                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                        'coordinates': coordinates
-                    })
+                    attributes[var_name] = dict_update(
+                        attributes.get(var_name, {}), {"coordinates": coordinates}
+                    )
 
             for i, (uid, sdf) in enumerate(station_group):
                 station[i] = uid
@@ -168,21 +173,23 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
                     try:
                         v[ts(i)] = vvalues
                     except BaseException:
-                        L.debug(f'{v.name} was not written. Likely a metadata variable')
+                        L.debug(f"{v.name} was not written. Likely a metadata variable")
 
             # Set global attributes
             nc.update_attributes(attributes)
 
         return OrthogonalMultidimensionalTimeseries(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+    def calculated_metadata(
+        self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs
+    ):
         # axes = get_default_axes(kwargs.pop('axes', {}))
         # if df is None:
         #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         raise NotImplementedError
 
     def to_dataframe(self, clean_cols=False, clean_rows=False, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
 
         axv = get_mapped_axes_variables(self, axes)
 
@@ -211,13 +218,15 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
         if axv.x.ndim == 1:
             t = np.repeat(t, len(svar))
 
-        df_data = OrderedDict([
-            (axes.t, t),
-            (axes.x, x),
-            (axes.y, y),
-            (axes.z, z),
-            (axes.station, s),
-        ])
+        df_data = OrderedDict(
+            [
+                (axes.t, t),
+                (axes.x, x),
+                (axes.y, y),
+                (axes.z, z),
+                (axes.station, s),
+            ]
+        )
 
         building_index_to_drop = np.ma.zeros(t.size, dtype=bool)
 
@@ -254,7 +263,7 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
         # Drop all data columns with no data
         if clean_cols:
-            df = df.dropna(axis=1, how='all')
+            df = df.dropna(axis=1, how="all")
 
         # Drop all data rows with no data variable data
         if clean_rows:
@@ -264,27 +273,14 @@ class OrthogonalMultidimensionalTimeseries(CFDataset):
 
     def nc_attributes(self, axes, daxes):
         atts = super().nc_attributes()
-        return dict_update(atts, {
-            'global' : {
-                'featureType': 'timeseries',
-                'cdm_data_type': 'Timeseries'
+        return dict_update(
+            atts,
+            {
+                "global": {"featureType": "timeseries", "cdm_data_type": "Timeseries"},
+                axes.station: {"cf_role": "timeseries_id", "long_name": "station identifier"},
+                axes.t: {"units": self.default_time_unit, "standard_name": "time", "axis": "T"},
+                axes.y: {"axis": "Y"},
+                axes.x: {"axis": "X"},
+                axes.z: {"axis": "Z"},
             },
-            axes.station : {
-                'cf_role': 'timeseries_id',
-                'long_name' : 'station identifier'
-            },
-            axes.t: {
-                'units': self.default_time_unit,
-                'standard_name': 'time',
-                'axis': 'T'
-            },
-            axes.y: {
-                'axis': 'Y'
-            },
-            axes.x: {
-                'axis': 'X'
-            },
-            axes.z: {
-                'axis': 'Z'
-            }
-        })
+        )

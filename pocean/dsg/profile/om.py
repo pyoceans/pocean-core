@@ -33,9 +33,9 @@ class OrthogonalMultidimensionalProfile(CFDataset):
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            pvars = dsg.filter_by_attrs(cf_role='profile_id')
+            pvars = dsg.filter_by_attrs(cf_role="profile_id")
             assert len(pvars) == 1
-            assert dsg.featureType.lower() == 'profile'
+            assert dsg.featureType.lower() == "profile"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
@@ -65,7 +65,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
             elif isinstance(ps, str):
                 # Non-dimensioned string variable
                 is_single = True
-            elif pvar.ndim == 1 and hasattr(ps, 'dtype') and ps.dtype.kind in ['U', 'S']:
+            elif pvar.ndim == 1 and hasattr(ps, "dtype") and ps.dtype.kind in ["U", "S"]:
                 is_single = True
 
             if is_single:
@@ -97,14 +97,16 @@ class OrthogonalMultidimensionalProfile(CFDataset):
     def from_dataframe(cls, df, output, **kwargs):
         raise NotImplementedError
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+    def calculated_metadata(
+        self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs
+    ):
+        axes = get_default_axes(kwargs.pop("axes", {}))
         if df is None:
             df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         return profile_calculated_metadata(df, axes, geometries)
 
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
 
         axv = get_mapped_axes_variables(self, axes)
 
@@ -137,13 +139,9 @@ class OrthogonalMultidimensionalProfile(CFDataset):
         yvar = axv.y
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
 
-        df_data = OrderedDict([
-            (axes.t, nt),
-            (axes.x, x),
-            (axes.y, y),
-            (axes.z, z),
-            (axes.profile, p)
-        ])
+        df_data = OrderedDict(
+            [(axes.t, nt), (axes.x, x), (axes.y, y), (axes.z, z), (axes.profile, p)]
+        )
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
 
@@ -154,14 +152,17 @@ class OrthogonalMultidimensionalProfile(CFDataset):
                 del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
-
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam))
+                vdata = generic_masked(
+                    dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam)
+                )
 
             # Z dimension
             elif dvar.dimensions == zvar.dimensions:
-                vdata = generic_masked(np.tile(dvar[:], ps).flatten().astype(dvar.dtype), attrs=self.vatts(dnam))
+                vdata = generic_masked(
+                    np.tile(dvar[:], ps).flatten().astype(dvar.dtype), attrs=self.vatts(dnam)
+                )
 
             # Profile, z dimension
             elif dvar.dimensions == pvar.dimensions + zvar.dimensions:
@@ -192,7 +193,7 @@ class OrthogonalMultidimensionalProfile(CFDataset):
 
         # Drop all data columns with no data
         if clean_cols:
-            df = df.dropna(axis=1, how='all')
+            df = df.dropna(axis=1, how="all")
 
         # Drop all data rows with no data variable data
         if clean_rows:

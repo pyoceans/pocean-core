@@ -24,11 +24,10 @@ from pocean.utils import (
 
 
 class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
-
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            assert dsg.featureType.lower() == 'timeseriesprofile'
+            assert dsg.featureType.lower() == "timeseriesprofile"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
@@ -45,14 +44,10 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
             assert tvar.dimensions != zvar.dimensions
 
             # Not ragged
-            o_index_vars = dsg.filter_by_attrs(
-                sample_dimension=lambda x: x is not None
-            )
+            o_index_vars = dsg.filter_by_attrs(sample_dimension=lambda x: x is not None)
             assert len(o_index_vars) == 0
 
-            r_index_vars = dsg.filter_by_attrs(
-                instance_dimension=lambda x: x is not None
-            )
+            r_index_vars = dsg.filter_by_attrs(instance_dimension=lambda x: x is not None)
             assert len(r_index_vars) == 0
 
         except BaseException:
@@ -64,18 +59,18 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
         daxes = axes
-        data_columns = [ d for d in df.columns if d not in axes ]
+        data_columns = [d for d in df.columns if d not in axes]
 
-        reduce_dims = kwargs.pop('reduce_dims', False)
-        unlimited = kwargs.pop('unlimited', False)
+        reduce_dims = kwargs.pop("reduce_dims", False)
+        unlimited = kwargs.pop("unlimited", False)
 
-        unique_dims = kwargs.pop('unique_dims', False)
+        unique_dims = kwargs.pop("unique_dims", False)
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not supported in xarray
-            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
+            changed_axes = {k: f"{v}_dim" for k, v in axes._asdict().items()}
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
@@ -87,17 +82,16 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         # of data will be able to be shaped to the size of the final unique sized dimensions.
         index_order = [axes.t, axes.z, axes.station]
         df = df.set_index(index_order)
-        df = df.reindex(
-            pd.MultiIndex.from_product(df.index.levels, names=index_order)
-        )
+        df = df.reindex(pd.MultiIndex.from_product(df.index.levels, names=index_order))
 
         unique_z = df.index.get_level_values(axes.z).unique().values
-        unique_t = df.index.get_level_values(axes.t).unique().tolist()  # tolist converts to Timestamp
+        unique_t = (
+            df.index.get_level_values(axes.t).unique().tolist()
+        )  # tolist converts to Timestamp
         all_stations = df.index.get_level_values(axes.station)
         unique_s = all_stations.unique()
 
-        with OrthogonalMultidimensionalTimeseriesProfile(output, 'w') as nc:
-
+        with OrthogonalMultidimensionalTimeseriesProfile(output, "w") as nc:
             if reduce_dims is True and unique_s.size == 1:
                 # If a singular trajectory, we can reduce that dimension if it is of size 1
                 default_dimensions = (daxes.t, daxes.z)
@@ -118,25 +112,25 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 longitude[si] = df[axes.x][all_stations == st].dropna().iloc[0]
 
             # Metadata variables
-            nc.createVariable('crs', 'i4')
+            nc.createVariable("crs", "i4")
 
             # Create all of the variables
             if unlimited is True:
                 nc.createDimension(daxes.t, None)
             else:
                 nc.createDimension(daxes.t, len(unique_t))
-            time = nc.createVariable(axes.t, 'f8', (daxes.t,))
-            time[:] = date2num(unique_t, units=cls.default_time_unit).astype('f8')
+            time = nc.createVariable(axes.t, "f8", (daxes.t,))
+            time[:] = date2num(unique_t, units=cls.default_time_unit).astype("f8")
 
             nc.createDimension(daxes.z, unique_z.size)
             z = nc.createVariable(axes.z, get_dtype(unique_z), (daxes.z,))
             z[:] = unique_z
 
-            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop("attributes", {}))
 
             # Variables defined on only the time axis and not the depth axis
-            detach_z_vars = kwargs.pop('detach_z', [])
-            detach_z_columnms = [ p for p in detach_z_vars if p in data_columns ]
+            detach_z_vars = kwargs.pop("detach_z", [])
+            detach_z_columnms = [p for p in detach_z_vars if p in data_columns]
             for c in detach_z_columnms:
                 var_name = cf_safe_name(c)
                 if var_name not in nc.variables:
@@ -146,11 +140,10 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                         default_dimensions[0::2],  # this removes the second dimension (z)
                         df[c],
                     )
-                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                        'coordinates' : '{} {} {}'.format(
-                            axes.t, axes.x, axes.y
-                        )
-                    })
+                    attributes[var_name] = dict_update(
+                        attributes.get(var_name, {}),
+                        {"coordinates": f"{axes.t} {axes.x} {axes.y}"},
+                    )
                 else:
                     v = nc.variables[var_name]
 
@@ -166,10 +159,10 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                 try:
                     v[:] = vvalues.reshape(v.shape)
                 except BaseException:
-                    L.exception(f'Failed to add {c}')
+                    L.exception(f"Failed to add {c}")
                     continue
 
-            full_columns = [ f for f in data_columns if f not in detach_z_columnms ]
+            full_columns = [f for f in data_columns if f not in detach_z_columnms]
             for c in full_columns:
                 # Create variable if it doesn't exist
                 var_name = cf_safe_name(c)
@@ -180,11 +173,10 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
                         default_dimensions,
                         df[c],
                     )
-                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                        'coordinates' : '{} {} {} {}'.format(
-                            axes.t, axes.z, axes.x, axes.y
-                        )
-                    })
+                    attributes[var_name] = dict_update(
+                        attributes.get(var_name, {}),
+                        {"coordinates": f"{axes.t} {axes.z} {axes.x} {axes.y}"},
+                    )
                 else:
                     v = nc.variables[var_name]
 
@@ -195,14 +187,16 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         return OrthogonalMultidimensionalTimeseriesProfile(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
+    def calculated_metadata(
+        self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs
+    ):
         # axes = get_default_axes(kwargs.pop('axes', {}))
         # if df is None:
         #     df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         raise NotImplementedError
 
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
 
         axv = get_mapped_axes_variables(self, axes)
 
@@ -230,13 +224,15 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
         y = np.tile(y, n_times * n_z)
         x = np.tile(x, n_times * n_z)
 
-        df_data = OrderedDict([
-            (axes.t, t),
-            (axes.x, x),
-            (axes.y, y),
-            (axes.z, z),
-            (axes.station, s),
-        ])
+        df_data = OrderedDict(
+            [
+                (axes.t, t),
+                (axes.x, x),
+                (axes.y, y),
+                (axes.z, z),
+                (axes.station, s),
+            ]
+        )
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
 
@@ -285,7 +281,7 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
         # Drop all data columns with no data
         if clean_cols:
-            df = df.dropna(axis=1, how='all')
+            df = df.dropna(axis=1, how="all")
 
         # Drop all data rows with no data variable data
         if clean_rows:
@@ -295,27 +291,17 @@ class OrthogonalMultidimensionalTimeseriesProfile(CFDataset):
 
     def nc_attributes(self, axes, daxes):
         atts = super().nc_attributes()
-        return dict_update(atts, {
-            'global' : {
-                'featureType': 'timeSeriesProfile',
-                'cdm_data_type': 'TimeseriesProfile'
+        return dict_update(
+            atts,
+            {
+                "global": {
+                    "featureType": "timeSeriesProfile",
+                    "cdm_data_type": "TimeseriesProfile",
+                },
+                axes.station: {"cf_role": "timeseries_id", "long_name": "station identifier"},
+                axes.x: {"axis": "X"},
+                axes.y: {"axis": "Y"},
+                axes.z: {"axis": "Z"},
+                axes.t: {"units": self.default_time_unit, "standard_name": "time", "axis": "T"},
             },
-            axes.station : {
-                'cf_role': 'timeseries_id',
-                'long_name' : 'station identifier'
-            },
-            axes.x: {
-                'axis': 'X'
-            },
-            axes.y: {
-                'axis': 'Y'
-            },
-            axes.z: {
-                'axis': 'Z'
-            },
-            axes.t: {
-                'units': self.default_time_unit,
-                'standard_name': 'time',
-                'axis': 'T'
-            }
-        })
+        )

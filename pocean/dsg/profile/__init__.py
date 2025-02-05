@@ -8,23 +8,10 @@ from pocean.utils import (
     unique_justseen,
 )
 
-profile_meta = namedtuple('Profile', [
-    'min_z',
-    'max_z',
-    't',
-    'x',
-    'y',
-    'id',
-    'geometry'
-])
-profiles_meta = namedtuple('ProfileCollection', [
-    'min_z',
-    'max_z',
-    'min_t',
-    'max_t',
-    'profiles',
-    'geometry'
-])
+profile_meta = namedtuple("Profile", ["min_z", "max_z", "t", "x", "y", "id", "geometry"])
+profiles_meta = namedtuple(
+    "ProfileCollection", ["min_z", "max_z", "min_t", "max_t", "profiles", "geometry"]
+)
 
 
 def profile_calculated_metadata(df, axes, geometries=True):
@@ -39,18 +26,22 @@ def profile_calculated_metadata(df, axes, geometries=True):
             x=first_row[axes.x],
             y=first_row[axes.y],
             id=pid,
-            geometry=Point(first_row[axes.x], first_row[axes.y])
+            geometry=Point(first_row[axes.x], first_row[axes.y]),
         )
 
     if geometries:
         null_coordinates = df[axes.x].isnull() | df[axes.y].isnull()
-        coords = list(unique_justseen(zip(
-            df.loc[~null_coordinates, axes.x].tolist(),
-            df.loc[~null_coordinates, axes.y].tolist()
-        )))
+        coords = list(
+            unique_justseen(
+                zip(
+                    df.loc[~null_coordinates, axes.x].tolist(),
+                    df.loc[~null_coordinates, axes.y].tolist(),
+                )
+            )
+        )
     else:
         # Calculate the geometry as the linestring between all of the profile points
-        coords = [ p.geometry for _, p in profiles.items() ]
+        coords = [p.geometry for _, p in profiles.items()]
 
     geometry = None
     if len(coords) > 1:
@@ -64,5 +55,5 @@ def profile_calculated_metadata(df, axes, geometries=True):
         min_t=df[axes.t].min(),
         max_t=df[axes.t].max(),
         profiles=profiles,
-        geometry=geometry
+        geometry=geometry,
     )

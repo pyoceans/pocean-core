@@ -41,9 +41,9 @@ class IncompleteMultidimensionalProfile(CFDataset):
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            pvars = dsg.filter_by_attrs(cf_role='profile_id')
+            pvars = dsg.filter_by_attrs(cf_role="profile_id")
             assert len(pvars) == 1
-            assert dsg.featureType.lower() == 'profile'
+            assert dsg.featureType.lower() == "profile"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
@@ -66,7 +66,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
             assert x.size == pvar.size
             assert y.size == pvar.size
             p_dim = dsg.dimensions[pvar.dimensions[0]]
-            z_dim = dsg.dimensions[[ d for d in z.dimensions if d != p_dim.name ][0]]
+            z_dim = dsg.dimensions[[d for d in z.dimensions if d != p_dim.name][0]]
             for dv in dsg.data_vars():
                 assert len(dv.dimensions) in [1, 2]  # dimensioned by profile or profile, z
                 assert z_dim.name in dv.dimensions or p_dim.name in dv.dimensions
@@ -81,25 +81,24 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     @classmethod
     def from_dataframe(cls, df, output, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
         daxes = axes
-        data_columns = [ d for d in df.columns if d not in axes ]
+        data_columns = [d for d in df.columns if d not in axes]
 
-        unlimited = kwargs.pop('unlimited', False)
+        unlimited = kwargs.pop("unlimited", False)
 
-        unique_dims = kwargs.pop('unique_dims', False)
+        unique_dims = kwargs.pop("unique_dims", False)
         if unique_dims is True:
             # Rename the dimension to avoid a dimension and coordinate having the same name
             # which is not support in xarray
-            changed_axes = { k: f'{v}_dim' for k, v in axes._asdict().items() }
+            changed_axes = {k: f"{v}_dim" for k, v in axes._asdict().items()}
             daxes = get_default_axes(changed_axes)
 
         # Downcast anything from int64 to int32
         # Convert any timezone aware datetimes to native UTC times
         df = downcast_dataframe(nativize_times(df))
 
-        with IncompleteMultidimensionalProfile(output, 'w') as nc:
-
+        with IncompleteMultidimensionalProfile(output, "w") as nc:
             profile_group = df.groupby(axes.profile)
 
             if unlimited is True:
@@ -112,17 +111,22 @@ class IncompleteMultidimensionalProfile(CFDataset):
             nc.createDimension(daxes.z, max_zs)
 
             # Metadata variables
-            nc.createVariable('crs', 'i4')
+            nc.createVariable("crs", "i4")
 
             profile = nc.createVariable(axes.profile, get_dtype(df[axes.profile]), (daxes.profile,))
 
             # Create all of the variables
-            time = nc.createVariable(axes.t, 'f8', (daxes.profile,))
+            time = nc.createVariable(axes.t, "f8", (daxes.profile,))
             latitude = nc.createVariable(axes.y, get_dtype(df[axes.y]), (daxes.profile,))
             longitude = nc.createVariable(axes.x, get_dtype(df[axes.x]), (daxes.profile,))
-            z = nc.createVariable(axes.z, get_dtype(df[axes.z]), (daxes.profile, daxes.z), fill_value=df[axes.z].dtype.type(cls.default_fill_value))
+            z = nc.createVariable(
+                axes.z,
+                get_dtype(df[axes.z]),
+                (daxes.profile, daxes.z),
+                fill_value=df[axes.z].dtype.type(cls.default_fill_value),
+            )
 
-            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop('attributes', {}))
+            attributes = dict_update(nc.nc_attributes(axes, daxes), kwargs.pop("attributes", {}))
 
             # Create vars based on full dataframe (to get all variables)
             for c in data_columns:
@@ -134,11 +138,10 @@ class IncompleteMultidimensionalProfile(CFDataset):
                         (daxes.profile, daxes.z),
                         df[c],
                     )
-                    attributes[var_name] = dict_update(attributes.get(var_name, {}), {
-                        'coordinates': '{} {} {} {}'.format(
-                            axes.t, axes.z, axes.x, axes.y
-                        )
-                    })
+                    attributes[var_name] = dict_update(
+                        attributes.get(var_name, {}),
+                        {"coordinates": f"{axes.t} {axes.z} {axes.x} {axes.y}"},
+                    )
 
             # Write values for each profile within profile_group
             for i, (uid, pdf) in enumerate(profile_group):
@@ -166,14 +169,16 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         return IncompleteMultidimensionalProfile(output, **kwargs)
 
-    def calculated_metadata(self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+    def calculated_metadata(
+        self, df=None, geometries=True, clean_cols=True, clean_rows=True, **kwargs
+    ):
+        axes = get_default_axes(kwargs.pop("axes", {}))
         if df is None:
             df = self.to_dataframe(clean_cols=clean_cols, clean_rows=clean_rows, axes=axes)
         return profile_calculated_metadata(df, axes, geometries)
 
     def to_dataframe(self, clean_cols=True, clean_rows=True, **kwargs):
-        axes = get_default_axes(kwargs.pop('axes', {}))
+        axes = get_default_axes(kwargs.pop("axes", {}))
 
         axv = get_mapped_axes_variables(self, axes)
 
@@ -182,7 +187,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
         p_dim = self.dimensions[pvar.dimensions[0]]
 
         zvar = axv.z
-        zs = len(self.dimensions[[ d for d in zvar.dimensions if d != p_dim.name ][0]])
+        zs = len(self.dimensions[[d for d in zvar.dimensions if d != p_dim.name][0]])
 
         # Profiles
         p = normalize_countable_array(pvar)
@@ -204,13 +209,9 @@ class IncompleteMultidimensionalProfile(CFDataset):
         yvar = axv.y
         y = generic_masked(yvar[:].repeat(zs), attrs=self.vatts(yvar.name))
 
-        df_data = OrderedDict([
-            (axes.t, nt),
-            (axes.x, x),
-            (axes.y, y),
-            (axes.z, z),
-            (axes.profile, p)
-        ])
+        df_data = OrderedDict(
+            [(axes.t, nt), (axes.x, x), (axes.y, y), (axes.z, z), (axes.profile, p)]
+        )
 
         building_index_to_drop = np.ones(t.size, dtype=bool)
 
@@ -220,10 +221,11 @@ class IncompleteMultidimensionalProfile(CFDataset):
                 del extract_vars[ncvar.name]
 
         for i, (dnam, dvar) in enumerate(extract_vars.items()):
-
             # Profile dimension
             if dvar.dimensions == pvar.dimensions:
-                vdata = generic_masked(dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam))
+                vdata = generic_masked(
+                    dvar[:].repeat(zs).astype(dvar.dtype), attrs=self.vatts(dnam)
+                )
 
             # Profile, z dimension
             elif dvar.dimensions == zvar.dimensions:
@@ -254,7 +256,7 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
         # Drop all data columns with no data
         if clean_cols:
-            df = df.dropna(axis=1, how='all')
+            df = df.dropna(axis=1, how="all")
 
         # Drop all data rows with no data variable data
         if clean_rows:
@@ -264,27 +266,14 @@ class IncompleteMultidimensionalProfile(CFDataset):
 
     def nc_attributes(self, axes, daxes):
         atts = super().nc_attributes()
-        return dict_update(atts, {
-            'global' : {
-                'featureType': 'profile',
-                'cdm_data_type': 'Profile'
+        return dict_update(
+            atts,
+            {
+                "global": {"featureType": "profile", "cdm_data_type": "Profile"},
+                axes.profile: {"cf_role": "profile_id", "long_name": "profile identifier"},
+                axes.x: {"axis": "X"},
+                axes.y: {"axis": "Y"},
+                axes.z: {"axis": "Z"},
+                axes.t: {"units": self.default_time_unit, "standard_name": "time", "axis": "T"},
             },
-            axes.profile : {
-                'cf_role': 'profile_id',
-                'long_name' : 'profile identifier'
-            },
-            axes.x: {
-                'axis': 'X'
-            },
-            axes.y: {
-                'axis': 'Y'
-            },
-            axes.z: {
-                'axis': 'Z'
-            },
-            axes.t: {
-                'units': self.default_time_unit,
-                'standard_name': 'time',
-                'axis': 'T'
-            }
-        })
+        )

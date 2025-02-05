@@ -19,5 +19,6 @@ def download_test_data():
     with zipfile.ZipFile(fname, "r") as zip_ref:
         zip_ref.extractall(here)
 
+
 if __name__ == "__main__":
     download_test_data()
