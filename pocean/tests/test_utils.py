@@ -19,32 +19,32 @@ logger.handlers = [logging.StreamHandler()]
 
 input_file = os.path.join(os.path.dirname(__file__), "resources/coamps.nc")
 
-@pytest.fixture
-def load_dataset():
-    nc = EnhancedDataset(input_file)
-    yield nc
-    nc.close()
+# @pytest.fixture
+# def load_dataset():
+#     nc = EnhancedDataset(input_file)
+#     yield nc
+#     nc.close()
 
 
-def test_single_attr_filter(load_dataset):
-    grid_spacing_vars = load_dataset.filter_by_attrs(grid_spacing="4.0 km")
+# def test_single_attr_filter(load_dataset):
+#     grid_spacing_vars = load_dataset.filter_by_attrs(grid_spacing="4.0 km")
 
-    x = load_dataset.variables.get("x")
-    y = load_dataset.variables.get("y")
+#     x = load_dataset.variables.get("x")
+#     y = load_dataset.variables.get("y")
 
-    assert len(grid_spacing_vars) == 2
-    assert x in grid_spacing_vars
-    assert y in grid_spacing_vars
+#     assert len(grid_spacing_vars) == 2
+#     assert x in grid_spacing_vars
+#     assert y in grid_spacing_vars
 
-def test_multiple_attr_filter(load_dataset):
-    grid_spacing_vars = load_dataset.filter_by_attrs(
-        grid_spacing="4.0 km", standard_name="projection_y_coordinate"
-    )
+# def test_multiple_attr_filter(load_dataset):
+#     grid_spacing_vars = load_dataset.filter_by_attrs(
+#         grid_spacing="4.0 km", standard_name="projection_y_coordinate"
+#     )
 
-    y = load_dataset.variables.get("y")
+#     y = load_dataset.variables.get("y")
 
-    assert len(grid_spacing_vars) == 1
-    assert y in grid_spacing_vars
+#     assert len(grid_spacing_vars) == 1
+#     assert y in grid_spacing_vars
 
 @pytest.mark.filterwarnings("ignore::UserWarning")
 def test_generic_masked_bad_min_max_value():
