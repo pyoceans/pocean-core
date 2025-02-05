@@ -4,26 +4,21 @@ from pocean.cf import CFDataset
 
 
 class IncompleteMultidimensionalTimeseries(CFDataset):
-
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            rvars = dsg.filter_by_attrs(cf_role='timeseries_id')
+            rvars = dsg.filter_by_attrs(cf_role="timeseries_id")
             assert len(rvars) == 1
-            assert dsg.featureType.lower() == 'timeseries'
+            assert dsg.featureType.lower() == "timeseries"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
 
             # Not a CR
-            assert not dsg.filter_by_attrs(
-                sample_dimension=lambda x: x is not None
-            )
+            assert not dsg.filter_by_attrs(sample_dimension=lambda x: x is not None)
 
             # Not an IR
-            assert not dsg.filter_by_attrs(
-                instance_dimension=lambda x: x is not None
-            )
+            assert not dsg.filter_by_attrs(instance_dimension=lambda x: x is not None)
 
             # IM files will always have a time variable with two dimensions
             # because IM files are never used for files with a single station.

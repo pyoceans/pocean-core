@@ -16,7 +16,7 @@ from pocean.utils import dict_update, get_default_axes, unique_justseen
 
 
 def get_calculated_attributes(df, axes=None, history=None):
-    """ Functions to automate netCDF attribute generation from the data itself
+    """Functions to automate netCDF attribute generation from the data itself
     This is a wrapper for the other four functions, which could be called separately.
 
     :param df: data (Pandas DataFrame)
@@ -35,7 +35,7 @@ def get_calculated_attributes(df, axes=None, history=None):
 
 
 def get_geographic_attributes(df, axes=None):
-    """ Use values in a dataframe to set geographic attributes for the eventual netCDF file
+    """Use values in a dataframe to set geographic attributes for the eventual netCDF file
     Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
     The coordinate reference system (CRS) is assumed to be EPSG:4326, which is WGS84 and is used with
     GPS satellite navigation (http://spatialreference.org/ref/epsg/wgs-84/).  This is NCEI's default.
@@ -78,34 +78,34 @@ def get_geographic_attributes(df, axes=None):
     geometry_wkt = p.convex_hull.wkt
 
     return {
-        'variables': {
+        "variables": {
             axes.y: {
-                'attributes': {
-                    'actual_min': carry_miny,
-                    'actual_max': carry_maxy,
+                "attributes": {
+                    "actual_min": carry_miny,
+                    "actual_max": carry_maxy,
                 }
             },
             axes.x: {
-                'attributes': {
-                    'actual_min': carry_minx,
-                    'actual_max': carry_maxx,
+                "attributes": {
+                    "actual_min": carry_minx,
+                    "actual_max": carry_maxx,
                 }
             },
         },
-        'attributes': {
-            'geospatial_lat_min': carry_miny,
-            'geospatial_lat_max': carry_maxy,
-            'geospatial_lon_min': carry_minx,
-            'geospatial_lon_max': carry_maxx,
-            'geospatial_bbox': geometry_bbox,
-            'geospatial_bounds': geometry_wkt,
-            'geospatial_bounds_crs': 'EPSG:4326',
-        }
+        "attributes": {
+            "geospatial_lat_min": carry_miny,
+            "geospatial_lat_max": carry_maxy,
+            "geospatial_lon_min": carry_minx,
+            "geospatial_lon_max": carry_maxx,
+            "geospatial_bbox": geometry_bbox,
+            "geospatial_bounds": geometry_wkt,
+            "geospatial_bounds_crs": "EPSG:4326",
+        },
     }
 
 
 def get_vertical_attributes(df, axes=None):
-    """ Use values in a dataframe to set vertical attributes for the eventual netCDF file
+    """Use values in a dataframe to set vertical attributes for the eventual netCDF file
     Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
     The CRS, geospatial_bounds_vertical_crs, cannot be assumed because NCEI suggests any of
     * 'EPSG:5829' (instantaneous height above sea level),
@@ -124,24 +124,24 @@ def get_vertical_attributes(df, axes=None):
     maxz = round(float(df[axes.z].max()), 6)
 
     return {
-        'variables': {
+        "variables": {
             axes.z: {
-                'attributes': {
-                    'actual_min': minz,
-                    'actual_max': maxz,
+                "attributes": {
+                    "actual_min": minz,
+                    "actual_max": maxz,
                 }
             },
         },
-        'attributes': {
-            'geospatial_vertical_min': minz,
-            'geospatial_vertical_max': maxz,
-            'geospatial_vertical_units': 'm',
-        }
+        "attributes": {
+            "geospatial_vertical_min": minz,
+            "geospatial_vertical_max": maxz,
+            "geospatial_vertical_units": "m",
+        },
     }
 
 
 def get_temporal_attributes(df, axes=None):
-    """ Use values in a dataframe to set temporal attributes for the eventual netCDF file
+    """Use values in a dataframe to set temporal attributes for the eventual netCDF file
     Attribute names come from https://www.ncei.noaa.gov/data/oceans/ncei/formats/netcdf/v2.0/index.html
 
     :param df: data (Pandas DataFrame)
@@ -161,47 +161,44 @@ def get_temporal_attributes(df, axes=None):
         mode_value = dt_counts.index[0]
     else:
         # Calculate a static resolution
-        mode_value = ((maxt - mint) / len(times))
+        mode_value = (maxt - mint) / len(times)
 
     return {
-        'variables': {
+        "variables": {
             axes.t: {
-                'attributes': {
-                    'actual_min': mint.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                    'actual_max': maxt.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                "attributes": {
+                    "actual_min": mint.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "actual_max": maxt.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 }
             },
         },
-        'attributes': {
-            'time_coverage_start': mint.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'time_coverage_end': maxt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'time_coverage_duration': (maxt - mint).round('1s').isoformat(),
-            'time_coverage_resolution': mode_value.round('1s').isoformat()
-        }
+        "attributes": {
+            "time_coverage_start": mint.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "time_coverage_end": maxt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "time_coverage_duration": (maxt - mint).round("1s").isoformat(),
+            "time_coverage_resolution": mode_value.round("1s").isoformat(),
+        },
     }
 
 
 def get_creation_attributes(history=None):
-    """ Query system for netCDF file creation times
+    """Query system for netCDF file creation times
 
     :param history: text initializing audit trail for modifications to the original data (optional, string)
     :return: dictionary of global attributes
     """
-    nc_create_ts = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+    nc_create_ts = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
     attrs = {
-        'attributes': {
-            'date_created': nc_create_ts,
-            'date_issued': nc_create_ts,
-            'date_modified': nc_create_ts,
+        "attributes": {
+            "date_created": nc_create_ts,
+            "date_issued": nc_create_ts,
+            "date_modified": nc_create_ts,
         }
     }
 
     # Add in the passed in history
     if history is not None:
-        attrs['attributes']['history'] = '{} - {}'.format(
-            nc_create_ts,
-            history
-        )
+        attrs["attributes"]["history"] = f"{nc_create_ts} - {history}"
 
     return attrs

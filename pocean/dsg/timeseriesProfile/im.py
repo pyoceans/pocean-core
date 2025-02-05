@@ -3,11 +3,10 @@ from pocean.cf import CFDataset
 
 
 class IncompleteMultidimensionalTimeseriesProfile(CFDataset):
-
     @classmethod
     def is_mine(cls, dsg, strict=False):
         try:
-            assert dsg.featureType.lower() == 'timeseriesprofile'
+            assert dsg.featureType.lower() == "timeseriesprofile"
             assert len(dsg.t_axes()) >= 1
             assert len(dsg.x_axes()) >= 1
             assert len(dsg.y_axes()) >= 1
@@ -17,14 +16,10 @@ class IncompleteMultidimensionalTimeseriesProfile(CFDataset):
             assert len(zvar.dimensions) > 1
 
             # Not ragged
-            o_index_vars = dsg.filter_by_attrs(
-                sample_dimension=lambda x: x is not None
-            )
+            o_index_vars = dsg.filter_by_attrs(sample_dimension=lambda x: x is not None)
             assert len(o_index_vars) == 0
 
-            r_index_vars = dsg.filter_by_attrs(
-                instance_dimension=lambda x: x is not None
-            )
+            r_index_vars = dsg.filter_by_attrs(instance_dimension=lambda x: x is not None)
             assert len(r_index_vars) == 0
 
         except BaseException:
