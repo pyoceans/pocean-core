@@ -22,26 +22,26 @@ class TestUtils(unittest.TestCase):
         self.input_file = os.path.join(os.path.dirname(__file__), "resources/coamps.nc")
 
     def test_single_attr_filter(self):
-        nc = EnhancedDataset(self.input_file)
-        grid_spacing_vars = nc.filter_by_attrs(grid_spacing="4.0 km")
+        with EnhancedDataset(self.input_file) as nc:
+            grid_spacing_vars = nc.filter_by_attrs(grid_spacing="4.0 km")
 
-        x = nc.variables.get("x")
-        y = nc.variables.get("y")
+            x = nc.variables.get("x")
+            y = nc.variables.get("y")
 
-        self.assertEqual(len(grid_spacing_vars), 2)
-        assert x in grid_spacing_vars
-        assert y in grid_spacing_vars
+            self.assertEqual(len(grid_spacing_vars), 2)
+            assert x in grid_spacing_vars
+            assert y in grid_spacing_vars
 
     def test_multiple_attr_filter(self):
-        nc = EnhancedDataset(self.input_file)
-        grid_spacing_vars = nc.filter_by_attrs(
-            grid_spacing="4.0 km", standard_name="projection_y_coordinate"
-        )
+        with EnhancedDataset(self.input_file) as nc:
+            grid_spacing_vars = nc.filter_by_attrs(
+                grid_spacing="4.0 km", standard_name="projection_y_coordinate"
+            )
 
-        y = nc.variables.get("y")
+            y = nc.variables.get("y")
 
-        self.assertEqual(len(grid_spacing_vars), 1)
-        assert y in grid_spacing_vars
+            self.assertEqual(len(grid_spacing_vars), 1)
+            assert y in grid_spacing_vars
 
     @pytest.mark.filterwarnings("ignore::UserWarning")
     def test_generic_masked_bad_min_max_value(self):
