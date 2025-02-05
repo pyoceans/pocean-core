@@ -14,10 +14,9 @@ license = { file = "LICENSE.txt" }
 authors = [
   { name = "Kyle Wilcox", email = "kyle@axds.co" },
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -49,6 +48,7 @@ packages = [
 [tool.setuptools_scm]
 write_to = "pocean/_version.py"
 write_to_template = "__version__ = '{version}'"
+tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
 
 [tool.ruff]
 

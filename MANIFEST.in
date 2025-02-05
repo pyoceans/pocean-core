@@ -4,12 +4,15 @@ include pyproject.toml
 
 graft pocean
 
-prune docs
-prune pocean/tests
 prune .github
 prune *.egg-info
+prune docs
+prune pocean/tests
 
+exclude .coveragerc
 exclude .gitignore
 exclude .pre-commit-config.yaml
+exclude pocean/_version.py
+exclude ruff.toml
 
 global-exclude *.nc
