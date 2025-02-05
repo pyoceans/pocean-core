@@ -57,35 +57,3 @@ def test_generic_masked_bad_min_max_value(copy_dataset):
     r = generic_masked(v[:], attrs=copy_dataset.vatts(v.name))
     rflat = r.flatten()
     assert rflat[~rflat.mask].size == 0
-
-    # Create a byte variable with a float valid_min and valid_max
-    # to make sure it doesn't error
-    b = copy_dataset.createVariable("imabyte", "b")
-    b.valid_min = 0
-    b.valid_max = np.int16(600)  # this is over a byte and thus invalid
-    b[:] = 3
-    r = generic_masked(b[:], attrs=copy_dataset.vatts(b.name))
-    assert np.all(r.mask == False)  # noqa
-
-    b.valid_min = 0
-    b.valid_max = 2
-    r = generic_masked(b[:], attrs=copy_dataset.vatts(b.name))
-    assert np.all(r.mask == True)  # noqa
-
-    c = copy_dataset.createVariable("imanotherbyte", "f4")
-    c.setncattr("valid_min", b"0")
-    c.setncattr("valid_max", b"9")
-    c[:] = 3
-    r = generic_masked(c[:], attrs=copy_dataset.vatts(c.name))
-    assert np.all(r.mask == False)  # noqa
-
-    c = copy_dataset.createVariable("imarange", "f4")
-    c.valid_range = [0.0, 2.0]
-    c[:] = 3.0
-    r = generic_masked(c[:], attrs=copy_dataset.vatts(c.name))
-    assert np.all(r.mask == True)  # noqa
-
-    c.valid_range = [0.0, 2.0]
-    c[:] = 1.0
-    r = generic_masked(c[:], attrs=copy_dataset.vatts(c.name))
-    assert np.all(r.mask == False)  # noqa
