@@ -7,6 +7,7 @@ import unittest
 
 import netCDF4 as nc4
 import numpy as np
+import pytest
 
 from pocean import logger
 from pocean.dataset import EnhancedDataset
@@ -110,6 +111,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(len(grid_spacing_vars), 1)
         assert y in grid_spacing_vars
 
+    @pytest.mark.filterwarnings("ignore::UserWarning")
     def test_generic_masked_bad_min_max_value(self):
         fid, tpath = tempfile.mkstemp(suffix=".nc", prefix="pocean-test")
         shutil.copy2(self.input_file, tpath)
