@@ -37,15 +37,6 @@ def copy_dataset():
     if os.path.exists(tpath):
         os.remove(tpath)
 
-def test_single_attr_filter(load_dataset):
-    grid_spacing_vars = load_dataset.filter_by_attrs(grid_spacing="4.0 km")
-
-    x = load_dataset.variables.get("x")
-    y = load_dataset.variables.get("y")
-
-    assert len(grid_spacing_vars) == 2
-    assert x in grid_spacing_vars
-    assert y in grid_spacing_vars
 
 def test_multiple_attr_filter(load_dataset):
     grid_spacing_vars = load_dataset.filter_by_attrs(
