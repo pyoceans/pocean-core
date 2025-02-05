@@ -36,6 +36,13 @@ _TYPE_SENSITIVE_ATTRIBUTES = [
 
 
 class EnhancedDataset(Dataset):
+    def __del__(self):
+        try:
+            if self.isopen():
+                self.close()
+        except TypeError:
+            pass
+
     def vatts(self, vname):
         d = {}
         var = self.variables[vname]
