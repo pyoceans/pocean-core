@@ -37,10 +37,7 @@ _TYPE_SENSITIVE_ATTRIBUTES = [
 
 class EnhancedDataset(Dataset):
     def __del__(self):
-        try:
-            self.close()
-        except RuntimeError:
-            pass
+        self.close()
 
     def close(self):
         if not self.isopen():
