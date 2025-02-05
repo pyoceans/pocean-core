@@ -94,6 +94,5 @@ lint.isort.order-by-type = false
 addopts = "-s -rxs -v"
 
 filterwarnings = [
-  "ignore::DeprecationWarning",
-  "ignore::UserWarning",
+  "error",
 ]
