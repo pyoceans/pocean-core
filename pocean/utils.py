@@ -316,13 +316,16 @@ def get_ncdata_from_series(series, ncvar, fillna=True):
         units = getattr(ncvar, "units", CFDataset.default_time_unit)
         calendar = getattr(ncvar, "calendar", "standard")
         nums = np.array([_safe_date2num(dtime, units=units, calendar=calendar) for dtime in series])
-        return np.ma.masked_invalid(nums)
+        series = np.ma.masked_invalid(nums)
     else:
         if fillna is True:
             fv = get_fill_value(ncvar) or np.nan
-            return series.fillna(fv).values.astype(ncvar.dtype)
+            series = series.fillna(fv).values.astype(ncvar.dtype)
         else:
-            return series.values.astype(ncvar.dtype)
+            series = series.values.astype(ncvar.dtype)
+    if hasattr(series, "to_numpy"):
+        series = series.to_numpy()
+    return series
 
 
 def get_masked_datetime_array(t, tvar, mask_nan=True):
@@ -423,7 +426,7 @@ def get_mapped_axes_variables(ncd, axes=None, skip=None):
 
 def get_dtype(obj):
     if hasattr(obj, "dtype"):
-        if obj.dtype == object:
+        if obj.dtype == object or isinstance(obj.dtype, pd.StringDtype):
             return str
         return obj.dtype
     elif isinstance(obj, (tuple, list)):
