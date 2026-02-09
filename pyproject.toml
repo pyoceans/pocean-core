@@ -52,9 +52,7 @@ write_to_template = "__version__ = '{version}'"
 tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
 
 [tool.ruff]
-
 line-length = 100
-
 exclude = [
   ".git",
   ".git/",
@@ -62,38 +60,34 @@ exclude = [
   "dist",
   "docs/",
 ]
-
 lint.select = [
   "E", # pycodecstyle
   "F", # flakes
   "I", # import sorting
   "W", # pydocstyle
 ]
-
 lint.ignore = [
-  #"E265",
-  #"E221",
-  #"E203",
-  #"E201",
-  #"E124",
-  #"E202",
-  #"E241",
-  #"E251",
-  #"W504",
+  # "E265",
+  # "E221",
+  # "E203",
+  # "E201",
+  # "E124",
+  # "E202",
+  # "E241",
+  # "E251",
+  # "W504",
   "E501",
   "W291",
   "W293",
 ]
-
 lint.per-file-ignores."pocean/tests/*.py" = [
   "F403",
   "F405",
 ]
 lint.isort.order-by-type = false
 
-[tool.pytest.ini_options]
-addopts = "-s -rxs -v"
-
-filterwarnings = [
+[tool.pytest]
+ini_options.addopts = "-s -rxs -v"
+ini_options.filterwarnings = [
   "error",
 ]
