@@ -3,8 +3,8 @@ pocean.dsg.trajectoryProfile package
 
 .. automodule:: pocean.dsg.trajectoryProfile
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
@@ -14,5 +14,5 @@ pocean.dsg.trajectoryProfile.cr module
 
 .. automodule:: pocean.dsg.trajectoryProfile.cr
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

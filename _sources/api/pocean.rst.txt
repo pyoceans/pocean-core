@@ -3,8 +3,8 @@ pocean package
 
 .. automodule:: pocean
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------
@@ -23,29 +23,29 @@ pocean.cf module
 
 .. automodule:: pocean.cf
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pocean.dataset module
 ---------------------
 
 .. automodule:: pocean.dataset
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pocean.meta module
 ------------------
 
 .. automodule:: pocean.meta
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 pocean.utils module
 -------------------
 
 .. automodule:: pocean.utils
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

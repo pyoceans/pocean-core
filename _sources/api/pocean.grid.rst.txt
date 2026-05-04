@@ -3,5 +3,5 @@ pocean.grid package
 
 .. automodule:: pocean.grid
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
