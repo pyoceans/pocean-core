@@ -2,3 +2,4 @@ flake8
 pooch
 pre-commit
 pytest
+setuptools-scm

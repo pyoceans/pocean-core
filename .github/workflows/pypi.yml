@@ -14,10 +14,21 @@ defaults:
     shell: bash
 
 jobs:
-  packages:
+  pypi-publish:
+    name: Upload release to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pocean-core/
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        # Should be enough for setuptools-scm
+        fetch-depth: 100
+        persist-credentials: false
 
     - name: Set up Python
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
@@ -49,6 +60,3 @@ jobs:
     - name: Publish a Python distribution to PyPI
       if: success() && github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_PASSWORD }}
