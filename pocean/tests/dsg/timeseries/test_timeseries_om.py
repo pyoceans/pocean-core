@@ -115,7 +115,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
             axes = {"z": None}
-            df.drop(columns=["z"], inplace=True)
+            df = df.drop(columns=["z"])
             with OrthogonalMultidimensionalTimeseries.from_dataframe(
                 df,
                 single_tmp,
@@ -134,7 +134,7 @@ class TestOrthogonalMultidimensionalTimeseries(unittest.TestCase):
         with OrthogonalMultidimensionalTimeseries(self.single) as s:
             df = s.to_dataframe()
             axes = {"z": None}
-            df.drop(columns=["z"], inplace=True)
+            df = df.drop(columns=["z"])
             with OrthogonalMultidimensionalTimeseries.from_dataframe(
                 df, single_tmp, axes=axes, reduce_dims=True
             ) as result_ncd:
